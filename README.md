@@ -42,4 +42,4 @@ By leveraging machine learning techniques and data from **Sport England’s Acti
 
 ## 🛠️ Getting Started
 ### Data Source
-This project utilizes data from **Sport England's Active Lives Survey**. Ensure you have requested the necessary microdata or API access keys before initializing the pipeline.
+This project utilizes data from **Sport England's Active Lives Survey**.
