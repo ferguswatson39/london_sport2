@@ -39,7 +39,3 @@ By leveraging machine learning techniques and data from **Sport England’s Acti
 * **Role Distribution:** Forecasted distribution of specific volunteer roles that different demographic groups (including ethnicity, disability status, gender, and age) are most likely to take on.
 
 ---
-
-## 🛠️ Getting Started
-### Data Source
-This project utilizes data from **Sport England's Active Lives Survey**.
