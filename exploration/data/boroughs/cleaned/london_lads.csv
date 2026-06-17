@@ -1,0 +1,34 @@
+id,lad_code,lad_name
+114.0,E09000014,Haringey
+126.0,E09000017,Hillingdon
+9.0,E09000003,Barnet
+129.0,E09000018,Hounslow
+139.0,E09000021,Kingston upon Thames
+160.0,E09000024,Merton
+171.0,E09000025,Newham
+8.0,E09000002,Barking and Dagenham
+35.0,E09000006,Bromley
+109.0,E09000012,Hackney
+122.0,E09000016,Havering
+201.0,E09000027,Richmond upon Thames
+112.0,E09000013,Hammersmith and Fulham
+142.0,E09000022,Lambeth
+241.0,E09000028,Southwark
+293.0,E09000033,Westminster
+17.0,E09000004,Bexley
+44.0,E09000007,Camden
+68.0,E09000008,Croydon
+135.0,E09000019,Islington
+147.0,E09000023,Lewisham
+272.0,E09000030,Tower Hamlets
+59.0,E09000001,City of London
+30.0,E09000005,Brent
+78.0,E09000009,Ealing
+107.0,E09000011,Greenwich
+117.0,E09000015,Harrow
+196.0,E09000026,Redbridge
+280.0,E09000032,Wandsworth
+91.0,E09000010,Enfield
+136.0,E09000020,Kensington and Chelsea
+255.0,E09000029,Sutton
+279.0,E09000031,Waltham Forest
