@@ -10,7 +10,7 @@ def get_data() -> pd.DataFrame:
     #'health', # General Health - variable is not in 2016/17
     'VolAny', # Has Volunteered
     'motivex2a', 'motivex2b', 'motivex2c', 'motivex2d', # Motivations
-    'Motiva_POP', 'motivb_POP', 'motivc_POP', 'motivd_POP','motive_POP', 
+    'Motiva_POP','motivb_POP', 'motivc_POP', 'motivd_POP','motive_POP', 
     'inclus_a', 'inclus_b', 'inclus_c','comm1', 'comm2', # Social Cohesion
     'anxious',  'happy', 'lifesat', 'lone', 'worthw', # Life Emotions
     'indev', 'indevtry', # Different types of motivations
@@ -21,15 +21,16 @@ def get_data() -> pd.DataFrame:
     df_path = Path(ROOT / 'exploration' / 'data' / 'master_data' / '2015_to_2023_full_preprocessed_data_set.csv.gz')
     df = pd.read_csv(df_path)
     df['VolAny'] = df['VolAny'].fillna(0.0) # Assumes that any respondent who did not fill voluneering question did not volunteer
+    df = df.copy()
+    df['active'] = df['MEMS7_ALL'] > 150
     available = [col for col in interested_cols if col in df.columns]
     unavailable = [col for col in interested_cols if col not in df.columns]
     healthy_cols, unhealthy_cols = missingness(80000, available, df) # Only keeps columns with 80000 / 120000 non missing values
-    total_cols = demographic_cols + healthy_cols
+    total_cols = demographic_cols + healthy_cols + ['active']
     df = df[total_cols].dropna()
     print(f'DataFrame Cleaned Sucessfully...')
-    print('DataFrame Contains:')
-    print(f'>>> Demographic Columns:\n{demographic_cols}')
-    print(f'>>> Other Columns:\n{healthy_cols}')
+    print('DataFrame Information:')
+    print(f'>>> Columns:\n{df.columns}')
     print(f'>>> Shape {df.shape}')
     print('--------------------------')
     print(f'Columns NOT in Master.csv:\n>>> {unavailable}')
