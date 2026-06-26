@@ -5,12 +5,9 @@ import sys
 ROOT = Path(__file__).resolve().parent.parent.parent
 sys.path.append(str(ROOT))
 from src.loading_data.load_data import get_data
-from sklearn.linear_model import LogisticRegression
-from sklearn.model_selection import train_test_split
 import statsmodels.api as sm
 from sklearn.preprocessing import StandardScaler
 from sklearn.preprocessing import OneHotEncoder
-
 
 def check_num_obs(X, year):
     no_obs = []
@@ -54,6 +51,7 @@ def generate_coeficients() -> pd.DataFrame:
             'pvalues' : output.pvalues.values,
             'confidence_lower' : np.exp(output.conf_int()[0].values),
             'confidence_upper' : np.exp(output.conf_int()[1].values),
+            'std_error' : output.bse.values,
             'year' : year 
         })
         all_years.append(logistic_results)
@@ -62,3 +60,5 @@ def generate_coeficients() -> pd.DataFrame:
     all.to_csv(save_path / 'logistic_coef_results.csv', index=False)
     print(f'Saved Logistic Coefficient Results to\n:>>>{save_path}')
     return 'done'
+
+# generate_coeficients()
