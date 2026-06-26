@@ -10,7 +10,7 @@ def get_data() -> pd.DataFrame:
     #'health', # General Health - variable is not in 2016/17
     'VolAny', # Has Volunteered
     'motivex2a', 'motivex2b', 'motivex2c', 'motivex2d', # Motivations
-    'Motiva_POP', 'motivb_POP', 'motivc_POP', 'motivd_POP','motive_POP', 
+    'Motiva_POP','motivb_POP', 'motivc_POP', 'motivd_POP','motive_POP', 
     'inclus_a', 'inclus_b', 'inclus_c','comm1', 'comm2', # Social Cohesion
     'anxious',  'happy', 'lifesat', 'lone', 'worthw', # Life Emotions
     'indev', 'indevtry', # Different types of motivations
