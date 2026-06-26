@@ -47,6 +47,3 @@ def missingness(health :int, available_cols:list, df : pd.DataFrame) -> list[str
         else:
             unhealthy_cols.append(j)
     return healthy_cols, unhealthy_cols
-
-df = get_data()
-print(df.head())
