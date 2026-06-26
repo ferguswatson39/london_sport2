@@ -42,7 +42,7 @@ def generate_coeficients() -> pd.DataFrame:
         X[continuous_cols] = scaler.fit_transform(X[continuous_cols])
         no_obs = check_num_obs(X, year)
         if len(no_obs) > 0:
-            X =  X.drop(columns = no_obs)
+            X = X.drop(columns = no_obs)
         logistic = sm.Logit(Y, X)
         output = logistic.fit()
         logistic_results = pd.DataFrame({
