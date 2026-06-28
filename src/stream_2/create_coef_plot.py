@@ -16,7 +16,8 @@ pivoted = df.pivot(
     values=['odds_ratios', 'pvalues', 'confidence_lower', 'confidence_upper', 'std_error']
 )
 fig, ax = plt.subplots(figsize=(10,15))
-ax.set_prop_cycle(color = plt.cm.YlOrRd(np.linspace(0,1,8)))
+num_years = len(pivoted.columns.levels[1])
+ax.set_prop_cycle(color = plt.cm.YlOrRd(np.linspace(0,1,num_years)))
 for idx, year in enumerate(sorted(pivoted.columns.levels[1])):
     ax.errorbar(x=pivoted['odds_ratios'][year].values, y =pivoted.index, marker='o', linestyle='None', label=year)
     ax.legend()
