@@ -6,7 +6,7 @@ def get_data() -> pd.DataFrame:
     demographic_cols = ['Gend3', 'Disab3', 'Age9', 'Eth7','NSSEC5']
     interested_cols = [
     'Educ6', 'MEMS7_ALL','year','IMD10', # Depravation
-    'nchild', 'nadults', # Childcare responsibilties
+    'nchild', 'nadult', # Childcare responsibilties
     #'health', # General Health - variable is not in 2016/17
     'VolAny', # Has Volunteered
     'motivex2a', 'motivex2b', 'motivex2c', 'motivex2d', # Motivations
