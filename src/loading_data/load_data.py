@@ -1,6 +1,7 @@
 from pathlib import Path
 import pandas as pd
 import sys
+import numpy as np
 ROOT = Path(__file__).resolve().parent.parent.parent
 sys.path.append(str(ROOT))
 from src.loading_data.data_catalogue import DataCatalogue
@@ -13,6 +14,7 @@ def get_data() -> pd.DataFrame:
     df['VolAny'] = df['VolAny'].fillna(0.0) # Assumes that any respondent who did not fill voluneering question did not volunteer
     df['active'] = df['MEMS7_ALL'] >= 150
     df = df[df['NSSEC5'] != 5.0]
+    df['LOG_MEMS7_ALL'] = np.log1p(df['MEMS7_ALL'])
     missing = [var for var in vars if var not in df.columns]
     if len(missing) > 0:
         raise KeyError(f'Missing Variables:\n {missing}')
