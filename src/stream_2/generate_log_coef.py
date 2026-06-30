@@ -25,6 +25,7 @@ def generate_coeficients() -> pd.DataFrame:
         df_encoded_sy = df_encoded_sy.drop(columns=['year'])
         Y = df_encoded_sy['active']
         X = df_encoded_sy.drop(columns=dc.get_target_vars())
+        X = sm.add_constant(X)
         scaler = StandardScaler()
         continuous_cols = dc.get_continuous_vars(with_targets = False)
         X[continuous_cols] = scaler.fit_transform(X[continuous_cols])
@@ -41,6 +42,8 @@ def generate_coeficients() -> pd.DataFrame:
             'confidence_lower' : np.exp(output.conf_int()[0].values),
             'confidence_upper' : np.exp(output.conf_int()[1].values),
             'std_error' : output.bse.values,
+            'rsquared' : output.rsquared,
+            'adj_rsquared' : output.rsquared_adj,
             'year' : year 
         })
         all_years.append(logistic_results)
