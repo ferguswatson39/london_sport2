@@ -53,4 +53,4 @@ def generate_coeficients() -> pd.DataFrame:
     print(f'Saved Logistic Coefficient Results to\n:>>>{save_path}')
     return 'done'
 
-generate_coeficients()
+# generate_coeficients()
