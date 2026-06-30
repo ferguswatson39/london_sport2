@@ -8,8 +8,10 @@ from src.loading_data.load_data import get_data
 import statsmodels.api as sm
 from sklearn.preprocessing import StandardScaler
 from sklearn.preprocessing import OneHotEncoder
+from src.loading_data.data_catalogue import DataCatalogue
 
-def check_num_obs(X, year):
+def check_empty_dummies(X, year):
+    """ Checks if any vars are completely 0 - want to prevent dummies being used that have zero coef"""
     no_obs = []
     num_zeroes = (X[X== 0].count()/len(X)).sort_values(ascending=False) 
     for idx, value in enumerate(num_zeroes):
@@ -24,25 +26,26 @@ def check_num_obs(X, year):
         return []
     
 def generate_coeficients() -> pd.DataFrame:
+    dc = DataCatalogue()
     df = get_data()
-    dont_encode = ['nchild', 'active', 'MEMS7_ALL', 'year']
-    discrete_variables = [c for c in df.columns if c not in dont_encode]
+    discrete_variables = dc.get_to_be_encoded_vars()
     reference_categories = [f'{c}_{df[c].value_counts().index[0]}' for c in discrete_variables]
-    encoder = OneHotEncoder(drop='first', handle_unknown = 'ignore', sparse_output = False).set_output(transform='pandas')
+    encoder = OneHotEncoder(drop='first', handle_unknown = 'ignore', sparse_output = False).set_output(transform = 'pandas')
     encoded = encoder.fit_transform(df[discrete_variables])
-    df_encoded = pd.concat([df, encoded], axis=1).drop(columns=discrete_variables+['MEMS7_ALL']) # dropped gender= other as coef=0
+    df_encoded = pd.concat([df, encoded], axis = 1).drop(columns = discrete_variables)
     all_years = []
     for year in sorted(df_encoded['year'].unique()):
         df_encoded_sy = df_encoded[df_encoded['year'] == year]
         df_encoded_sy = df_encoded_sy.drop(columns=['year'])
         Y = df_encoded_sy['active']
-        X = df_encoded_sy.drop(columns=['active'])
+        X = df_encoded_sy.drop(columns=dc.get_target_vars())
         scaler = StandardScaler()
-        continuous_cols = ['nchild']
+        continuous_cols = dc.get_continuous_vars(with_targets = False)
         X[continuous_cols] = scaler.fit_transform(X[continuous_cols])
-        no_obs = check_num_obs(X, year)
+        no_obs = check_empty_dummies(X, year)
         if len(no_obs) > 0:
             X = X.drop(columns = no_obs)
+        print(f'Columns into Model:\n>>> Y = {Y.name}\n>>> X = {X.columns}')
         logistic = sm.Logit(Y, X)
         output = logistic.fit()
         logistic_results = pd.DataFrame({
@@ -61,4 +64,4 @@ def generate_coeficients() -> pd.DataFrame:
     print(f'Saved Logistic Coefficient Results to\n:>>>{save_path}')
     return 'done'
 
-# generate_coeficients()
+generate_coeficients()
