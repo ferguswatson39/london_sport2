@@ -1,5 +1,4 @@
-
-data_dict = {
+unclean_data_dict = {
     # Demographic Features
     'Gend3': {
         'type' : 'categorical',
