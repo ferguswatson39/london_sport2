@@ -11,7 +11,7 @@ from sklearn.preprocessing import OneHotEncoder
 from src.loading_data.data_catalogue import DataCatalogue
 from src.stream_2.check_empty_dummies import check_empty_dummies
 
-def generate_coeficients() -> pd.DataFrame:
+def generate_reg_coef() -> pd.DataFrame:
     dc = DataCatalogue()
     df = get_data()
     discrete_variables = dc.get_to_be_encoded_vars()
@@ -49,5 +49,3 @@ def generate_coeficients() -> pd.DataFrame:
     all.to_csv(save_path / 'logistic_coef_results.csv', index=False)
     print(f'Saved Logistic Coefficient Results to\n:>>>{save_path}')
     return 'done'
-
-generate_coeficients()
