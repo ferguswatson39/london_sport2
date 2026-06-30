@@ -15,7 +15,7 @@ def generate_reg_coef() -> pd.DataFrame:
     dc = DataCatalogue()
     df = get_data()
     discrete_variables = dc.get_to_be_encoded_vars()
-    reference_categories = [f'{c}_{df[c].value_counts().index[0]}' for c in discrete_variables]
+    # reference_categories = [f'{c}_{df[c].value_counts().index[0]}' for c in discrete_variables]
     encoder = OneHotEncoder(drop='first', handle_unknown = 'ignore', sparse_output = False).set_output(transform = 'pandas')
     encoded = encoder.fit_transform(df[discrete_variables])
     df_encoded = pd.concat([df, encoded], axis = 1).drop(columns = discrete_variables)
@@ -23,7 +23,7 @@ def generate_reg_coef() -> pd.DataFrame:
     for year in sorted(df_encoded['year'].unique()):
         df_encoded_sy = df_encoded[df_encoded['year'] == year]
         df_encoded_sy = df_encoded_sy.drop(columns=['year'])
-        Y = df_encoded_sy['active']
+        Y = df_encoded_sy['MEMS7_ALL']
         X = df_encoded_sy.drop(columns=dc.get_target_vars())
         scaler = StandardScaler()
         continuous_cols = dc.get_continuous_vars(with_targets = False)

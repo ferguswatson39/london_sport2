@@ -49,6 +49,14 @@ data_dict = {
         'graph_label' : 'Minutes of Moderate Activity Per Week',
         'value_labels' : None
         },
+    'LOG_MEMS7_ALL' : {
+        'type' : 'continuous',
+        'demographic' : False,
+        'dummy_encode' : False,
+        'target' : True,
+        'graph_label' : 'Log Minutes of Moderate Activity Per Week',
+        'value_labels' : None
+        },
     'active' : {
         'type' : 'categorical',
         'demographic' : False,
