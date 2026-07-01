@@ -6,7 +6,7 @@ ROOT = Path(__file__).resolve().parent.parent.parent
 sys.path.append(str(ROOT))
 import matplotlib.pyplot as plt
 
-save_path = Path(ROOT / 'figures' / 'logistic_plot3.png')
+save_path = Path(ROOT / 'figures' / 'logistic_plot4.png')
 data_path = Path(ROOT / 'data' / 'logistic_coefficients' / 'logistic_coef_results.csv')
 df = pd.read_csv(data_path)
 df = df[df['feature_names'] != 'const']

@@ -42,8 +42,7 @@ def generate_coeficients() -> pd.DataFrame:
             'confidence_lower' : np.exp(output.conf_int()[0].values),
             'confidence_upper' : np.exp(output.conf_int()[1].values),
             'std_error' : output.bse.values,
-            'rsquared' : output.rsquared,
-            'adj_rsquared' : output.rsquared_adj,
+            'pseudo_rsquared' : output.prsquared,
             'year' : year 
         })
         all_years.append(logistic_results)
@@ -53,4 +52,4 @@ def generate_coeficients() -> pd.DataFrame:
     print(f'Saved Logistic Coefficient Results to\n:>>>{save_path}')
     return 'done'
 
-# generate_coeficients()
+generate_coeficients()
