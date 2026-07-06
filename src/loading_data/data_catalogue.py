@@ -69,6 +69,7 @@ class DataCatalogue:
             if self.data_dict[key]['geographic'] == True:
                 vars.append(key)
         return vars
+    
     def get_cluster_vars(self) -> list:
         vars = []
         for key, value in self.data_dict.items():
