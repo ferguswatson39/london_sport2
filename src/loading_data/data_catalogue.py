@@ -62,6 +62,11 @@ class DataCatalogue:
             if self.data_dict[key]['target'] == True:
                 targets.append(key)
         return targets
-
     
-
+    def get_geographic_vars(self) -> list:
+        vars = []
+        for key, value in self.data_dict.items():
+            if self.data_dict[key]['geographic'] == True:
+                vars.append(key)
+        return vars
+    
