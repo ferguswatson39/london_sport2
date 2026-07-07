@@ -41,4 +41,6 @@ if __name__ == "__main__":
     g.set(xlabel = 'Year', ylabel = 'Avg Sport Participation')
     g.set_xticklabels([])
     g.set_yticklabels([])
+    plt.savefig('src/stream_1/figures/Average Participation Boroughs', bbox_inches = 'tight')
     plt.show()
+    

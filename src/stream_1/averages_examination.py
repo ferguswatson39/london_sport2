@@ -56,5 +56,6 @@ for borough in borough_df['LA_Name'].unique():
         ax3.plot(national['year'], national['MEMS7_ALL'], linestyle = 'dashed', color = 'black', linewidth = 3, zorder = 5)
         ax3.set_xticklabels(national['year'], rotation = 45, ha = 'right')
         ax3.set_aspect(0.022) 
-        ax3.set_title('Fluctuating', weight = 'bold', fontsize = 15, color = "#EABA8A")   
+        ax3.set_title('Fluctuating', weight = 'bold', fontsize = 15, color = "#EABA8A") 
+plt.savefig('src/stream_1//figures/National Comparison', bbox_inches = 'tight')
 plt.show()
