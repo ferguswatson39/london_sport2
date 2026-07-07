@@ -4,15 +4,21 @@ import seaborn as sns
 import sys
 ROOT = Path(__file__).resolve().parent.parent.parent
 sys.path.append(str(ROOT))
-from src.loading_data.load_data import get_borough_data
+from src.loading_data.load_data import get_geographic_data
 
 def prepare_borough_data():
-    borough_df = get_borough_data()
+    borough_df = get_geographic_data()
     borough_df = borough_df.groupby(['LA_2023', 'LA_Name', 'year'])['MEMS7_ALL'].mean()
     borough_df = borough_df.reset_index()
     borough_df['LA_Name'] = borough_df['LA_Name'].replace({'Kingston upon Thames': 'Kingston', 'Richmond upon Thames': 'Richmond'})
     borough_df = borough_df[borough_df['LA_2023'] != 59.0] # Removing City of London (COVID Outliers)
     return borough_df
+
+def prepare_national_data():
+    national_df = get_geographic_data()
+    national_df = national_df.groupby('year')['MEMS7_ALL'].mean()
+    national_df = national_df.reset_index()
+    return national_df
 
 # Initial Visualisation
 if __name__ == "__main__":

@@ -25,7 +25,7 @@ def get_data() -> pd.DataFrame:
     print(f'>>> Shape {df.shape}')
     return df
 
-def get_borough_data() -> pd.DataFrame:
+def get_geographic_data() -> pd.DataFrame:
     dc = DataCatalogue()
     geographic = dc.get_geographic_vars()
     targets = dc.get_target_vars()
