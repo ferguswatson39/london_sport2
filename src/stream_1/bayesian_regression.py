@@ -25,3 +25,53 @@ def bayesian_ridge_forecast_borough(included_years : list, forecast_years: list,
             output.append({'borough': borough, 'year' : year, 'participation' : participation, 'error' : error})
     return pd.DataFrame(output)
 
+# Forecast Visualisation
+if __name__ == "__main__":
+    INCLUDED_YEARS =  [2016, 2017, 2018, 2019, 2020, 2021, 2022]
+    FORECAST_YEARS = [2023, 2024, 2025, 2026]
+    full_df = bayesian_ridge_forecast_borough(INCLUDED_YEARS, FORECAST_YEARS, target_col = 'MEMS7_ALL')
+    colours = ['#808080'] * len(INCLUDED_YEARS) + ['#00BFFF'] * len(FORECAST_YEARS)
+    g = sns.relplot(kind = 'scatter', 
+                    data = full_df, 
+                    x = 'year', 
+                    y = 'participation', 
+                    col = 'borough', 
+                    col_wrap = 8,
+                    height = 2, 
+                    aspect = 1.4,
+                    s = 50,
+                    palette = 'RdYlGn',
+                    hue = 'participation',
+                    legend = False,
+                    edgecolors = colours, 
+                    linewidth = 1,
+                    zorder = 2)
+    
+    for borough, ax in g.axes_dict.items():
+        borough_df = full_df[full_df['borough'] == borough]
+        # Add regression line
+        sns.regplot(data = borough_df, 
+                    x = 'year', 
+                    y = 'participation',
+                    ax = ax,
+                    scatter = False,
+                    ci = None,
+                    color = '#00BFFF',
+                    line_kws = {'alpha': 0.3, 'zorder': 0})
+        # Add erorr bars to forecast datapoints
+        forecast_df = borough_df[borough_df['year'].isin(FORECAST_YEARS)]
+        ax.errorbar(x = forecast_df['year'],
+                    y = forecast_df['participation'],
+                    yerr = forecast_df['error'],
+                    alpha = 0.2,
+                    fmt='none',
+                    color = '#00BFFF', 
+                    zorder = 1,
+                    capsize = 3)
+        
+    g.set_titles('{col_name}', weight = 'bold')
+    g.set(xlabel = 'Year', ylabel = 'Avg Sport Participation')
+    g.set_xticklabels([])
+    g.set_yticklabels([])
+    plt.savefig('src/stream_1/figures/Borough Forecast with Uncertainy', bbox_inches = 'tight')
+    plt.show()
