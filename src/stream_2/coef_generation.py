@@ -10,6 +10,8 @@ import statsmodels.api as sm
 from sklearn.preprocessing import StandardScaler
 from sklearn.preprocessing import OneHotEncoder
 from src.loading_data.data_catalogue import DataCatalogue
+from models.stream_2.bayesian_ridge import Bayesian
+from models.stream_2.exponential_smoothing import ExponentialSmoothingModels
 
 class CoefGeneration:
     def __init__(self, model: str, df : pd.DataFrame):
@@ -25,7 +27,9 @@ class CoefGeneration:
                 'plot_title' : 'Odds ratio of participating in >150 minutes of PA per week, 2016-2023',
                 'main_var' : 'odds_ratios', 
                 'fig_save_path' : Path(ROOT / 'figures' / 'logistic_coef_plot.png'),
-                'fig_save_path_trends' : Path(ROOT / 'figures' / 'logistic_coef_trend_plot.png')},
+                'fig_save_path_trends' : Path(ROOT / 'figures' / 'logistic_coef_trend_plot.png'),
+                'forecast_file_name' : 'logistic_forecast_results.csv'},
+
             'ols' : {
                 'fit_model' : self.fit_ols,
                 'target' : 'LOG_MEMS7_ALL',
@@ -35,7 +39,15 @@ class CoefGeneration:
                 'plot_title' : 'Percentage change in MEMS, for a one unit change in the predictor, 2016-2023',
                 'main_var' : 'coef_as_percent',
                 'fig_save_path' : Path(ROOT / 'figures' / 'ols_coef_plot.png'),
-                'fig_save_path_trends' : Path(ROOT / 'figures' / 'ols_coef_trend_plot.png')}
+                'fig_save_path_trends' : Path(ROOT / 'figures' / 'ols_coef_trend_plot.png'),
+                'forecast_file_name' : 'ols_forecast_results.csv'}
+        }
+
+        self.forecast_models = {
+            'bayesian_ridge' : Bayesian('ridge'),
+            'simple_exp' : ExponentialSmoothingModels('simple_exp'),
+            'exp' : ExponentialSmoothingModels('exp'),
+            'holt' : ExponentialSmoothingModels('holt')
         }
         if self.model not in ['logistic', 'ols']:
             raise KeyError(f"{self.model} not in ['logistic', 'ols'] ")
@@ -153,20 +165,34 @@ class CoefGeneration:
             axes[idx].text(2, 2.5, name, weight='bold')
         fig.savefig(self.model_catalogue[self.model]['fig_save_path_trends'])
         print(f"Coef trend plots generated successfully for {self.model}.\nFigure saved to {self.model_catalogue[self.model]['fig_save_path_trends']}")
+    
+    def generate_forecasts(self):
+        df = pd.read_csv(self.model_catalogue[self.model]['save_path'] / self.model_catalogue[self.model]['file_name'])
+        df = df[df['feature_names'] != 'const']
+        names = list(sorted(df['feature_names'].unique()))
+        dfs = []
+        for n in names:
+            new = df[df['feature_names'] == n]
+            data = new[self.model_catalogue[self.model]['main_var']].values
+            for key, model in self.forecast_models.items():
+                if key == 'bayesian_ridge':
+                    preds, std = model.estimate(data, len(data))
+                    std = np.concatenate((np.zeros(len(data)), std)) 
+                else:
+                    preds = model.estimate(data, len(data))
+                    std = 0
+                full = np.concatenate((data, preds))
+                is_pred = [False if i < len(data) else True for i in range(len(full))]
+                another_df = pd.DataFrame({
+                    'feature_names' : n,
+                    'values' : full,
+                    'is_pred': is_pred,
+                    'model_name' : key,
+                    'std' : std
+                })
+                dfs.append(another_df)
+        combined = pd.concat(dfs, ignore_index=True)
+        combined.to_csv(self.model_catalogue[self.model]['save_path'] / self.model_catalogue[self.model]['forecast_file_name'], index=False)
+        print(f'Forecasts completed successfully for {self.model} coefficients')
+        print(f'Data saved to {self.model_catalogue[self.model]['save_path'] / self.model_catalogue[self.model]['forecast_file_name']}')
 
-
-df = get_data()
-coefGenOLS = CoefGeneration(model = 'ols', df = df)
-coefGenLog = CoefGeneration(model = 'logistic', df = df)
-
-# OLS
-ols_coefs = coefGenOLS.generate_coefs()
-coefGenOLS.save_results(ols_coefs)
-coefGenOLS.generate_forest_plot()
-coefGenOLS.generate_coef_trend_plot()
-
-#Logistic
-log_coefs = coefGenLog.generate_coefs()
-coefGenLog.save_results(log_coefs)
-coefGenLog.generate_forest_plot()
-coefGenLog.generate_coef_trend_plot()
