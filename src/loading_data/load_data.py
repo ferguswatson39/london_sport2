@@ -9,7 +9,7 @@ from src.loading_data.data_catalogue import DataCatalogue
 def get_data() -> pd.DataFrame:
     dc = DataCatalogue()
     vars = dc.get_vars()
-    df_path = Path(ROOT / 'exploration' / 'data' / 'master_data' / '2015_to_2023_full_preprocessed_data_set.csv.gz')
+    df_path = Path(ROOT / 'data' / 'master_data' / '2016_to_2023_full_preprocessed_data_set.csv.gz')
     df = pd.read_csv(df_path)
     df['VolAny'] = df['VolAny'].fillna(0.0) # Assumes that any respondent who did not fill voluneering question did not volunteer
     df['active'] = df['MEMS7_ALL'] >= 150

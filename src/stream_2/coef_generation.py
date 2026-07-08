@@ -38,7 +38,7 @@ class CoefGeneration:
                 'fig_save_path_trends' : Path(ROOT / 'figures' / 'ols_coef_trend_plot.png')}
         }
         if self.model not in ['logistic', 'ols']:
-            raise ValueError(f"{self.model} not in ['logistic', 'ols'] ")
+            raise KeyError(f"{self.model} not in ['logistic', 'ols'] ")
     def fit_logistic(self, Y, X):
         return sm.Logit(Y, X).fit()
     def fit_ols(self, Y, X):
@@ -52,7 +52,7 @@ class CoefGeneration:
             if value == 1.0:
                 no_obs.append(num_zeroes.index[idx])
         if len(no_obs) > 0:
-            print(f'Year: {year}. No observations detected!:')
+            print(f'Year: {year}. No observations detected for:')
             print(no_obs)
             return no_obs
         else:
@@ -102,15 +102,16 @@ class CoefGeneration:
             no_obs = self.check_empty_dummies(X, year)
             if len(no_obs) > 0:
                 X = X.drop(columns = no_obs)
-            print(f'Columns into Model:\n>>> Y = {Y.name}\n>>> X = {X.columns}')
+            # print(f'Columns into Model:\n>>> Y = {Y.name}\n>>> X = {X.columns}')
             output = self.model_catalogue[self.model]['fit_model'](Y, X)
             all_years.append(self.build_csv(self.model, output, year))
         all = pd.concat(all_years)
+        print(f'Coefs generated successfully for: {self.model}')
         return all
     
     def save_results(self, results):
         results.to_csv(self.model_catalogue[self.model]['save_path'] / self.model_catalogue[self.model]['file_name'], index=False )
-        print(f"Results Saved to: {self.model_catalogue[self.model]['save_path'] / self.model_catalogue[self.model]['file_name']}")
+        print(f"Results for {self.model} saved successfully to: {self.model_catalogue[self.model]['save_path'] / self.model_catalogue[self.model]['file_name']}")
 
     def generate_forest_plot(self):
         df = pd.read_csv(self.model_catalogue[self.model]['save_path'] / self.model_catalogue[self.model]['file_name'])
@@ -133,24 +134,39 @@ class CoefGeneration:
             ax.set_title(self.model_catalogue[self.model]['plot_title'])
             ax.axvline(x=line, linestyle='--')
         fig.savefig(self.model_catalogue[self.model]['fig_save_path'])
-        print(f"Done. Figure saved to {self.model_catalogue[self.model]['fig_save_path']}")
+        print(f"Coef forest plot generated successfully for {self.model}.\nFigure saved to {self.model_catalogue[self.model]['fig_save_path']}")
 
     def generate_coef_trend_plot(self):
         df = pd.read_csv(self.model_catalogue[self.model]['save_path'] / self.model_catalogue[self.model]['file_name'])
         df = df[df['feature_names'] != 'const']
-        fig, axes = plt.subplots(9,6 , figsize=(20,3*10), sharey=True)
+        fig, axes = plt.subplots(9,6, figsize=(20,3*10), sharey=True)
         axes = axes.flatten()
         for idx, name in enumerate(sorted(list(df['feature_names'].unique()))):
-            trend_colour = ''
+            trend_colour = 'red'
             new = df[df['feature_names'] == name]
-            coef = np.polyfit(np.arange(len(new['year'])), new['odds_ratios'], deg=1)
+            coef = np.polyfit(np.arange(len(new['year'])), new[self.model_catalogue[self.model]['main_var']], deg=1)
             trend = np.poly1d(coef)
             if coef[0] > 0:
                 trend_colour = 'green'
-            else:
-                trend_colour = 'red'
-            axes[idx].plot(new['year'], new['odds_ratios'], marker='o')
+            axes[idx].plot(new['year'], new[self.model_catalogue[self.model]['main_var']], marker='o')
             axes[idx].plot(new['year'], trend(np.arange(len(new['year']))), c=trend_colour)
             axes[idx].text(2, 2.5, name, weight='bold')
         fig.savefig(self.model_catalogue[self.model]['fig_save_path_trends'])
-        print(f"Done. Figure saved to {self.model_catalogue[self.model]['fig_save_path_trends']}")
+        print(f"Coef trend plots generated successfully for {self.model}.\nFigure saved to {self.model_catalogue[self.model]['fig_save_path_trends']}")
+
+
+df = get_data()
+coefGenOLS = CoefGeneration(model = 'ols', df = df)
+coefGenLog = CoefGeneration(model = 'logistic', df = df)
+
+# OLS
+ols_coefs = coefGenOLS.generate_coefs()
+coefGenOLS.save_results(ols_coefs)
+coefGenOLS.generate_forest_plot()
+coefGenOLS.generate_coef_trend_plot()
+
+#Logistic
+log_coefs = coefGenLog.generate_coefs()
+coefGenLog.save_results(log_coefs)
+coefGenLog.generate_forest_plot()
+coefGenLog.generate_coef_trend_plot()
