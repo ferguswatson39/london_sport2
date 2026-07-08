@@ -24,7 +24,8 @@ class CoefGeneration:
                 'plot_values' : ['odds_ratios', 'pvalues', 'confidence_lower', 'confidence_upper', 'std_error'],
                 'plot_title' : 'Odds ratio of participating in >150 minutes of PA per week, 2016-2023',
                 'main_var' : 'odds_ratios', 
-                'fig_save_path' : Path(ROOT / 'figures' / 'logistic_coef_plot.png')},
+                'fig_save_path' : Path(ROOT / 'figures' / 'logistic_coef_plot.png'),
+                'fig_save_path_trends' : Path(ROOT / 'figures' / 'logistic_coef_trend_plot.png')},
             'ols' : {
                 'fit_model' : self.fit_ols,
                 'target' : 'LOG_MEMS7_ALL',
@@ -33,8 +34,11 @@ class CoefGeneration:
                 'plot_values' : ['coef_as_percent', 'pvalues', 'confidence_lower', 'confidence_upper', 'std_error'],
                 'plot_title' : 'Percentage change in MEMS, for a one unit change in the predictor, 2016-2023',
                 'main_var' : 'coef_as_percent',
-                'fig_save_path' : Path(ROOT / 'figures' / 'ols_coef_plot.png')}
+                'fig_save_path' : Path(ROOT / 'figures' / 'ols_coef_plot.png'),
+                'fig_save_path_trends' : Path(ROOT / 'figures' / 'ols_coef_trend_plot.png')}
         }
+        if self.model not in ['logistic', 'ols']:
+            raise ValueError(f"{self.model} not in ['logistic', 'ols'] ")
     def fit_logistic(self, Y, X):
         return sm.Logit(Y, X).fit()
     def fit_ols(self, Y, X):
@@ -108,7 +112,7 @@ class CoefGeneration:
         results.to_csv(self.model_catalogue[self.model]['save_path'] / self.model_catalogue[self.model]['file_name'], index=False )
         print(f"Results Saved to: {self.model_catalogue[self.model]['save_path'] / self.model_catalogue[self.model]['file_name']}")
 
-    def generate_plot(self):
+    def generate_forest_plot(self):
         df = pd.read_csv(self.model_catalogue[self.model]['save_path'] / self.model_catalogue[self.model]['file_name'])
         df = df[df['feature_names'] != 'const']
         pivoted = df.pivot(
@@ -130,3 +134,15 @@ class CoefGeneration:
             ax.axvline(x=line, linestyle='--')
         fig.savefig(self.model_catalogue[self.model]['fig_save_path'])
         print(f"Done. Figure saved to {self.model_catalogue[self.model]['fig_save_path']}")
+
+    def generate_coef_trend_plot(self):
+        df = pd.read_csv(self.model_catalogue[self.model]['save_path'] / self.model_catalogue[self.model]['file_name'])
+        df = df[df['feature_names'] != 'const']
+        fig, axes = plt.subplots(9,6 , figsize=(20,3*10), sharey=True)
+        axes = axes.flatten()
+        for idx, name in enumerate(sorted(list(df['feature_names'].unique()))):
+            new = df[df['feature_names'] == name]
+            axes[idx].plot(new['year'], new['odds_ratios'], marker='o')
+            axes[idx].text(2, 2.5, name, weight='bold')
+        fig.savefig(self.model_catalogue[self.model]['fig_save_path_trends'])
+        print(f"Done. Figure saved to {self.model_catalogue[self.model]['fig_save_path_trends']}")
