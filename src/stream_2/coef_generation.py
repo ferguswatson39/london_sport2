@@ -141,8 +141,16 @@ class CoefGeneration:
         fig, axes = plt.subplots(9,6 , figsize=(20,3*10), sharey=True)
         axes = axes.flatten()
         for idx, name in enumerate(sorted(list(df['feature_names'].unique()))):
+            trend_colour = ''
             new = df[df['feature_names'] == name]
+            coef = np.polyfit(np.arange(len(new['year'])), new['odds_ratios'], deg=1)
+            trend = np.poly1d(coef)
+            if coef[0] > 0:
+                trend_colour = 'green'
+            else:
+                trend_colour = 'red'
             axes[idx].plot(new['year'], new['odds_ratios'], marker='o')
+            axes[idx].plot(new['year'], trend(np.arange(len(new['year']))), c=trend_colour)
             axes[idx].text(2, 2.5, name, weight='bold')
         fig.savefig(self.model_catalogue[self.model]['fig_save_path_trends'])
         print(f"Done. Figure saved to {self.model_catalogue[self.model]['fig_save_path_trends']}")
