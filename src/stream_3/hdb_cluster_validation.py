@@ -2,6 +2,7 @@ import hdbscan
 from tqdm import tqdm
 import pandas as pd
 import numpy as np
+# Adapted From: https://towardsdatascience.com/tuning-with-hdbscan-149865ac2970/
 
 def hdb_dbcv(
         emb : np.ndarray,

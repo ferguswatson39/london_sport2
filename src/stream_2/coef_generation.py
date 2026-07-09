@@ -28,7 +28,8 @@ class CoefGeneration:
                 'main_var' : 'odds_ratios', 
                 'fig_save_path' : Path(ROOT / 'figures' / 'logistic_coef_plot.png'),
                 'fig_save_path_trends' : Path(ROOT / 'figures' / 'logistic_coef_trend_plot.png'),
-                'forecast_file_name' : 'logistic_forecast_results.csv'},
+                'forecast_file_name' : 'logistic_forecast_results.csv',
+                'forecast_plot_path' : Path(ROOT / 'figures' / 'logistic_forecasts')},
 
             'ols' : {
                 'fit_model' : self.fit_ols,
@@ -40,7 +41,8 @@ class CoefGeneration:
                 'main_var' : 'coef_as_percent',
                 'fig_save_path' : Path(ROOT / 'figures' / 'ols_coef_plot.png'),
                 'fig_save_path_trends' : Path(ROOT / 'figures' / 'ols_coef_trend_plot.png'),
-                'forecast_file_name' : 'ols_forecast_results.csv'}
+                'forecast_file_name' : 'ols_forecast_results.csv',
+                'forecast_plot_path' : Path(ROOT / 'figures' / 'ols_forecasts')}
         }
 
         self.forecast_models = {
@@ -195,4 +197,35 @@ class CoefGeneration:
         combined.to_csv(self.model_catalogue[self.model]['save_path'] / self.model_catalogue[self.model]['forecast_file_name'], index=False)
         print(f'Forecasts completed successfully for {self.model} coefficients')
         print(f'Data saved to {self.model_catalogue[self.model]['save_path'] / self.model_catalogue[self.model]['forecast_file_name']}')
+    
+    def generate_full_forecast_plots(self):
+        df = pd.read_csv(self.model_catalogue[self.model]['save_path'] / self.model_catalogue[self.model]['forecast_file_name'])
+        models = list(sorted(df['model_name'].unique()))
+        names = list(sorted(df['feature_names'].unique()))
+        for model in models:
+            df_m = df[df['model_name'] == model]
+            fig, axes = plt.subplots(9,6, figsize=(20,3*10), sharey=True)
+            axes = axes.flatten()
+            for idx, name in enumerate(names):
+                df_n = df_m[df_m['feature_names'] == name]
+                actuals = df_n[df_n['is_pred'] == False]
+                preds = df_n[df_n['is_pred'] == True]
+                colour = 'red'
+                if preds['values'].values[0] < preds['values'].values[-1]:
+                    colour = 'green'
+                actual_len = np.arange(len(actuals))
+                pred_len = np.arange(len(actuals), len(actuals) + len(preds))
+                axes[idx].plot(actual_len, actuals['values'], c='black', marker='o')
+                axes[idx].plot(pred_len, preds['values'], c=colour, marker='o')
+                axes[idx].text(2, 2.5, name, weight='bold')
+            fig.savefig(self.model_catalogue[self.model]['forecast_plot_path'] / f'{self.model}_{model}_forecasts.png')
+            print(f'Forecast plot for {model} saved successfully to:')
+            print(f"{self.model_catalogue[self.model]['forecast_plot_path'] / f'{self.model}_{model}_forecasts.png'}")
+        print(f'Forecast plots for {models} finished.')
 
+
+df = get_data()
+OLS = CoefGeneration('ols', df)
+LOGISTIC = CoefGeneration('logistic', df)
+OLS.generate_full_forecast_plots()
+LOGISTIC.generate_full_forecast_plots()
