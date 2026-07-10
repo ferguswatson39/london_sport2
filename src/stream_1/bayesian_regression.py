@@ -20,9 +20,10 @@ def bayesian_ridge_forecast_borough(included_years : list, forecast_years: list,
         Y_forecast, E_forecast = model.predict(X_forecast, return_std = True)    
         years_full = included_years + forecast_years
         participation_full = np.concat((Y_train, Y_forecast))
+        predicted_full = model.predict(np.concat((X_train, X_forecast))) 
         error_full = np.concat((np.zeros(len(Y_train)), E_forecast))
-        for year, participation, error in zip(years_full, participation_full, error_full):
-            output.append({'borough': borough, 'year' : year, 'participation' : participation, 'error' : error})
+        for year, participation, error, predicted in zip(years_full, participation_full, error_full, predicted_full):
+            output.append({'borough': borough, 'year' : year, 'participation' : participation, 'error' : error, 'predicted' : predicted})
     return pd.DataFrame(output)
 
 # Forecast Visualisation
@@ -52,12 +53,13 @@ if __name__ == "__main__":
         # Add regression line
         sns.regplot(data = borough_df, 
                     x = 'year', 
-                    y = 'participation',
+                    y = 'predicted',
                     ax = ax,
                     scatter = False,
                     ci = None,
                     color = '#00BFFF',
                     line_kws = {'alpha': 0.3, 'zorder': 0})
+        
         # Add erorr bars to forecast datapoints
         forecast_df = borough_df[borough_df['year'].isin(FORECAST_YEARS)]
         ax.errorbar(x = forecast_df['year'],
