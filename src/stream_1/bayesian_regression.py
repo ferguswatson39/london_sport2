@@ -62,7 +62,7 @@ if __name__ == "__main__":
         forecast_df = borough_df[borough_df['year'].isin(FORECAST_YEARS)]
         ax.errorbar(x = forecast_df['year'],
                     y = forecast_df['participation'],
-                    yerr = forecast_df['error'],
+                    yerr = forecast_df['error'] * 2,
                     alpha = 0.2,
                     fmt='none',
                     color = '#00BFFF', 
