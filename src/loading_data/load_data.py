@@ -40,3 +40,4 @@ def get_geographic_data() -> pd.DataFrame:
     print(f'>>> Columns:\n{df.columns}')
     print(f'>>> Shape {df.shape}')
     return df
+
