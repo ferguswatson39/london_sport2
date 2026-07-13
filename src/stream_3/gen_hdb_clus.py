@@ -9,17 +9,13 @@ from tqdm import tqdm
 import gower
 
 class GenerateHBDSCAN:
-    def __init__(self, df : pd.DataFrame, categorical_cols : list[str]):
-        self.df = df
-        self.categorical_cols = categorical_cols
-        self.gower = self.get_gower()
-
-    def get_gower(self):
-        cat_bool_mask = np.array([True if c in self.categorical_cols else False for c in self.df.columns])
-        gower_matrix = gower.gower_matrix(self.df, cat_features = cat_bool_mask)
-        for idx, value in enumerate(self.df.columns):
-            print(f'{idx} | {cat_bool_mask[idx]} | {value}')
-        return gower_matrix
+    """
+    HDBSCAN Class.
+    Requires data to be input in the form of a gower matrix
+    Can change to euclidean but would need to change metric
+    """
+    def __init__(self, emb : np.ndarray):
+        self.emb = emb
 
     def hdb(self):
         optimal_hp = self.hdb_dbcv()
@@ -28,7 +24,7 @@ class GenerateHBDSCAN:
             min_cluster_size = optimal_hp['min_cluster_size'],
             cluster_selection_method = optimal_hp['cluster_selection_method'],
             metric = 'precomputed'
-            ).fit(self.gower)
+            ).fit(self.emb)
         return clusters.labels_
 
     def hdb_dbcv(
@@ -55,7 +51,7 @@ class GenerateHBDSCAN:
                         cluster_selection_method = cluster_selection,
                         metric = 'precomputed',
                         gen_min_span_tree = True
-                    ).fit(self.gower)
+                    ).fit(self.emb)
                     num_clusters = len(set(hdb.labels_))
                     unclustered_prop = len([c for c in hdb.labels_ if c == -1])/len(hdb.labels_)
                     dbcv = hdb.relative_validity_
