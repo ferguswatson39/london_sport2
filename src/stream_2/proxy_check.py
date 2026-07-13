@@ -31,4 +31,4 @@ def proxy_suitability():
     plt.savefig(save_path)
     print(f'Figure saved to: {save_path}')
     plt.show()
-proxy_suitability()
+# proxy_suitability()
