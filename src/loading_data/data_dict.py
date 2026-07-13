@@ -3,6 +3,7 @@ data_dict = {
     'Gend3': {
         'type' : 'categorical',
         'demographic' : True,
+        'geographic' : False,
         'dummy_encode' : True,
         'target' : False,
         'graph_label' : 'Gender',
@@ -11,6 +12,7 @@ data_dict = {
     'Disab3' : {
         'type' : 'categorical',
         'demographic' : True,
+        'geographic' : False,
         'dummy_encode' : True, 
         'target' : False,
         'graph_label' : 'Disability Status',
@@ -19,6 +21,7 @@ data_dict = {
     'Age9' : {
         'type' : 'ordinal',
         'demographic' : True,
+        'geographic' : False,
         'dummy_encode' : True,
         'target' : False,
         'graph_label' : 'Age',
@@ -27,6 +30,7 @@ data_dict = {
     'Eth7' : {
         'type' : 'categorical',
         'demographic' : True,
+        'geographic' : False,
         'dummy_encode' : True,
         'target' : False,
         'graph_label' : 'Ethnicity',
@@ -35,6 +39,7 @@ data_dict = {
     'NSSEC5' : {
         'type' : 'ordinal',
         'demographic' : True,
+        'geographic' : False,
         'dummy_encode' : False,
         'target' : False,
         'graph_label' : 'NSSEC',
@@ -44,6 +49,7 @@ data_dict = {
     'MEMS7_ALL' : {
         'type' : 'continuous',
         'demographic' : False,
+        'geographic' : False,
         'dummy_encode' : False,
         'target' : True,
         'graph_label' : 'Minutes of Moderate Activity Per Week',
@@ -52,6 +58,7 @@ data_dict = {
     'LOG_MEMS7_ALL' : {
         'type' : 'continuous',
         'demographic' : False,
+        'geographic' : False,
         'dummy_encode' : False,
         'target' : True,
         'graph_label' : 'Log Minutes of Moderate Activity Per Week',
@@ -60,6 +67,7 @@ data_dict = {
     'active' : {
         'type' : 'categorical',
         'demographic' : False,
+        'geographic' : False,
         'dummy_encode' : False,
         'target' : True,
         'graph_label' : 'Active Status',
@@ -70,6 +78,7 @@ data_dict = {
     'Educ6' : {
         'type' : 'ordinal',
         'demographic' : False,
+        'geographic' : False,
         'dummy_encode' : False,
         'target' : False,
         'graph_label' : 'Highest Qualification',
@@ -79,6 +88,7 @@ data_dict = {
     'IMD10' : {
         'type' : 'ordinal',
         'demographic' : False,
+        'geographic' : False,
         'dummy_encode' : True,
         'target' : False,
         'graph_label' : 'IMD',
@@ -87,6 +97,7 @@ data_dict = {
     'nchild' : {
         'type' : 'continuous',
         'demographic' : False,
+        'geographic' : False,
         'dummy_encode' : False,
         'target' : False,
         'graph_label' : 'Num Children in Household',
@@ -95,6 +106,7 @@ data_dict = {
     'nadult' : {
         'type' : 'continuous',
         'demographic' : False,
+        'geographic' : False,
         'dummy_encode' : False,
         'target' : False,
         'graph_label' : 'Num Adults in Household',
@@ -103,6 +115,7 @@ data_dict = {
     'WorkStat10' : {
         'type' : 'categorical',
         'demographic' : False,
+        'geographic' : False,
         'dummy_encode' : True,
         'target' : False,
         'graph_label' : 'Employment Status',
@@ -111,6 +124,7 @@ data_dict = {
     'VolAny' : {
         'type' : 'categorical',
         'demographic' : False,
+        'geographic' : False,
         'dummy_encode' : False,
         'target' : False,
         'graph_label' : 'Has Volunteered',
@@ -120,6 +134,7 @@ data_dict = {
     'Motiva_POP': {
         'type' : 'ordinal',
         'demographic' : False,
+        'geographic' : False,
         'dummy_encode' : False,
         'target' : False,
         'graph_label' : 'Exercise enjoyable and satisfying',
@@ -128,6 +143,7 @@ data_dict = {
     'motivd_POP' : { # showed massuive varaince on coefficient plot
         'type' : 'ordinal',
         'demographic' : False,
+        'geographic' : False,
         'dummy_encode' : False,
         'target' : False,
         'graph_label' : 'Exercise to prevent dissapoint from others',
@@ -137,6 +153,7 @@ data_dict = {
     'HHLiv12' : {
         'type' : 'categorical',
         'demographic' : False,
+        'geographic' : False,
         'dummy_encode' : True,
         'target' : False,
         'graph_label' : 'Living Arrangements (12)',
@@ -158,8 +175,39 @@ data_dict = {
         'type' : 'ordinal',
         'demographic' : False,
         'dummy_encode' : False,
+        'geographic' : False,
         'target' : False,
         'graph_label' : 'Year',
         'value_labels' : None
+    },
+
+    # Geographic
+    'LA_2023' : {
+        'type' : 'categorical',
+        'demographic' : False,
+        'geographic' : True,
+        'dummy_encode' : False,
+        'target' : False,
+        'graph_label' : 'LA 2023',
+        'value_labels' : {
+            114.0: 'Haringey', 126.0: 'Hillingdon', 9.0: 'Barnet', 129.0: 'Hounslow', 139.0: 'Kingston upon Thames', 
+            160.0: 'Merton', 171.0: 'Newham', 8.0: 'Barking and Dagenham', 35.0: 'Bromley', 109.0: 'Hackney', 
+            122.0: 'Havering', 201.0: 'Richmond upon Thames', 112.0: 'Hammersmith and Fulham', 142.0: 'Lambeth', 
+            241.0: 'Southwark', 293.0: 'Westminster', 17.0: 'Bexley', 44.0: 'Camden', 68.0: 'Croydon', 
+            135.0: 'Islington', 147.0: 'Lewisham', 272.0: 'Tower Hamlets', 59.0: 'City of London', 30.0: 'Brent', 
+            78.0: 'Ealing', 107.0: 'Greenwich', 117.0: 'Harrow', 196.0: 'Redbridge', 280.0: 'Wandsworth', 
+            91.0: 'Enfield', 136.0: 'Kensington and Chelsea', 255.0: 'Sutton', 279.0: 'Waltham Forest'
         }
+    },
+    'LondInOut' : {
+        'type' : 'categorical',
+        'demographic' : False,
+        'geographic' : True,
+        'dummy_encode' : False,
+        'target' : False,
+        'graph_label' : 'Inner/Outer',
+        'value_labels' : {
+            1.0: 'Outer', 2.0: 'Inner'
+        }
+    }
 }

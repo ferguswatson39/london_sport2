@@ -24,3 +24,20 @@ def get_data() -> pd.DataFrame:
     print(f'>>> Columns:\n{df.columns}')
     print(f'>>> Shape {df.shape}')
     return df
+
+def get_geographic_data() -> pd.DataFrame:
+    dc = DataCatalogue()
+    geographic = dc.get_geographic_vars()
+    targets = dc.get_target_vars()
+    df_path = Path(ROOT / 'data' / 'master_data' / '2016_to_2023_full_preprocessed_data_set.csv.gz')
+    df = pd.read_csv(df_path)
+    df['LOG_MEMS7_ALL'] = np.log1p(df['MEMS7_ALL'])
+    df['active'] = df['MEMS7_ALL'] >= 150
+    df = df[geographic + targets + ['year']]
+    df['LA_Name'] = df['LA_2023'].map(dc.get_data_dict()['LA_2023']['value_labels'])       
+    print(f'DataFrame Cleaned Successfully...')
+    print('DataFrame Information:')
+    print(f'>>> Columns:\n{df.columns}')
+    print(f'>>> Shape {df.shape}')
+    return df
+
