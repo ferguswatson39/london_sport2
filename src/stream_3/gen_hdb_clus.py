@@ -22,6 +22,7 @@ class GenerateHBDSCAN:
         return clusters.labels_
 
     def hdb_dbcv(
+        ## Adapted From: https://towardsdatascience.com/tuning-with-hdbscan-149865ac2970/
         self,
         min_samples: list[int] = [5, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100],
         min_cluster_size : list[int] = [50, 100, 150, 200, 250, 300, 350, 400, 450, 500],
