@@ -34,7 +34,7 @@ corr = check_multicolinearity()
 # sns.heatmap(corr)
 # plt.show()
 print(type(corr))
-corr = corr[corr.abs() > 0.65]
+corr = corr[corr.abs() > 0.7]
 sns.heatmap(corr)
 plt.show()
 # corr.to_csv('corr.csv')
