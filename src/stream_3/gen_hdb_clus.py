@@ -7,23 +7,24 @@ ROOT = Path(__file__).resolve().parent.parent.parent
 sys.path.append(str(ROOT))
 from tqdm import tqdm
 
-class GenerateHBDSCAN:
+class GenerateHDBSCAN:
     """
     HDBSCAN Class.
-    Uses two dimensional umap embedding on gower matrix
     """
     def __init__(self, emb : np.ndarray):
         self.emb = emb
+        self.clusterer = None
 
     def hdb(self):
         optimal_hp = self.hdb_dbcv()
-        clusters = hdbscan.HDBSCAN(
+        cluster = hdbscan.HDBSCAN(
             min_samples = optimal_hp['min_samples'],
             min_cluster_size = optimal_hp['min_cluster_size'],
             cluster_selection_method = optimal_hp['cluster_selection_method'],
             metric = optimal_hp['metric']
             ).fit(self.emb)
-        return clusters.labels_
+        self.clusterer = cluster
+        return self.get_clusterer()
 
     def hdb_dbcv(
         ## Adapted From: https://towardsdatascience.com/tuning-with-hdbscan-149865ac2970/
@@ -65,7 +66,8 @@ class GenerateHBDSCAN:
                             best['unclustered_prop'] = unclustered_prop
                             best['dbcv'] = dbcv
                         frames.append([min_sample, min_cluster, cluster_selection, m, num_clusters, unclustered_prop, dbcv])
-        print(f'Optimal HDBSCAN Hyperparameters:\n>>>{best}')
         df_output = pd.DataFrame(frames, columns = ['min_sample', 'min_cluster', 'cluster_selection','metric', 'num_clusters', 'unclustered_prop', 'dbcv'])
         print(df_output.sort_values('dbcv', ascending=False).head())
         return best
+    def get_clusterer(self):
+        return self.clusterer

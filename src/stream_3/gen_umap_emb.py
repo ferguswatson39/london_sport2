@@ -53,9 +53,9 @@ class GenerateUmapEmb:
         X_categoricals = self.dummy_encode(avail_cats)
         print(f'Categorical Shape: {X_categoricals.shape}')
         assert X_scaled_continuous.shape[0] == X_categoricals.shape[0] == len(self.df)
-        continuous = umap.UMAP(min_dist = 0.0, n_components = num_dimensions, n_neighbors = 15, metric = 'euclidean').fit(X_scaled_continuous)
+        continuous = umap.UMAP(min_dist = 0.0, n_components = num_dimensions, n_neighbors = 15, metric = 'euclidean', random_state=42).fit(X_scaled_continuous)
         print('Finished fitting continuous....')
-        categorical = umap.UMAP(min_dist = 0.0, n_components = num_dimensions, n_neighbors = 100, metric = 'dice').fit(X_categoricals)
+        categorical = umap.UMAP(min_dist = 0.0, n_components = num_dimensions, n_neighbors = 100, metric = 'dice', random_state=42).fit(X_categoricals)
         print('Finished fitting categorical....')
         intersection = continuous * categorical
         print('Finished computing intersection...')
@@ -63,13 +63,15 @@ class GenerateUmapEmb:
         self.categorical_umap = categorical
         self.intersection_umap = intersection
         print('UMAP fit complete!')
-        return intersection
+        return self.get_intersection()
 
     
     def get_categorical_umap(self):
         return self.categorical_umap
     def get_continuous_umap(self):
         return self.continuous_umap
+    def get_intersection_umap(self):
+        return self.intersection_umap
     def get_scaler(self):
         return self.scaler
     def get_encoder(self):
