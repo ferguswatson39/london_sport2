@@ -98,7 +98,7 @@ data_dict = {
         'dummy_encode' : False,
         'target' : False,
         'clustering' : True,
-        'clustering_categorical' : True,
+        'clustering_categorical' : False,
         'graph_label' : 'Highest Qualification',
         'value_labels' : {1.0: 'Level 4 or above', 2.0: 'Level 3 and equivalents', 3.0: 'Level 2 and equivalents', 4.0: 'Level 1 and below', 5.0: 'Another type of qualification', 6.0: 'No qualifications'}
         },
@@ -211,7 +211,7 @@ data_dict = {
         'dummy_encode' : False,
         'geographic' : False,
         'target' : False,
-        'clustering' : True,
+        'clustering' : False,
         'clustering_categorical' : False,
         'graph_label' : 'Year',
         'value_labels' : None

@@ -8,7 +8,6 @@ class GenerateKMEANS:
     def __init__(self, emb : np.ndarray):
         self.emb = emb
 
-
     def kmeans(self):
         optimised_k = self.kmeans_cv()
         k = KMeans(n_clusters = optimised_k['best_k'], random_state = 42, n_init='auto').fit(self.emb)
