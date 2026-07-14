@@ -10,6 +10,7 @@ from src.loading_data.data_catalogue import DataCatalogue
 
 def prepare_borough_data():
     borough_df = get_geographic_data()
+    borough_df['year'] = borough_df['year'].str.split('/').str[1].astype(int) + 2000
     borough_df = borough_df.groupby(['LA_2023', 'LA_Name', 'year'])['MEMS7_ALL'].mean()
     borough_df = borough_df.reset_index()
     borough_df['LA_Name'] = borough_df['LA_Name'].replace({'Kingston upon Thames': 'Kingston', 'Richmond upon Thames': 'Richmond'})
@@ -18,6 +19,7 @@ def prepare_borough_data():
 
 def prepare_national_data():
     national_df = get_geographic_data()
+    national_df['year'] = national_df['year'].str.split('/').str[1].astype(int) + 2000
     national_df = national_df.groupby('year')['MEMS7_ALL'].mean()
     national_df = national_df.reset_index()
     return national_df

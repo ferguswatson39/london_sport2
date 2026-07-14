@@ -7,13 +7,11 @@ import matplotlib.pyplot as plt
 
 def bayesian_ridge_forecast_borough(included_years : list, forecast_years: list, target_col: str) -> pd.DataFrame:
     borough_df = prepare_borough_data()
-    # Handle year conversion from e.g: 2016/17 -> 2016 and select years
-    borough_df['year'] = borough_df['year'].str.split('/').str[0].astype(int)
     borough_df = borough_df[borough_df['year'].isin(included_years)]
     output = []
     for borough in borough_df['LA_Name'].unique():
-        X_train = (np.array(included_years) - 2016).reshape(-1, 1)
-        X_forecast = (np.array(forecast_years) - 2016).reshape(-1, 1)
+        X_train = (np.array(included_years) - 2017).reshape(-1, 1)
+        X_forecast = (np.array(forecast_years) - 2017).reshape(-1, 1)
         Y_train = borough_df[borough_df['LA_Name'] == borough][target_col].values
         model = BayesianRidge()
         model.fit(X_train, Y_train)
@@ -28,8 +26,8 @@ def bayesian_ridge_forecast_borough(included_years : list, forecast_years: list,
 
 # Forecast Visualisation
 if __name__ == "__main__":
-    INCLUDED_YEARS =  [2016, 2017, 2018, 2019, 2020, 2021, 2022]
-    FORECAST_YEARS = [2023, 2024, 2025, 2026]
+    INCLUDED_YEARS =  [2017, 2018, 2019, 2020, 2021, 2022, 2023]
+    FORECAST_YEARS = [2024, 2025, 2026, 2027]
     full_df = bayesian_ridge_forecast_borough(INCLUDED_YEARS, FORECAST_YEARS, target_col = 'MEMS7_ALL')
     colours = ['#808080'] * len(INCLUDED_YEARS) + ['#00BFFF'] * len(FORECAST_YEARS)
     g = sns.relplot(kind = 'scatter', 

@@ -6,13 +6,14 @@ import matplotlib.pyplot as plt
 borough_df = prepare_borough_data()
 borough_df['LA_Name'] = borough_df['LA_Name'].replace({'Kingston upon Thames': 'Kingston', 'Richmond upon Thames': 'Richmond', 'Barking and Dagenham' : 'Barking', 'Hammersmith and Fulham' : 'Hammersmith'})
 national = prepare_national_data()
+print(national)
 
 # Define COVID constants
-PRE_COVID_YEAR = '2018/19'
-COVID_YEAR = '2019/20'
-POST_COVID_YEAR1 = '2020/21'
-POST_COVID_YEAR2 = '2021/22'
-POST_COVID_YEAR3 = '2022/23'
+PRE_COVID_YEAR = 2019
+COVID_YEAR = 2020
+POST_COVID_YEAR1 = 2021
+POST_COVID_YEAR2 = 2022
+POST_COVID_YEAR3 = 2023
 
 def plot_national_comparison():
     _, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize = (25, 6), sharey = True)
@@ -23,6 +24,7 @@ def plot_national_comparison():
         if (subset['MEMS7_ALL'] > national['MEMS7_ALL']).all():
             ax1.plot(subset['year'], subset['MEMS7_ALL'], alpha = 0.55, color = '#82B366', zorder = 2, linewidth = 1.5, marker='o', markersize = 4)
             ax1.plot(national['year'], national['MEMS7_ALL'], linestyle = 'dashed', color = 'black', linewidth = 3, zorder = 5)
+            ax1.set_xticks(national['year'])
             ax1.set_xticklabels(national['year'], rotation = 45, ha = 'right')
             ax1.set_title('Always Above Average', weight = 'bold', fontsize = 15, color = '#82B366')
             if borough == 'Lambeth':
@@ -35,6 +37,7 @@ def plot_national_comparison():
         elif (subset['MEMS7_ALL'] < national['MEMS7_ALL']).all():
             ax2.plot(subset['year'], subset['MEMS7_ALL'], alpha = 0.55, color = '#B85450', zorder = 2, linewidth = 1.5, marker='o', markersize = 4)
             ax2.plot(national['year'], national['MEMS7_ALL'], linestyle = 'dashed', color = 'black', linewidth = 3, zorder = 5)
+            ax2.set_xticks(national['year'])
             ax2.set_xticklabels(national['year'], rotation = 45, ha = 'right')
             ax2.set_title('Always Below Average', weight = 'bold', fontsize = 15, color = '#B85450')
             if borough == 'Newham':
@@ -63,6 +66,7 @@ def plot_national_comparison():
             else:
                 ax3.plot(subset['year'], subset['MEMS7_ALL'], alpha = 0.55, color = '#FFCC99', zorder = 2, linewidth = 1.5, marker='o', markersize = 4)
             ax3.plot(national['year'], national['MEMS7_ALL'], linestyle = 'dashed', color = 'black', linewidth = 3, zorder = 5)
+            ax3.set_xticks(national['year'])
             ax3.set_xticklabels(national['year'], rotation = 45, ha = 'right')
             ax3.set_aspect(0.022) 
             ax3.set_title('Fluctuating', weight = 'bold', fontsize = 15, color = "#EABA8A") 
