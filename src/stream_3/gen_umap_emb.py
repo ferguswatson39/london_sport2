@@ -11,10 +11,15 @@ from sklearn.preprocessing import OneHotEncoder
 from src.loading_data.data_catalogue import DataCatalogue
 
 class GenerateUmapEmb:
+    """
+    Generates n dimensional umap embedding
+    Splits data into continuous and categorical and applied separate umap models using euclidean and dice distance respectively
+    Then performs a fuzzy set intersection which combined the two fuzzy graphs then re-embeds using the combined graph
+    """
     def __init__(self, df: pd.DataFrame):
         self.df = df
         self.dc = DataCatalogue()
-        self.df_cols = list(df.columns)
+        self.df_cols = list(self.df.columns)
         self.scaler = None
         self.categorical_umap = None
         self.continuous_umap = None
@@ -41,18 +46,25 @@ class GenerateUmapEmb:
         self.encoder = encoder
         return X_categoricals.values
 
-    def fit_umap(self):
+    def fit_umap(self, num_dimensions : int = 2):
         avail_cats, avail_contins = self.gen_splits()
         X_scaled_continuous = self.scale_continuous(avail_contins)
+        print(f'Continuous Shape: {X_scaled_continuous.shape}')
         X_categoricals = self.dummy_encode(avail_cats)
-        continuous = umap.UMAP(n_neighbors = 15, metric = 'euclidean', random_state = 42).fit(X_scaled_continuous)
-        categorical = umap.UMAP(n_neighbors = 100, metric = 'dice', random_state = 42).fit(X_categoricals)
+        print(f'Categorical Shape: {X_categoricals.shape}')
+        assert X_scaled_continuous.shape[0] == X_categoricals.shape[0] == len(self.df)
+        continuous = umap.UMAP(min_dist = 0.0, n_components = num_dimensions, n_neighbors = 15, metric = 'euclidean').fit(X_scaled_continuous)
+        print('Finished fitting continuous....')
+        categorical = umap.UMAP(min_dist = 0.0, n_components = num_dimensions, n_neighbors = 100, metric = 'dice').fit(X_categoricals)
+        print('Finished fitting categorical....')
         intersection = continuous * categorical
+        print('Finished computing intersection...')
         self.continuous_umap = continuous
         self.categorical_umap = categorical
         self.intersection_umap = intersection
+        print('UMAP fit complete!')
         return intersection
-    
+
     
     def get_categorical_umap(self):
         return self.categorical_umap
