@@ -65,7 +65,6 @@ class GenerateUmapEmb:
         print('UMAP fit complete!')
         return self.get_intersection()
 
-    
     def get_categorical_umap(self):
         return self.categorical_umap
     def get_continuous_umap(self):

@@ -10,6 +10,9 @@ from tqdm import tqdm
 class GenerateHDBSCAN:
     """
     HDBSCAN Class.
+    Uses a grid-search approach to find optimal hdbcv based off of dbcv
+    Returns clusterer object with optimal hyperparams
+    For labels:     clusterer.labels_
     """
     def __init__(self, emb : np.ndarray):
         self.emb = emb
