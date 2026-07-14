@@ -26,6 +26,7 @@ def prepare_quarterly_data():
     quarterly_df.loc[quarterly_df['month'].isin([11,12]), 'year'] = quarterly_df['year'] - 1
     quarterly_df['quarter_num'] = quarterly_df['month'].map(MONTH_MAP)
     quarterly_df['quarter_date'] = pd.to_datetime(quarterly_df['year'].astype(str) + quarterly_df['quarter_num'].map(QUARTER_MAP).astype(str), format='%Y%m')
+    quarterly_df = quarterly_df[~((quarterly_df['year'] == 2023) & (quarterly_df['quarter_num'] == 4))]
     quarterly_df = quarterly_df.groupby(['year', 'quarter_date', 'quarter_num'])['MEMS7_ALL'].agg(['mean', 'count']).reset_index()
     print(quarterly_df)
     return quarterly_df
@@ -46,7 +47,7 @@ if __name__ == "__main__":
     quarterly_df = prepare_quarterly_data()
     fig, ax = plt.subplots(figsize = (10, 4))
     sns.lineplot(data = quarterly_df, x = 'quarter_date', y = 'mean', ax = ax, zorder = 1, color = 'grey')
-    sns.scatterplot(data = quarterly_df, x = 'quarter_date', y = 'mean', hue = 'year', ax = ax, size = 'count', sizes = (20, 100), legend = False, zorder = 2, palette = 'RdYlGn')
+    sns.scatterplot(data = quarterly_df, x = 'quarter_date', y = 'mean', hue = 'year', ax = ax, size = 'count', sizes = (60, 100), legend = False, zorder = 2, palette = 'RdYlGn')
     ax.set_ylim(450, None)
     ax.set(xlabel = 'Year', ylabel = 'Average Participation')
     ax.axvspan('2020-03-01', '2021-01-01', alpha = 0.2, color = 'skyblue')
