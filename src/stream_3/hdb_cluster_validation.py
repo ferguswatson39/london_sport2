@@ -10,7 +10,16 @@ def hdb_dbcv(
         min_cluster_size : list[int] = [50, 100, 150, 200, 250, 300, 350, 400, 450, 500],
         cluster_selection_method : list[str]  = ['eom', 'leaf'],
         metric : list[str] = ['euclidean', 'manhattan']) -> pd.DataFrame:
-    outputs = []
+    frames = []
+    best = {
+        'min_samples': 0,
+        'min_cluster_size': 0,
+        'cluster_selection_method': 0,
+        'metric' : 0,
+        'num_clusters' : 0,
+        'unclustered_prop' : 0,
+        'dbcv' : float('-inf')
+    }
     for min_sample in tqdm(min_samples):
         for min_cluster in min_cluster_size:
             for cluster_selection in cluster_selection_method:
@@ -25,7 +34,16 @@ def hdb_dbcv(
                     num_clusters = len(set(hdb.labels_))
                     unclustered_prop = len([c for c in hdb.labels_ if c == -1])/len(hdb.labels_)
                     dbcv = hdb.relative_validity_
-                    outputs.append([min_sample, min_cluster, cluster_selection, m, num_clusters, unclustered_prop, dbcv])
-    df_output = pd.DataFrame(outputs, columns = ['min_sample', 'min_cluster', 'cluster_selection', 'm', 'num_clusters', 'unclustered_prop', 'dbcv'])
+                    if dbcv > best['dbcv']:
+                        best['min_samples'] = min_sample
+                        best['min_cluster_size'] = min_cluster
+                        best['cluster_selection_method'] = cluster_selection
+                        best['metric'] = m
+                        best['num_clusters'] = num_clusters
+                        best['unclustered_prop'] = unclustered_prop
+                        best['dbcv'] = dbcv
+                    frames.append([min_sample, min_cluster, cluster_selection, m, num_clusters, unclustered_prop, dbcv])
+    print(f'Optimal HDBSCAN Hyperparameters:\n>>>{best}')
+    df_output = pd.DataFrame(frames, columns = ['min_sample', 'min_cluster', 'cluster_selection', 'm', 'num_clusters', 'unclustered_prop', 'dbcv'])
     print(df_output.sort_values('dbcv', ascending=False).head())
-    return df_output
+    return best
