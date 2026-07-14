@@ -181,6 +181,16 @@ data_dict = {
         'value_labels' : None
     },
 
+    'month' : {
+        'type' : 'ordinal',
+        'demographic' : False,
+        'dummy_encode' : False,
+        'geographic' : False,
+        'target' : False,
+        'graph_label' : 'Year',
+        'value_labels' : None
+    },
+
     # Geographic
     'LA_2023' : {
         'type' : 'categorical',
@@ -199,6 +209,7 @@ data_dict = {
             91.0: 'Enfield', 136.0: 'Kensington and Chelsea', 255.0: 'Sutton', 279.0: 'Waltham Forest'
         }
     },
+
     'LondInOut' : {
         'type' : 'categorical',
         'demographic' : False,

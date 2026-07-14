@@ -5,15 +5,14 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-def bayesian_ridge_forecast_borough(included_years : list, forecast_years: list, target_col: str) -> pd.DataFrame:
-    borough_df = prepare_borough_data()
-    # Handle year conversion from e.g: 2016/17 -> 2016 and select years
-    borough_df['year'] = borough_df['year'].str.split('/').str[0].astype(int)
+def bayesian_ridge_forecast_borough(included_years : list, forecast_years: list, target_col: str, ADJUST_COVID: bool) -> pd.DataFrame:
+    borough_df = prepare_borough_data(ADJUST_COVID = ADJUST_COVID)
     borough_df = borough_df[borough_df['year'].isin(included_years)]
+    borough_df[target_col] = borough_df.groupby('LA_Name')[target_col].ffill()
     output = []
     for borough in borough_df['LA_Name'].unique():
-        X_train = (np.array(included_years) - 2016).reshape(-1, 1)
-        X_forecast = (np.array(forecast_years) - 2016).reshape(-1, 1)
+        X_train = (np.array(included_years) - 2017).reshape(-1, 1)
+        X_forecast = (np.array(forecast_years) - 2017).reshape(-1, 1)
         Y_train = borough_df[borough_df['LA_Name'] == borough][target_col].values
         model = BayesianRidge()
         model.fit(X_train, Y_train)
@@ -28,9 +27,10 @@ def bayesian_ridge_forecast_borough(included_years : list, forecast_years: list,
 
 # Forecast Visualisation
 if __name__ == "__main__":
-    INCLUDED_YEARS =  [2016, 2017, 2018, 2019, 2020, 2021, 2022]
-    FORECAST_YEARS = [2023, 2024, 2025, 2026]
-    full_df = bayesian_ridge_forecast_borough(INCLUDED_YEARS, FORECAST_YEARS, target_col = 'MEMS7_ALL')
+    INCLUDED_YEARS =  [2017, 2018, 2019, 2020, 2021, 2022, 2023]
+    FORECAST_YEARS = [2024, 2025, 2026, 2027]
+    ADJUST_COVID = True
+    full_df = bayesian_ridge_forecast_borough(INCLUDED_YEARS, FORECAST_YEARS, target_col = 'MEMS7_ALL', ADJUST_COVID = ADJUST_COVID)
     colours = ['#808080'] * len(INCLUDED_YEARS) + ['#00BFFF'] * len(FORECAST_YEARS)
     g = sns.relplot(kind = 'scatter', 
                     data = full_df, 
@@ -75,5 +75,8 @@ if __name__ == "__main__":
     g.set(xlabel = 'Year', ylabel = 'Avg Sport Participation')
     g.set_xticklabels([])
     g.set_yticklabels([])
-    plt.savefig('src/stream_1/figures/Borough Forecast with Uncertainy', bbox_inches = 'tight')
+    if ADJUST_COVID:
+        plt.savefig('src/stream_1/figures/Borough Forecast with Uncertainty (COVID Adjusted)', bbox_inches = 'tight')
+    else:
+        plt.savefig('src/stream_1/figures/Borough Forecast with Uncertainty', bbox_inches = 'tight')
     plt.show()
