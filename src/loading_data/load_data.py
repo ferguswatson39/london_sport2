@@ -33,7 +33,7 @@ def get_geographic_data() -> pd.DataFrame:
     df = pd.read_csv(df_path)
     df['LOG_MEMS7_ALL'] = np.log1p(df['MEMS7_ALL'])
     df['active'] = df['MEMS7_ALL'] >= 150
-    df = df[geographic + targets + ['year']]
+    df = df[geographic + targets + ['year', 'month']]
     df['LA_Name'] = df['LA_2023'].map(dc.get_data_dict()['LA_2023']['value_labels'])       
     print(f'DataFrame Cleaned Successfully...')
     print('DataFrame Information:')
