@@ -6,7 +6,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 
 def bayesian_ridge_forecast_borough(included_years : list, forecast_years: list, target_col: str, ADJUST_COVID: bool) -> pd.DataFrame:
-    borough_df = prepare_borough_data(ADJUST_COVID = ADJUST_COVID)
+    borough_df = prepare_borough_data(ADJUST_COVID = ADJUST_COVID, target_col = target_col)
     borough_df = borough_df[borough_df['year'].isin(included_years)]
     borough_df[target_col] = borough_df.groupby('LA_Name')[target_col].ffill()
     output = []
@@ -30,7 +30,8 @@ if __name__ == "__main__":
     INCLUDED_YEARS =  [2017, 2018, 2019, 2020, 2021, 2022, 2023]
     FORECAST_YEARS = [2024, 2025, 2026, 2027]
     ADJUST_COVID = True
-    full_df = bayesian_ridge_forecast_borough(INCLUDED_YEARS, FORECAST_YEARS, target_col = 'MEMS7_ALL', ADJUST_COVID = ADJUST_COVID)
+    TARGET_COL = 'MEMS7_ALL'
+    full_df = bayesian_ridge_forecast_borough(INCLUDED_YEARS, FORECAST_YEARS, target_col = TARGET_COL, ADJUST_COVID = ADJUST_COVID)
     colours = ['#808080'] * len(INCLUDED_YEARS) + ['#00BFFF'] * len(FORECAST_YEARS)
     g = sns.relplot(kind = 'scatter', 
                     data = full_df, 
@@ -76,7 +77,7 @@ if __name__ == "__main__":
     g.set_xticklabels([])
     g.set_yticklabels([])
     if ADJUST_COVID:
-        plt.savefig('src/stream_1/figures/Borough Forecast with Uncertainty (COVID Adjusted)', bbox_inches = 'tight')
+        plt.savefig(f'src/stream_1/figures/Bayesian Borough Forecast: {TARGET_COL} (COVID Adjusted)', bbox_inches = 'tight')
     else:
-        plt.savefig('src/stream_1/figures/Borough Forecast with Uncertainty', bbox_inches = 'tight')
+        plt.savefig(f'src/stream_1/figures/Bayesian Borough Forecast {TARGET_COL}', bbox_inches = 'tight')
     plt.show()
