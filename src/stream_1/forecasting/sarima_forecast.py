@@ -1,5 +1,9 @@
 from statsmodels.tsa.statespace.sarimax import SARIMAX
 import pandas as pd
+import numpy as np
+
+def calculate_mape(y_test, y_forecast):
+    return np.mean(abs(y_test - y_forecast[:len(y_test)]) / y_test) * 100
 
 def sarima_forecast(df, t_train_cutoff, forecast_steps):
     final = []
@@ -21,8 +25,8 @@ def sarima_forecast(df, t_train_cutoff, forecast_steps):
         model = SARIMAX(df_borough_train, order=(1,1,1), seasonal_order=(1,1,1,seasonal_period))
 
         results = model.fit(disp=False)
+        forecast = results.forecast(forecast_steps).values
         # borough, train, test, forecast results
-        final.append([borough, df_borough_train, df_borough_test, results.forecast(forecast_steps).values])
+        final.append([borough, df_borough_train, df_borough_test, forecast, calculate_mape(df_borough_test, forecast)])
     
-    return pd.DataFrame(final, columns=['borough', 'y_train', 'y_test', 'y_forecast'])
-
+    return pd.DataFrame(final, columns=['borough', 'y_train', 'y_test', 'y_forecast', 'mape'])
