@@ -12,9 +12,14 @@ from covid_analysis import covid_adjustment, correct_year_and_month
 def prepare_borough_data(target_col = 'MEMS7_ALL', ADJUST_COVID = True):
     borough_df = get_geographic_data()
     borough_df = correct_year_and_month(borough_df)
-    if ADJUST_COVID: borough_df = covid_adjustment(borough_df)
-    borough_df = borough_df.groupby(['LA_2023', 'LA_Name', 'year'])[target_col].mean()
-    borough_df = borough_df.reset_index()
+    borough_df[target_col] = borough_df[target_col].astype(float)
+    if ADJUST_COVID:
+        adjusted = []
+        for borough in borough_df['LA_Name'].unique():
+            borough_adjusted = covid_adjustment(borough_df[borough_df['LA_Name'] == borough], target_col = target_col)
+            adjusted.append(borough_adjusted)
+        borough_df = pd.concat(adjusted, ignore_index = True)
+    borough_df = borough_df.groupby(['LA_2023', 'LA_Name', 'year'])[target_col].mean().reset_index()
     borough_df['LA_Name'] = borough_df['LA_Name'].replace({'Kingston upon Thames': 'Kingston', 'Richmond upon Thames': 'Richmond'})
     borough_df = borough_df[borough_df['LA_2023'] != 59.0] # Removing City of London (COVID Outliers)
     return borough_df
@@ -22,7 +27,7 @@ def prepare_borough_data(target_col = 'MEMS7_ALL', ADJUST_COVID = True):
 def prepare_national_data(target_col = 'MEMS7_ALL', ADJUST_COVID = True):
     national_df = get_geographic_data()
     national_df['year'] = national_df['year'].str.split('/').str[1].astype(int) + 2000
-    if ADJUST_COVID: national_df = covid_adjustment(national_df)
+    if ADJUST_COVID: national_df = covid_adjustment(national_df, target_col = target_col)
     national_df = national_df.groupby('year')[target_col].mean()
     national_df = national_df.reset_index()
     return national_df
