@@ -89,3 +89,4 @@ def prepare_yearly_boroughs():
     borough_df.sort_values(['LA_2023', 'year'], inplace=True)
     print("COMPLETE")
     return borough_df
+
