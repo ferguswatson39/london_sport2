@@ -52,7 +52,7 @@ def bayesian_ridge_forecast(df, t_train_cutoff, forecast_steps):
         model.fit(X_train, y_train)
         y_forecast, e_forecast = model.predict(X_forecast, return_std = True)    
 
-        final.append([borough, y_train, y_test, y_forecast, e_forecast, calculate_mape(y_test, y_forecast)])
+        final.append([borough, y_train.values, y_test.values, y_forecast, e_forecast, calculate_mape(y_test, y_forecast)])
     return pd.DataFrame(final, columns=['borough', 'y_train', 'y_test', 'y_forecast', 'e_forecast', 'mape'])
 
 
@@ -60,14 +60,14 @@ def plot_borough_forecasts(df, t_train_cutoff, UNCERTAINTY=False):
     n_boroughs = len(df)
     n_cols = 4
     n_rows = n_boroughs // 4
-    fig, axes = plt.subplots(n_rows, n_cols, figsize=(20, 24))
+    fig, axes = plt.subplots(n_rows, n_cols, figsize=(20, 24), sharey=True)
     for ax, (idx, row) in zip(axes.flatten(), df.iterrows()):
         t_train = range(len(row['y_train']))
         t_test = range(t_train_cutoff, t_train_cutoff + len(row['y_test']))
         t_forecast = range(t_train_cutoff, t_train_cutoff + len(row['y_forecast']))
-        ax.scatter(t_train, row['y_train'].values, s=5)
-        ax.scatter(t_test, row['y_test'].values, s=5)
-        ax.scatter(t_forecast, row['y_forecast'], s=5)
+        ax.plot(t_train, row['y_train'])
+        ax.plot(t_test, row['y_test'])
+        ax.plot(t_forecast, row['y_forecast'])
         ax.text(0.05, 0.95, f"MAPE: {row['mape']:.1f}%",fontsize=7, transform=ax.transAxes, verticalalignment='top')
         ax.set_title(row['borough'], fontweight='bold', fontsize=8)
         ax.spines['right'].set_visible(False)
