@@ -9,6 +9,7 @@ sys.path.append(str(ROOT))
 from sklearn.preprocessing import StandardScaler
 from sklearn.preprocessing import OneHotEncoder
 from src.loading_data.data_catalogue import DataCatalogue
+from src.stream_3.gower_distance import get_gower
 
 class GenerateUmapEmb:
     """
@@ -64,6 +65,9 @@ class GenerateUmapEmb:
         self.intersection_umap = intersection
         print('UMAP fit complete!')
         return self.get_intersection()
+    
+    def fit_umap_using_gower(self, num_dimensions : int = 2):
+        pass
 
     def get_categorical_umap(self):
         return self.categorical_umap
