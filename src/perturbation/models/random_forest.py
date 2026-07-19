@@ -34,12 +34,17 @@ class RandomForest:
         return self.model
     def get_score(self):
         return self.model.score(self.X_test, self.Y_test)
-    def get_preds(self):
+    def get_class_preds(self):
         model = self.get_model()
         preds = model.predict(self.X_test)
         return preds
+    def get_probability_preds(self, X):
+        """ Returns probabiltiies for both classes"""
+        model = self.get_model()
+        preds = model.predict_proba(X)
+        return preds
     def get_classification_report(self):
-        preds = self.get_preds() 
+        preds = self.get_class_preds() 
         return classification_report(self.Y_test, preds)
     def get_feature_importance(self) -> pd.DataFrame:
         features = pd.DataFrame(self.model.feature_importances_, index=self.X_cols) 
