@@ -4,7 +4,7 @@ import numpy as np
 import sys
 from pathlib import Path
 
-def get_gower(categorical_cols : list[str], df : pd.DataFrame) -> np.array:
+def get_gower( df : pd.DataFrame, categorical_cols : list[str],) -> np.array:
     cat_bool_mask = np.array([True if c in categorical_cols else False for c in df.columns])
     gower_matrix = gower.gower_matrix(df, cat_features = cat_bool_mask)
     print('Categorical Variables:')

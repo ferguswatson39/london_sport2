@@ -9,6 +9,7 @@ sys.path.append(str(ROOT))
 from sklearn.preprocessing import StandardScaler
 from sklearn.preprocessing import OneHotEncoder
 from src.loading_data.data_catalogue import DataCatalogue
+from src.stream_3.gower_distance import get_gower
 
 class GenerateUmapEmb:
     """
@@ -25,6 +26,7 @@ class GenerateUmapEmb:
         self.continuous_umap = None
         self.intersection_umap = None
         self.encoder = None
+        self.gower_umap = None
 
     def gen_splits(self):
         avail_cats = [c for c in self.df_cols if c in self.dc.get_clustering_categoricals()]
@@ -64,6 +66,14 @@ class GenerateUmapEmb:
         self.intersection_umap = intersection
         print('UMAP fit complete!')
         return self.get_intersection()
+    
+    def fit_umap_using_gower(self, num_dimensions : int = 2):
+        catogs = ['Eth7', 'Gend3', 'HHLiv12', 'WorkStat10']
+        contins = ['Age9', 'Educ6', 'IMD10', 'NSSEC5', 'Motiva_POP', 'motivd_POP', 'happy', 'lifesat', 'lone', 'worthw', 'comm1', 'inclus_a']
+        distances = get_gower(self.df[catogs + contins], catogs)
+        emb = umap.UMAP(min_dist=0.0, n_components = num_dimensions, n_neighbors = 15, random_state = 42).fit(distances)
+        self.gower_umap = emb
+        return self.get_gower_umap()
 
     def get_categorical_umap(self):
         return self.categorical_umap
@@ -75,5 +85,7 @@ class GenerateUmapEmb:
         return self.scaler
     def get_encoder(self):
         return self.encoder
+    def get_gower_umap(self):
+        return self.gower_umap
     
 
