@@ -73,7 +73,7 @@ class GenerateUmapEmb:
         distances = get_gower(self.df[catogs + contins], catogs)
         emb = umap.UMAP(min_dist=0.0, n_components = num_dimensions, n_neighbors = 15, random_state = 42).fit(distances)
         self.gower_umap = emb
-        return emb
+        return self.get_gower_umap()
 
     def get_categorical_umap(self):
         return self.categorical_umap
@@ -85,5 +85,7 @@ class GenerateUmapEmb:
         return self.scaler
     def get_encoder(self):
         return self.encoder
+    def get_gower_umap(self):
+        return self.gower_umap
     
 
