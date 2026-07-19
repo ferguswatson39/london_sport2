@@ -26,6 +26,7 @@ class GenerateUmapEmb:
         self.continuous_umap = None
         self.intersection_umap = None
         self.encoder = None
+        self.gower_umap = None
 
     def gen_splits(self):
         avail_cats = [c for c in self.df_cols if c in self.dc.get_clustering_categoricals()]
@@ -67,7 +68,12 @@ class GenerateUmapEmb:
         return self.get_intersection()
     
     def fit_umap_using_gower(self, num_dimensions : int = 2):
-        pass
+        catogs = ['Eth7', 'Gend3', 'HHLiv12', 'WorkStat10']
+        contins = ['Age9', 'Educ6', 'IMD10', 'NSSEC5', 'Motiva_POP', 'motivd_POP', 'happy', 'lifesat', 'lone', 'worthw', 'comm1', 'inclus_a']
+        distances = get_gower(self.df[catogs + contins], catogs)
+        emb = umap.UMAP(min_dist=0.0, n_components = num_dimensions, n_neighbors = 15, random_state = 42).fit(distances)
+        self.gower_umap = emb
+        return emb
 
     def get_categorical_umap(self):
         return self.categorical_umap
