@@ -4,6 +4,10 @@ import pandas as pd
 from sklearn.model_selection import GridSearchCV
 
 class RandomForest:
+    """ Random Forest Classifier class
+    Adapted from: https://medium.com/cloudvillains/random-forest-with-grid-search-b739fb0da311
+    
+    """
     def __init__(self, X_train, X_test, Y_train, Y_test, X_cols):
         self.X_train = X_train
         self.X_test = X_test
