@@ -5,9 +5,11 @@ from sklearn.linear_model import BayesianRidge
 import warnings
 import matplotlib.pyplot as plt
 warnings.filterwarnings('ignore')
+from pmdarima import auto_arima
+from tqdm.auto import tqdm
 
 def calculate_mape(y_test, y_forecast):
-    return np.mean(abs(y_test - y_forecast[:len(y_test)]) / y_test) * 100
+    return np.mean(abs(np.array(y_test) - y_forecast[:len(np.array(y_test))]) / np.array(y_test)) * 100
 
 def sarima_forecast(df, t_train_cutoff, forecast_steps):
     final = []
@@ -33,6 +35,35 @@ def sarima_forecast(df, t_train_cutoff, forecast_steps):
         final.append([borough, df_borough_train, df_borough_test, forecast, calculate_mape(df_borough_test, forecast)])
     
     return pd.DataFrame(final, columns=['borough', 'y_train', 'y_test', 'y_forecast', 'mape'])
+
+def tune_sarima(df, t_train_cutoff, forecast_steps):
+    final = []
+    df = df.copy()
+    df['t'] = df.groupby('LA_Name').cumcount()
+    if 'month' in df.columns:
+        seasonal_period = 12
+    elif 'quarter' in df.columns:
+        seasonal_period = 4
+    else:
+        seasonal_period = 1
+
+    print("-------------------------")
+    print("----- TUNING SARIMA -----")
+    print("-------------------------")
+    for borough in tqdm(df['LA_Name'].unique()):
+        df_borough = df[df['LA_Name'] == borough]
+
+        df_borough_train = df_borough[df_borough['t'] < t_train_cutoff]['MEMS7_ALL']
+        df_borough_test = df_borough[df_borough['t'] >= t_train_cutoff]['MEMS7_ALL']
+        
+        arima_model = auto_arima(df_borough_train, seasonal=True, m=seasonal_period, stepwise=True, suppress_warnings=True, error_action='ignore')
+        print(f"{borough}: {arima_model.order} x {arima_model.seasonal_order}")
+        forecast = arima_model.predict(n_periods=forecast_steps)
+        # borough, train, test, forecast results
+        final.append([borough, df_borough_train.values, df_borough_test.values, forecast, calculate_mape(df_borough_test.values, forecast)])
+    
+    return pd.DataFrame(final, columns=['borough', 'y_train', 'y_test', 'y_forecast', 'mape'])
+
 
 
 def bayesian_ridge_forecast(df, t_train_cutoff, forecast_steps):
