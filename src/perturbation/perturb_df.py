@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 
-def perturb(df : pd.DataFrame, perturb_col : str) -> pd.DataFrame:
+def perturb(df : pd.DataFrame, perturb_col : str) -> np.array:
     """ 
     Perturbation function
     Takes perturb_col as argument and creates new col with perturbed inputs
@@ -9,6 +9,6 @@ def perturb(df : pd.DataFrame, perturb_col : str) -> pd.DataFrame:
     """
     df = df.copy()
     max_val = df[perturb_col].max()
-    p_name = f'PERTURBED_{perturb_col}'
-    df[p_name] = np.where(df[perturb_col] < max_val, df[perturb_col] + 1, np.nan)
-    return df
+    # p_name = f'PERTURBED_{perturb_col}'
+    p_col = np.where(df[perturb_col] < max_val, df[perturb_col] + 1, np.nan)
+    return p_col

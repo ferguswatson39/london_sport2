@@ -31,6 +31,7 @@ class RandomForest:
         self.model.fit(self.X_train, self.Y_train)
         return self.get_model()
     def search(self):
+        print('Tuning Random Forest Hyperparams.....')
         self.grid.fit(self.X_train, self.Y_train)
         self.best_params = self.grid.best_params_
         return self.get_best_params()
