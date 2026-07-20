@@ -18,7 +18,7 @@ class Logistic:
         return classification_report(Y_test, preds)
     def get_model(self):
         return self.model
-    def get_preds(self, X_test):
+    def get_proba(self, X_test):
         preds = self.model.predict_proba(X_test)
         return preds[: , 1]
     

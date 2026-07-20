@@ -9,7 +9,7 @@ from src.perturbation.perturb_df import perturb
 def run_perturbation(df : pd.DataFrame, to_perturb : list, model : object):
     """
     Run perturbations function.
-    Requires model object to have scikit-learn predict_proba() method
+    Requires model object to have get_proba() method -- Ensure that models used in perturbation have .get_proba() method
     Creates two copies of df and uses one to store results and the other to compute perturbations
     Builds inverted boolean mask to filter data and ensure that samples which have max value arent perturbed to increase beyond limit.
     Saved output to new df
