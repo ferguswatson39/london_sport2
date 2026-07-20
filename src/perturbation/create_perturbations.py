@@ -27,7 +27,7 @@ def run_perturbation(df : pd.DataFrame, to_perturb : list, model : object):
         nan_mask = ~np.isnan(perturbed_vals)
         
         ## Generate the preds for non perturbed subset
-        non_p_preds = model.predict_proba(new[nan_mask].values)
+        non_p_preds = model.get_proba(new[nan_mask].values)
 
         new.loc[nan_mask, var] = perturbed_vals[nan_mask]
 

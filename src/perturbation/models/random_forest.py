@@ -43,10 +43,10 @@ class RandomForest:
         model = self.get_model()
         preds = model.predict(self.X_test)
         return preds
-    def get_probability_preds(self, X):
+    def get_probability_preds(self, X_test):
         """ Returns probabiltiies for both classes"""
         model = self.get_model()
-        preds = model.predict_proba(X)
+        preds = model.predict_proba(X_test)
         return preds
     def get_classification_report(self):
         preds = self.get_class_preds() 
@@ -56,3 +56,7 @@ class RandomForest:
         return features
     def get_best_params(self):
         return self.best_params
+    def get_proba(self, X_test):
+        model = self.get_model()
+        preds = model.predict_proba(X_test)
+        return preds[:,1]
