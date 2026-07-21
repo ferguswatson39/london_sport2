@@ -53,7 +53,6 @@ def run_perturbation(df : pd.DataFrame, model : object, scaler : object):
 def create_and_join_diff_series(df : pd.DataFrame):
     series = []
     cols = [col for col in df.columns if 'DIFFERENCE' in col]
-    print(cols)
     for c in cols:
        x = df.groupby('labels')[c].mean()
        series.append(x)

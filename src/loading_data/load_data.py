@@ -83,9 +83,10 @@ def get_master_2022_data():
 def get_raw_2022_data():
     dc = DataCatalogue()
     to_perturb = dc.get_perturbation_vars()
-    full_cols = ['serial'] + to_perturb
+    full_cols = ['serial', 'MEMS7_ALL'] + to_perturb
     data_path = r"C:\Masters\London Sport\9288_ActiveLifeSurvey_2022_2023\UKDA-9288-spss\spss\spss28\active_lives_survey_nov_22-23_data_year_8_shared_20250103.sav"
     df, meta = pyreadstat.read_sav(data_path, usecols = full_cols)
+    df['active'] = df['MEMS7_ALL'] >= 150
     missing = [var for var in full_cols if var not in df.columns]
     if missing:
         raise ValueError(f'{missing} MISSING')
