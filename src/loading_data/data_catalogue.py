@@ -110,6 +110,7 @@ class DataCatalogue:
     
     def get_perturbation_change(self, var_name):
         return self.data_dict[var_name]['change']
-dc = DataCatalogue()
-vars = dc.get_perturbation_vars()
-print(vars)
+    def get_perturbation_max(self, var_name):
+        return self.data_dict[var_name]['max']
+    def get_perturbation_min(self, var_name):
+        return self.data_dict[var_name]['min']

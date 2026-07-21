@@ -4,8 +4,6 @@ import sys
 from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent.parent
 sys.path.append(str(ROOT))
-from src.perturbation.perturb_df import perturb
-from sklearn.preprocessing import StandardScaler
 from src.loading_data.data_catalogue import DataCatalogue
 
 def run_perturbation(df : pd.DataFrame, model : object, scaler : object):
@@ -20,7 +18,6 @@ def run_perturbation(df : pd.DataFrame, model : object, scaler : object):
     output_df = df.copy()
     dc = DataCatalogue()
     to_perturb = dc.get_perturbation_vars()
-    data_dict = dc.get_data_dict()
     for var in to_perturb:
         
         new = df.copy()
@@ -31,16 +28,19 @@ def run_perturbation(df : pd.DataFrame, model : object, scaler : object):
         new_var_name = f'PERTURBED_PREDS_{var}'
         difference = f'DIFFERENCE_{var}'
 
-        var_change = data_dict[var]['perturbation']['change']
-        var_max = data_dict[var]['perturbation']['max']
-        var_min = data_dict[var]['perturbation']['min']
+
+        var_change = dc.get_perturbation_change(var)
+        var_max = dc.get_perturbation_max(var)
+        var_min = dc.get_perturbation_min(var)
         var_values = new[var].values
         var_idx = new.columns.get_loc(var)
         
+
         if var_change < 0:
             mask = np.where(var_values > var_min, True, False)
         elif var_change > 0:
             mask = np.where(var_values < var_max, True, False)
+
 
         X_scaled = scaler.transform(new[mask])
         non_p_preds = model.get_proba(X_scaled)
