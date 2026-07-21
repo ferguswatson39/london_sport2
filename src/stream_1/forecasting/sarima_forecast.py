@@ -102,6 +102,7 @@ def plot_borough_forecasts(df, t_train_cutoff, xtick_positions, xtick_labels, UN
         ax.plot(t_forecast, row['y_forecast'], color='blue')
         ax.scatter(t_forecast, row['y_forecast'], color='black', s=7)
         ax.set_xticks(xtick_positions)
+        ax.set_ylim(0, 1500)
         ax.set_xticklabels(xtick_labels, rotation=45, fontsize=7)
         ax.text(0.05, 0.95, f"MAPE: {row['mape']:.1f}%",fontsize=7, transform=ax.transAxes, verticalalignment='top')
         ax.set_title(row['borough'], fontweight='bold', fontsize=8)
