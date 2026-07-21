@@ -20,22 +20,25 @@ data_dict = {
             'encode' : True
             }
         },
-    'Disab3' : {
+
+
+    'Disab2_POP' : {
         'type' : 'categorical',
         'demographic' : True,
         'geographic' : False,
-        'dummy_encode' : True, 
+        'dummy_encode' : False, 
         'target' : False,
         'clustering' : True,
-        'clustering_categorical' : True,
-        'graph_label' : 'Disability Status',
-        'value_labels' : {1.0: 'Limiting disability', 2.0: 'Non-limiting disability', 3.0: 'No disability'},
+        'clustering_categorical' : False, # Investigate what clustering categorical is as
+        'graph_label' : 'Physically Limiting Disability',
+        'value_labels' : {1.0: 'Disability', 2.0: 'No Physically Limitting Disability'},
         'perturbation' : {
             'core' : True,
             'to_perturb' : False,
-            'encode' : True
+            'encode' : False
             }
         },
+    
     'Age9' : {
         'type' : 'ordinal',
         'demographic' : True,
@@ -119,39 +122,25 @@ data_dict = {
             'encode' : False
             }
         },
-    'nchild' : {
-        'type' : 'continuous',
+
+    'Child4' : {
+        'type' : 'categorical',
         'demographic' : False,
         'geographic' : False,
         'dummy_encode' : False,
         'target' : False,
         'clustering' : True,
         'clustering_categorical' : False,
-        'graph_label' : 'Num Children in Household',
-        'value_labels' : None,
+        'graph_label' : 'Number of Children in Household (Grouped)',
+        'value_labels' : { 1.0 : 'None', 2.0 : 'one child', 3.0 : 'two children', 4.0 : 'three or more children'},
         'perturbation' : {
             'core' : True,
             'to_perturb' : False,
             'encode' : False
-            }
-        },
-    'nadult' : {
-        'type' : 'continuous',
-        'demographic' : False,
-        'geographic' : False,
-        'dummy_encode' : False,
-        'target' : False,
-        'clustering' : False,
-        'clustering_categorical' : False,
-        'graph_label' : 'Num Adults in Household',
-        'value_labels' : None,
-        'perturbation' : {
-            'core' : True,
-            'to_perturb' : False,
-            'encode' : False
-            }
-        },
-    'WorkStat10' : {
+        }
+    },
+
+    'WorkStat8' : {
         'type' : 'categorical',
         'demographic' : False,
         'geographic' : False,
@@ -168,7 +157,7 @@ data_dict = {
             }
         },
             # Living Arrangements
-    'HHLiv12' : {
+    'HHLiv9' : {
         'type' : 'categorical',
         'demographic' : False,
         'geographic' : False,
@@ -215,7 +204,9 @@ data_dict = {
             'min' : 1,
             'encode' : False
             }
-        },   
+        },
+
+
     
     'motivd_POP' : {
         'type' : 'ordinal',
@@ -233,7 +224,6 @@ data_dict = {
             'encode' : False
             }
         },
-
 
     'indev' : {
         'type' : 'ordinal',
@@ -596,4 +586,81 @@ data_dict = {
             'encode' : False
             }
         },
+"""
+
+"""
+
+    'nadult' : {
+        'type' : 'continuous',
+        'demographic' : False,
+        'geographic' : False,
+        'dummy_encode' : False,
+        'target' : False,
+        'clustering' : False,
+        'clustering_categorical' : False,
+        'graph_label' : 'Num Adults in Household',
+        'value_labels' : None,
+        'perturbation' : {
+            'core' : True,
+            'to_perturb' : False,
+            'encode' : False
+            }
+        },
+"""
+"""
+    'Motivation_PC_Q' : {
+        'type' : 'continuous',
+        'demographic' : False,
+        'dummy_encode' : False,
+        'target' : False,
+        'graph_label' : 'Intrinsic Motivation',
+        'value_labels' : {},
+        'perturbation' : {
+            'core' : False,
+            'to_perturb' : True,
+            'change' : 'unsure',
+            'max' : 'unsure',
+            'min' : 'unsure',
+            'encode' : False
+        }
+    }
+"""
+"""
+    'Disab3' : {
+        'type' : 'categorical',
+        'demographic' : True,
+        'geographic' : False,
+        'dummy_encode' : True, 
+        'target' : False,
+        'clustering' : True,
+        'clustering_categorical' : True,
+        'graph_label' : 'Disability Status',
+        'value_labels' : {1.0: 'Limiting disability', 2.0: 'Non-limiting disability', 3.0: 'No disability'},
+        'perturbation' : {
+            'core' : True,
+            'to_perturb' : False,
+            'encode' : True
+            }
+        },
+
+"""
+
+"""
+    'nchild' : {
+        'type' : 'continuous',
+        'demographic' : False,
+        'geographic' : False,
+        'dummy_encode' : False,
+        'target' : False,
+        'clustering' : True,
+        'clustering_categorical' : False,
+        'graph_label' : 'Num Children in Household',
+        'value_labels' : None,
+        'perturbation' : {
+            'core' : True,
+            'to_perturb' : False,
+            'encode' : False
+            }
+        },
+
 """

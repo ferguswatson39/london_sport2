@@ -66,4 +66,40 @@ def get_2022_data() -> pd.DataFrame:
     print(f'>>> Shape {df.shape}')
     return df
 
+def get_master_2022_data():
+    dc = DataCatalogue()
+    catogs = dc.get_perturbation_catogs()
+    contins = dc.get_perturbation_contins()
+    all = catogs + contins + ['serial', 'year', 'LCA_Class']
+    path = ROOT / 'data' / 'master_data' / '2016_to_2023_master_clustering_data_set.csv'
+    df = pd.read_csv(path, usecols = all)
+    missing = [var for var in all if var not in df.columns]
+    if missing:
+        raise ValueError(f'{missing} MISSING')
+    df = df[df['year'] == '2022/23']
+    df = df[df['LCA_Class'].notna()]
+    return df
 
+def get_raw_2022_data():
+    dc = DataCatalogue()
+    to_perturb = dc.get_perturbation_vars()
+    full_cols = ['serial'] + to_perturb
+    data_path = r"C:\Masters\London Sport\9288_ActiveLifeSurvey_2022_2023\UKDA-9288-spss\spss\spss28\active_lives_survey_nov_22-23_data_year_8_shared_20250103.sav"
+    df, meta = pyreadstat.read_sav(data_path, usecols = full_cols)
+    missing = [var for var in full_cols if var not in df.columns]
+    if missing:
+        raise ValueError(f'{missing} MISSING')
+    return df
+
+def merge_frames(on : str, primary_frame : pd.DataFrame, secondary_frame : pd.DataFrame ) -> pd.DataFrame:
+    combined = primary_frame.merge(secondary_frame, how = 'left', on = on )
+    return combined
+
+def get_clean_2022():
+    primary_frame = get_master_2022_data()
+    print('Loaded primary frame...')
+    secondary_frame = get_raw_2022_data()
+    print('Loaded secondary frame...')
+    combined = merge_frames(on = 'serial', primary_frame = primary_frame, secondary_frame = secondary_frame)
+    print('Done.')
+    return combined

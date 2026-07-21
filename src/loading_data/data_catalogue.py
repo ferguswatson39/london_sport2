@@ -130,7 +130,3 @@ class DataCatalogue:
                 vars.append(key)
         return vars
 
-dc = DataCatalogue()
-print(dc.get_perturbation_catogs())
-print(dc.get_perturbation_contins())
-print(dc.get_perturbation_vars())
