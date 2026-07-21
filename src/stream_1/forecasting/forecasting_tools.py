@@ -65,7 +65,7 @@ def tune_sarima(df, t_train_cutoff, forecast_steps):
     
     return pd.DataFrame(final, columns=['borough', 'y_train', 'y_test', 'y_forecast', 'mape'])
 
-def prophet_forecast(df, t_train_cutoff, forecast_steps):
+def prophet_forecast(df, t_train_cutoff, forecast_steps, tuned=False, changepoint_prior_scale=0.05, seasonality_mode='additive'):
     final = []
     df = df.copy()
     df['t'] = df.groupby('LA_Name').cumcount()
@@ -90,7 +90,10 @@ def prophet_forecast(df, t_train_cutoff, forecast_steps):
         df_borough_train = df_borough[df_borough['t'] < t_train_cutoff]['MEMS7_ALL']
         df_borough_test = df_borough[df_borough['t'] >= t_train_cutoff]['MEMS7_ALL']
         
-        model = Prophet(yearly_seasonality=True, weekly_seasonality=False, daily_seasonality=False)
+        if tuned:
+            model = Prophet(yearly_seasonality=True, weekly_seasonality=False, daily_seasonality=False, changepoint_prior_scale=changepoint_prior_scale, seasonality_mode=seasonality_mode)
+        else:
+            model = Prophet(yearly_seasonality=True, weekly_seasonality=False, daily_seasonality=False)
         model.fit(df_prophet_train)
         future = model.make_future_dataframe(periods=forecast_steps, freq=freq)
         forecast_df = model.predict(future)
