@@ -130,7 +130,7 @@ def plot_borough_forecasts(df, t_train_cutoff, xtick_positions, xtick_labels, UN
     n_boroughs = len(df)
     n_cols = 4
     n_rows = n_boroughs // 4
-    fig, axes = plt.subplots(n_rows, n_cols, figsize=(20, 24), sharey=True)
+    fig, axes = plt.subplots(n_rows, n_cols, figsize=(20, 24))
     for ax, (idx, row) in zip(axes.flatten(), df.iterrows()):
         t_train = range(len(row['y_train']))
         t_test = range(t_train_cutoff, t_train_cutoff + len(row['y_test']))
@@ -149,4 +149,26 @@ def plot_borough_forecasts(df, t_train_cutoff, xtick_positions, xtick_labels, UN
     plt.tight_layout()
     plt.show()
 
-
+def plot_prophet_forecasts(df, t_train_cutoff, xtick_positions, xtick_labels, UNCERTAINTY=False):
+    n_boroughs = len(df)
+    n_cols = 4
+    n_rows = n_boroughs // 4
+    fig, axes = plt.subplots(n_rows, n_cols, figsize=(20, 24))
+    for ax, (idx, row) in zip(axes.flatten(), df.iterrows()):
+        t_train = range(len(row['y_train']))
+        t_test = range(t_train_cutoff, t_train_cutoff + len(row['y_test']))
+        t_forecast = range(t_train_cutoff, t_train_cutoff + len(row['y_forecast']))
+        t_all = list(t_train) + list(t_test)
+        y_all = np.concatenate([row['y_train'], row['y_test']])
+        ax.plot(t_all, y_all, color='black')
+        ax.plot(t_forecast, row['y_forecast'], color='blue')
+        ax.scatter(t_forecast, row['y_forecast'], color='black', s=7)
+        ax.fill_between(t_forecast, row['y_lower'], row['y_upper'], alpha=0.2, color='blue')
+        ax.set_xticks(xtick_positions)
+        ax.set_ylim(0, 1500)
+        ax.set_xticklabels(xtick_labels, rotation=45, fontsize=7)
+        ax.text(0.05, 0.95, f"MAPE: {row['mape']:.1f}%",fontsize=7, transform=ax.transAxes, verticalalignment='top')
+        ax.set_title(row['borough'], fontweight='bold', fontsize=8)
+        ax.spines['right'].set_visible(False)
+    plt.tight_layout()
+    plt.show()
