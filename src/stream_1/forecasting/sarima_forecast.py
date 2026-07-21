@@ -2,6 +2,7 @@ from statsmodels.tsa.statespace.sarimax import SARIMAX
 import pandas as pd
 import numpy as np
 from sklearn.linear_model import BayesianRidge
+from prophet import Prophet
 import warnings
 import matplotlib.pyplot as plt
 warnings.filterwarnings('ignore')
@@ -63,6 +64,44 @@ def tune_sarima(df, t_train_cutoff, forecast_steps):
         final.append([borough, df_borough_train.values, df_borough_test.values, forecast, calculate_mape(df_borough_test.values, forecast)])
     
     return pd.DataFrame(final, columns=['borough', 'y_train', 'y_test', 'y_forecast', 'mape'])
+
+def prophet_forecast(df, t_train_cutoff, forecast_steps):
+    final = []
+    df = df.copy()
+    df['t'] = df.groupby('LA_Name').cumcount()
+
+    for borough in df['LA_Name'].unique():
+        df_borough = df[df['LA_Name'] == borough]
+
+        if 'month' in df.columns:
+            dates = pd.to_datetime(df_borough[['year', 'month']].assign(day=1))
+            freq = 'MS'
+        elif 'quarter' in df.columns:
+            month_num = df_borough['quarter'].astype(int) * 3 - 2
+            dates = pd.to_datetime(df_borough[['year']].assign(month=month_num, day=1))
+            freq = 'QS'
+        else:
+            dates = pd.to_datetime(df_borough[['year']].assign(month=1, day=1))
+            freq = 'YS'
+
+        df_prophet = pd.DataFrame({'ds': dates, 'y': df_borough['MEMS7_ALL'].values})
+        df_prophet_train = df_prophet[df_prophet['ds'] < dates.iloc[t_train_cutoff]]
+
+        df_borough_train = df_borough[df_borough['t'] < t_train_cutoff]['MEMS7_ALL']
+        df_borough_test = df_borough[df_borough['t'] >= t_train_cutoff]['MEMS7_ALL']
+        
+        model = Prophet(yearly_seasonality=True, weekly_seasonality=False, daily_seasonality=False)
+        model.fit(df_prophet_train)
+        future = model.make_future_dataframe(periods=forecast_steps, freq=freq)
+        forecast_df = model.predict(future)
+        y_forecast = forecast_df['yhat'].values[-forecast_steps:]
+        y_lower = forecast_df['yhat_lower'].values[-forecast_steps:]
+        y_upper = forecast_df['yhat_upper'].values[-forecast_steps:]
+        # borough, train, test, forecast results
+        final.append([borough, df_borough_train.values, df_borough_test.values, y_forecast, y_lower, y_upper, calculate_mape(df_borough_test.values, y_forecast)])
+    
+    return pd.DataFrame(final, columns=['borough', 'y_train', 'y_test', 'y_forecast', 'y_lower', 'y_upper', 'mape'])
+
 
 
 
