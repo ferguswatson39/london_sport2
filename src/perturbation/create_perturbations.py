@@ -39,3 +39,31 @@ def run_perturbation(df : pd.DataFrame, to_perturb : list, model : object, scale
         output_df.loc[nan_mask, new_var_name] = p_preds
         output_df[difference] = (output_df[new_var_name] - output_df[old_var_name])
     return output_df
+
+def run_perturbation2(df : pd.DataFrame, to_perturb : list, model : object, scaler : object):
+    output_df = df.copy()
+    for var in to_perturb:
+        
+        new = df.copy()
+        old_var_name = f'PREDS_{var}'
+        new_var_name = f'PERTURBED_PREDS_{var}'
+        difference = f'DIFFERENCE_{var}'
+
+        
+        var_values = new[var].values
+        var_idx = new.columns.get_loc(var)
+        var_max_val = new[var].max() # assumes that the max val is in test set - may need to check this
+        mask = np.where(var_values < var_max_val, True, False)
+        
+        
+        X_scaled = scaler.transform(new[mask])
+        non_p_preds = model.get_proba(X_scaled)
+        X_scaled[:, var_idx] = X_scaled[:, var_idx] + 1
+        p_preds = model.get_proba(X_scaled)
+
+        
+        output_df.loc[mask, old_var_name] = non_p_preds
+        output_df.loc[mask, new_var_name] = p_preds
+        output_df.loc[mask, difference] = p_preds - non_p_preds
+    return output_df
+
