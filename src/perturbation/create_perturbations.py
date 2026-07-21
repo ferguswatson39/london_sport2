@@ -6,59 +6,45 @@ ROOT = Path(__file__).resolve().parent.parent.parent
 sys.path.append(str(ROOT))
 from src.perturbation.perturb_df import perturb
 from sklearn.preprocessing import StandardScaler
+from src.loading_data.data_catalogue import DataCatalogue
 
-def run_perturbation(df : pd.DataFrame, to_perturb : list, model : object, scaler : object):
+def run_perturbation(df : pd.DataFrame, model : object, scaler : object):
     """
-    Run perturbations function.
-    Requires model object to have get_proba() method -- Ensure that models used in perturbation have .get_proba() method
-    Creates two copies of df and uses one to store results and the other to compute perturbations
-    Builds inverted boolean mask to filter data and ensure that samples which have max value arent perturbed to increase beyond limit.
-    Saved output to new df
+    Perturbation Function.
+
+    Requires, df, model and scaler objects.
+
+    Returns full df with original data and predictions in terms of probability for each var in to_perturb 
+
     """
-    # using one df to store the output and one to do the perturbations
     output_df = df.copy()
+    dc = DataCatalogue()
+    to_perturb = dc.get_perturbation_vars()
+    data_dict = dc.get_data_dict()
     for var in to_perturb:
+        
         new = df.copy()
+        if var not in new.columns:
+            print(f'{var} not in DataFrame pre perturbation')
+            continue
         old_var_name = f'PREDS_{var}'
         new_var_name = f'PERTURBED_PREDS_{var}'
         difference = f'DIFFERENCE_{var}'
 
-        perturbed_vals = perturb(new, var)
-        # Use ~ to invert condition thus returns True for int values and False for NaN
-        #https://jakevdp.github.io/PythonDataScienceHandbook/02.06-boolean-arrays-and-masks.html
-        nan_mask = ~np.isnan(perturbed_vals)
-        X_scaled = scaler.transform(new[nan_mask])
-        ## Generate the preds for non perturbed subset
-        non_p_preds = model.get_proba(X_scaled)
-
-        new.loc[nan_mask, var] = perturbed_vals[nan_mask]
-        new_X_scaled = scaler.transform(new[nan_mask])
-        p_preds = model.get_proba(new_X_scaled)
-        
-        output_df.loc[nan_mask, old_var_name] = non_p_preds
-        output_df.loc[nan_mask, new_var_name] = p_preds
-        output_df[difference] = (output_df[new_var_name] - output_df[old_var_name])
-    return output_df
-
-def run_perturbation2(df : pd.DataFrame, to_perturb : list, model : object, scaler : object):
-    output_df = df.copy()
-    for var in to_perturb:
-        
-        new = df.copy()
-        old_var_name = f'PREDS_{var}'
-        new_var_name = f'PERTURBED_PREDS_{var}'
-        difference = f'DIFFERENCE_{var}'
-
-        
+        var_change = data_dict[var]['perturbation']['change']
+        var_max = data_dict[var]['perturbation']['max']
+        var_min = data_dict[var]['perturbation']['min']
         var_values = new[var].values
         var_idx = new.columns.get_loc(var)
-        var_max_val = new[var].max() # assumes that the max val is in test set - may need to check this
-        mask = np.where(var_values < var_max_val, True, False)
         
-        
+        if var_change < 0:
+            mask = np.where(var_values > var_min, True, False)
+        elif var_change > 0:
+            mask = np.where(var_values < var_max, True, False)
+
         X_scaled = scaler.transform(new[mask])
         non_p_preds = model.get_proba(X_scaled)
-        X_scaled[:, var_idx] = X_scaled[:, var_idx] + 1
+        X_scaled[:, var_idx] = X_scaled[:, var_idx] + var_change
         p_preds = model.get_proba(X_scaled)
 
         

@@ -95,3 +95,21 @@ class DataCatalogue:
             if self.data_dict[key]['clustering_categorical'] == False and self.data_dict[key]['clustering'] == True:
                 vars.append(key)
         return vars
+    def get_perturbation_df_vars(self):
+        vars = []
+        for key, value in self.data_dict.items():
+            if self.data_dict[key]['perturbation']['core'] == True or self.data_dict[key]['perturbation']['to_perturb'] == True:
+                vars.append(key)
+        return vars
+    def get_perturbation_vars(self):
+        vars = []
+        for key, value in self.data_dict.items():
+            if self.data_dict[key]['perturbation']['to_perturb'] == True:
+                vars.append(key)
+        return vars
+    
+    def get_perturbation_change(self, var_name):
+        return self.data_dict[var_name]['change']
+dc = DataCatalogue()
+vars = dc.get_perturbation_vars()
+print(vars)

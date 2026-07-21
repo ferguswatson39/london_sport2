@@ -1,5 +1,9 @@
 data_dict = {
-    # Demographic Features
+    
+    #################################
+    ########## Core Vars ############
+    #################################
+    
     'Gend3': {
         'type' : 'categorical',
         'demographic' : True,
@@ -9,7 +13,11 @@ data_dict = {
         'clustering' : True,
         'clustering_categorical' : True,
         'graph_label' : 'Gender',
-        'value_labels' :  {1.0: 'Male', 2.0: 'Female', 3.0: 'Other'}
+        'value_labels' :  {1.0: 'Male', 2.0: 'Female', 3.0: 'Other'},
+        'perturbation' : {
+            'core' : True,
+            'to_perturb' : False
+            }
         },
     'Disab3' : {
         'type' : 'categorical',
@@ -20,7 +28,11 @@ data_dict = {
         'clustering' : True,
         'clustering_categorical' : True,
         'graph_label' : 'Disability Status',
-        'value_labels' : {1.0: 'Limiting disability', 2.0: 'Non-limiting disability', 3.0: 'No disability'}
+        'value_labels' : {1.0: 'Limiting disability', 2.0: 'Non-limiting disability', 3.0: 'No disability'},
+        'perturbation' : {
+            'core' : True,
+            'to_perturb' : False
+            }
         },
     'Age9' : {
         'type' : 'ordinal',
@@ -31,7 +43,11 @@ data_dict = {
         'clustering' : True,
         'clustering_categorical' : False,
         'graph_label' : 'Age',
-        'value_labels' : {1.0: '14-15', 2.0: '16-24', 3.0: '25-34', 4.0: '35-44', 5.0: '45-54', 6.0: '55-64', 7.0: '65-74', 8.0: '75-84', 9.0: '85+'}
+        'value_labels' : {1.0: '14-15', 2.0: '16-24', 3.0: '25-34', 4.0: '35-44', 5.0: '45-54', 6.0: '55-64', 7.0: '65-74', 8.0: '75-84', 9.0: '85+'},
+        'perturbation' : {
+            'core' : True,
+            'to_perturb' : False
+            }
         },
     'Eth7' : {
         'type' : 'categorical',
@@ -42,7 +58,11 @@ data_dict = {
         'clustering' : True,
         'clustering_categorical' : True,
         'graph_label' : 'Ethnicity',
-        'value_labels' : {1.0: 'White British', 2.0: 'White Other', 3.0: 'Asian (excl. Chinese)', 4.0: 'Black', 5.0: 'Chinese', 6.0: 'Mixed', 7.0: 'Other ethnic group'}
+        'value_labels' : {1.0: 'White British', 2.0: 'White Other', 3.0: 'Asian (excl. Chinese)', 4.0: 'Black', 5.0: 'Chinese', 6.0: 'Mixed', 7.0: 'Other ethnic group'},
+        'perturbation' : {
+            'core' : True,
+            'to_perturb' : False
+            }
         },
     'NSSEC5' : {
         'type' : 'ordinal',
@@ -53,41 +73,11 @@ data_dict = {
         'clustering' : True,
         'clustering_categorical' : False,
         'graph_label' : 'NSSEC',
-        'value_labels' : {1.0: 'NS SEC 1-2: Higher social groups', 2.0: 'NS SEC 3-5: Middle social groups', 3.0: 'NS SEC 6-8: Lower social groups', 4.0: 'NS SEC 9: Students and other / unclassified'} 
-        },
-
-    'MEMS7_ALL' : {
-        'type' : 'continuous',
-        'demographic' : False,
-        'geographic' : False,
-        'dummy_encode' : False,
-        'target' : True,
-        'clustering' : False,
-        'clustering_categorical' : False,
-        'graph_label' : 'Minutes of Moderate Activity Per Week',
-        'value_labels' : None
-        },
-    'LOG_MEMS7_ALL' : {
-        'type' : 'continuous',
-        'demographic' : False,
-        'geographic' : False,
-        'dummy_encode' : False,
-        'target' : True,
-        'clustering' : False,
-        'clustering_categorical' : False,
-        'graph_label' : 'Log Minutes of Moderate Activity Per Week',
-        'value_labels' : None
-        },
-    'active' : {
-        'type' : 'categorical',
-        'demographic' : False,
-        'geographic' : False,
-        'dummy_encode' : False,
-        'target' : True,
-        'clustering' : False,
-        'clustering_categorical' : False,
-        'graph_label' : 'Active Status',
-        'value_labels' : {0 : 'Not Active', 1 : 'Active' },
+        'value_labels' : {1.0: 'NS SEC 1-2: Higher social groups', 2.0: 'NS SEC 3-5: Middle social groups', 3.0: 'NS SEC 6-8: Lower social groups', 4.0: 'NS SEC 9: Students and other / unclassified'},
+        'perturbation' : {
+            'core' : True,
+            'to_perturb' : False
+            }
         },
 
     # Explanatory Variables
@@ -100,7 +90,11 @@ data_dict = {
         'clustering' : True,
         'clustering_categorical' : False,
         'graph_label' : 'Highest Qualification',
-        'value_labels' : {1.0: 'Level 4 or above', 2.0: 'Level 3 and equivalents', 3.0: 'Level 2 and equivalents', 4.0: 'Level 1 and below', 5.0: 'Another type of qualification', 6.0: 'No qualifications'}
+        'value_labels' : {1.0: 'Level 4 or above', 2.0: 'Level 3 and equivalents', 3.0: 'Level 2 and equivalents', 4.0: 'Level 1 and below', 5.0: 'Another type of qualification', 6.0: 'No qualifications'},
+        'perturbation' : {
+            'core' : True,
+            'to_perturb' : False
+            }
         },
 
     'IMD10' : {
@@ -112,7 +106,11 @@ data_dict = {
         'clustering' : True,
         'clustering_categorical' : False,
         'graph_label' : 'IMD',
-        'value_labels' : {1.0: 'Most deprived decile', 2.0: 'Second most deprived decile', 3.0: 'Third most deprived decile', 4.0: 'Fourth most deprived decile', 5.0: 'Fifth most deprived decile', 6.0: 'Fifth least deprived decile', 7.0: 'Fourth least deprived decile', 8.0: 'Third least deprived decile', 9.0: 'Second least deprived decile', 10.0: 'Least deprived decile'}
+        'value_labels' : {1.0: 'Most deprived decile', 2.0: 'Second most deprived decile', 3.0: 'Third most deprived decile', 4.0: 'Fourth most deprived decile', 5.0: 'Fifth most deprived decile', 6.0: 'Fifth least deprived decile', 7.0: 'Fourth least deprived decile', 8.0: 'Third least deprived decile', 9.0: 'Second least deprived decile', 10.0: 'Least deprived decile'},
+        'perturbation' : {
+            'core' : True,
+            'to_perturb' : False
+            }
         },
     'nchild' : {
         'type' : 'continuous',
@@ -123,7 +121,11 @@ data_dict = {
         'clustering' : True,
         'clustering_categorical' : False,
         'graph_label' : 'Num Children in Household',
-        'value_labels' : None
+        'value_labels' : None,
+        'perturbation' : {
+            'core' : True,
+            'to_perturb' : False
+            }
         },
     'nadult' : {
         'type' : 'continuous',
@@ -134,7 +136,11 @@ data_dict = {
         'clustering' : False,
         'clustering_categorical' : False,
         'graph_label' : 'Num Adults in Household',
-        'value_labels' : None
+        'value_labels' : None,
+        'perturbation' : {
+            'core' : True,
+            'to_perturb' : False
+            }
         },
     'WorkStat10' : {
         'type' : 'categorical',
@@ -145,8 +151,13 @@ data_dict = {
         'clustering' : True,
         'clustering_categorical' : True,
         'graph_label' : 'Employment Status',
-        'value_labels' : {1.0: 'Working full time', 2.0: 'Working part time', 3.0: 'Unemployed < 12mths', 4.0: 'Unemployed >12 mths', 5.0: 'Not working-retired', 6.0: 'Not working-looking after house/children', 7.0: 'Not working-long term sick or disabled', 8.0: 'Student full time', 9.0: 'Student part time', 10.0: 'Other'}
+        'value_labels' : {1.0: 'Working full time', 2.0: 'Working part time', 3.0: 'Unemployed < 12mths', 4.0: 'Unemployed >12 mths', 5.0: 'Not working-retired', 6.0: 'Not working-looking after house/children', 7.0: 'Not working-long term sick or disabled', 8.0: 'Student full time', 9.0: 'Student part time', 10.0: 'Other'},
+        'perturbation' : {
+            'core' : True,
+            'to_perturb' : False
+            }
         },
+    
     'VolAny' : {
         'type' : 'categorical',
         'demographic' : False,
@@ -156,32 +167,13 @@ data_dict = {
         'clustering' : False,
         'clustering_categorical' : False,
         'graph_label' : 'Has Volunteered',
-        'value_labels' : {0 : 'Not volunteered' , 1 : 'Volunteered'}
+        'value_labels' : {0 : 'Not volunteered' , 1 : 'Volunteered'},
+        'perturbation' : {
+            'core' : True,
+            'to_perturb' : False
+            }
         },
-        # Self-Determination Theory - intrinsic vs extrinsic motivation
-    'Motiva_POP': {
-        'type' : 'ordinal',
-        'demographic' : False,
-        'geographic' : False,
-        'dummy_encode' : False,
-        'target' : False,
-        'clustering' : True,
-        'clustering_categorical' : False,
-        'graph_label' : 'Exercise enjoyable and satisfying',
-        'value_labels' : {1.0: 'Strongly agree', 2.0: 'Agree', 3.0: 'Neither agree nor disagree', 4.0: 'Disagree', 5.0: 'Strongly disagree'}
-          },
-    'motivd_POP' : { # showed massuive varaince on coefficient plot
-        'type' : 'ordinal',
-        'demographic' : False,
-        'geographic' : False,
-        'dummy_encode' : False,
-        'target' : False,
-        'clustering' : True,
-        'clustering_categorical' : False,
-        'graph_label' : 'Exercise to prevent dissapoint from others',
-        'value_labels' : {1.0: 'Strongly agree', 2.0: 'Agree', 3.0: 'Neither agree nor disagree', 4.0: 'Disagree', 5.0: 'Strongly disagree'} 
-        },
-        # Living Arrangements
+            # Living Arrangements
     'HHLiv12' : {
         'type' : 'categorical',
         'demographic' : False,
@@ -202,8 +194,289 @@ data_dict = {
             9.0: 'Multi-generational, children in household',
             10.0: 'Living with parents', 
             11.0: 'Other/complex, no children',
-            12.0: 'Other/complex, children' }
+            12.0: 'Other/complex, children' },
+        'perturbation' : {
+            'core' : True,
+            'to_perturb' : False
+            }
     },
+
+    #################################
+    ####### Perturbation Vars #######
+    #################################
+
+    'Motiva_POP': {
+        'type' : 'ordinal',
+        'demographic' : False,
+        'dummy_encode' : False,
+        'target' : False,
+        'graph_label' : 'Exercise enjoyable and satisfying',
+        'value_labels' : {1.0: 'Strongly agree', 2.0: 'Agree', 3.0: 'Neither agree nor disagree', 4.0: 'Disagree', 5.0: 'Strongly disagree'},
+        'perturbation' : {
+            'core' : False,
+            'to_perturb' : True,
+            'change' : -1,
+            'max' : 5,
+            'min' : 1
+            }
+        },   
+    
+    'motivd_POP' : {
+        'type' : 'ordinal',
+        'demographic' : False,
+        'dummy_encode' : False,
+        'target' : False,
+        'graph_label' : 'Exercise to prevent guilt from others',
+        'value_labels' : {1.0: 'Strongly agree', 2.0: 'Agree', 3.0: 'Neither agree nor disagree', 4.0: 'Disagree', 5.0: 'Strongly disagree'},
+        'perturbation' : {
+            'core' : False,
+            'to_perturb' : True,
+            'change' : 1,
+            'max' : 5,
+            'min' : 1
+            }
+        },
+
+
+    'indev' : {
+        'type' : 'ordinal',
+        'demographic' : False,
+        'dummy_encode' : False,
+        'target' : False,
+        'graph_label' : 'Can achieve goals',
+        'value_labels' : {1.0: 'Strongly disagree', 2.0: 'Disagree', 3.0: 'Neither agree nor disagree', 4.0: 'Agree', 5.0: 'Strongly agree'},
+        'perturbation' : {
+            'core' : False,
+            'to_perturb' : True,
+            'change' : 1,
+            'max' : 5,
+            'min' : 1
+            }
+        },
+    'indevtry' : {
+        'type' : 'ordinal',
+        'demographic' : False,
+        'dummy_encode' : False,
+        'target' : False,
+        'graph_label' : 'Persistence (keep trying)',
+        'value_labels' : {1.0: 'Strongly disagree', 2.0: 'Disagree', 3.0: 'Neither agree nor disagree', 4.0: 'Agree', 5.0: 'Strongly agree'},
+        'perturbation' : {
+            'core' : False,
+            'to_perturb' : True,
+            'change' : 1,
+            'max' : 5,
+            'min' : 1
+            }
+        },
+        # Social Cohesion
+    'inclus_a' : {
+        'type' : 'ordinal',
+        'demographic' : False,
+        'dummy_encode' : False,
+        'target' : False,
+        'graph_label' : 'Exercise areas inclusive and welcoming',
+        'value_labels' : {1.0: 'Strongly agree', 2.0: 'Agree', 3.0: 'Neither agree nor disagree', 4.0: 'Disagree', 5.0: 'Strongly disagree'},
+        'perturbation' : {
+            'core' : False,
+            'to_perturb' : True,
+            'change' : -1,
+            'max' : 5,
+            'min' : 1
+            }
+        },
+        # you cant really perturb 'see similar people when excersise' - maybe can relate to social cohesion?
+    'inclus_b' : {
+        'type' : 'ordinal',
+        'demographic' : False,
+        'dummy_encode' : False,
+        'target' : False,
+        'graph_label' : 'See similar people when exercise',
+        'value_labels' : {1.0: 'Strongly agree', 2.0: 'Agree', 3.0: 'Neither agree nor disagree', 4.0: 'Disagree', 5.0: 'Strongly disagree'},
+        'perturbation' : {
+            'core' : False,
+            'to_perturb' : True,
+            'change' : -1,
+            'max' : 5,
+            'min' : 1
+            }
+        },
+    'inclus_c' : {
+        'type' : 'ordinal',
+        'demographic' : False,
+        'dummy_encode' : False,
+        'target' : False,
+        'graph_label' : 'Safe exercise places (public)',
+        'value_labels' : {1.0: 'Strongly agree', 2.0: 'Agree', 3.0: 'Neither agree nor disagree', 4.0: 'Disagree', 5.0: 'Strongly disagree'},
+        'perturbation' : {
+            'core' : False,
+            'to_perturb' : True,
+            'change' : -1,
+            'max' : 5,
+            'min' : 1
+            }
+        },
+    'comm1' : {
+        'type' : 'ordinal',
+        'demographic' : False,
+        'dummy_encode' : False,
+        'target' : False,
+        'graph_label' : 'Trust local people',
+        'value_labels' : {1.0: 'Strongly disagree', 2.0: 'Disagree', 3.0: 'Neither agree nor disagree', 4.0: 'Agree', 5.0: 'Strongly agree'},
+        'perturbation' : {
+            'core' : False,
+            'to_perturb' : True,
+            'change' : 1,
+            'max' : 5,
+            'min' : 1
+            }
+        },
+    'comm2' : {
+        'type' : 'ordinal',
+        'demographic' : False,
+        'dummy_encode' : False,
+        'target' : False,
+        'graph_label' : 'Local people from different backgrounds get on well',
+        'value_labels' : {-2.0: 'People in this area are all of the same background', -1.0: 'There are too few people in the local area', 1.0: 'Definitely disagree', 2.0: 'Tend to disagree', 3.0: 'Tend to agree', 4.0: 'Definitely agree'},
+        'perturbation' : {
+            'core' : False,
+            'to_perturb' : True,
+            'change' : 1,
+            'max' : 4,
+            'min' : -2
+            }
+        },
+        # Life Emotions
+    'anxious' : {
+        'type' : 'ordinal',
+        'demographic' : False,
+        'dummy_encode' : False,
+        'target' : False,
+        'graph_label' : 'Anxious yesterday',
+        'value_labels' : {0.0: '0 Not at all anxious', 1.0: '1', 2.0: '2', 3.0: '3', 4.0: '4', 5.0: '5', 6.0: '6', 7.0: '7', 8.0: '8', 9.0: '9', 10.0: '10 Completely anxious'},
+        'perturbation' : {
+            'core' : False,
+            'to_perturb' : True,
+            'change' : -1,
+            'max' : 10,
+            'min' : 0
+            }
+        },
+    'happy' : {
+        'type' : 'ordinal',
+        'demographic' : False,
+        'dummy_encode' : False,
+        'target' : False,
+        'graph_label' : 'Happy yesterday',
+        'value_labels' : {0.0: '0 Not at all happy', 1.0: '1', 2.0: '2', 3.0: '3', 4.0: '4', 5.0: '5', 6.0: '6', 7.0: '7', 8.0: '8', 9.0: '9', 10.0: '10 Completely happy'},
+        'perturbation' : {
+            'core' : False,
+            'to_perturb' : True,
+            'change' : 1,
+            'max' : 10,
+            'min' : 0
+            }
+        },
+    'lifesat' : {
+        'type' : 'ordinal',
+        'demographic' : False,
+        'dummy_encode' : False,
+        'target' : False,
+        'graph_label' : 'Life Satisfaction',
+        'value_labels' : {0.0: '0 Not at all satisfied', 1.0: '1', 2.0: '2', 3.0: '3', 4.0: '4', 5.0: '5', 6.0: '6', 7.0: '7', 8.0: '8', 9.0: '9', 10.0: '10 Completely satisfied'},
+        'perturbation' : {
+            'core' : False,
+            'to_perturb' : True,
+            'change' : 1,
+            'max' : 10,
+            'min' : 0
+            }
+        },
+    'lone' : {
+        'type' : 'ordinal',
+        'demographic' : False,
+        'dummy_encode' : False,
+        'target' : False,
+        'graph_label' : 'Feeling lonely',
+        'value_labels' : {1.0: 'Often / always', 2.0: 'Some of the time', 3.0: 'Occasionally', 4.0: 'Hardly ever', 5.0: 'Never'},
+        'perturbation' : {
+            'core' : False,
+            'to_perturb' : True,
+            'change' : -1,
+            'max' : 5,
+            'min' : 1
+            }
+        },
+    'worthw' : {
+        'type' : 'ordinal',
+        'demographic' : False,
+        'dummy_encode' : False,
+        'target' : False,
+        'graph_label' : 'Extent life worthwhile',
+        'value_labels' : {0.0: '0 Not at all worthwhile', 1.0: '1', 2.0: '2', 3.0: '3', 4.0: '4', 5.0: '5', 6.0: '6', 7.0: '7', 8.0: '8', 9.0: '9', 10.0: '10 Completely worthwhile'},
+        'perturbation' : {
+            'core' : False,
+            'to_perturb' : True,
+            'change' : 1,
+            'max' : 10,
+            'min' : 0
+            }
+        },
+  
+    ###################################
+    ########## Target Vars ############
+    ###################################
+
+    'MEMS7_ALL' : {
+        'type' : 'continuous',
+        'demographic' : False,
+        'geographic' : False,
+        'dummy_encode' : False,
+        'target' : True,
+        'clustering' : False,
+        'clustering_categorical' : False,
+        'graph_label' : 'Minutes of Moderate Activity Per Week',
+        'value_labels' : None,
+        'perturbation' : {
+            'core' : False,
+            'to_perturb' : False
+        }
+        },
+    'LOG_MEMS7_ALL' : {
+        'type' : 'continuous',
+        'demographic' : False,
+        'geographic' : False,
+        'dummy_encode' : False,
+        'target' : True,
+        'clustering' : False,
+        'clustering_categorical' : False,
+        'graph_label' : 'Log Minutes of Moderate Activity Per Week',
+        'value_labels' : None,
+        'perturbation' : {
+            'core' : False,
+            'to_perturb' : False
+        }
+        },
+    'active' : {
+        'type' : 'categorical',
+        'demographic' : False,
+        'geographic' : False,
+        'dummy_encode' : False,
+        'target' : True,
+        'clustering' : False,
+        'clustering_categorical' : False,
+        'graph_label' : 'Active Status',
+        'value_labels' : {0 : 'Not Active', 1 : 'Active' },
+        'perturbation' : {
+            'core' : True,
+            'to_perturb' : False
+            }
+        },
+
+
+    #################################
+    ########## Time Vars ############
+    #################################
+
     # Time
     'year' : {
         'type' : 'ordinal',
@@ -214,7 +487,11 @@ data_dict = {
         'clustering' : False,
         'clustering_categorical' : False,
         'graph_label' : 'Year',
-        'value_labels' : None
+        'value_labels' : None,
+        'perturbation' : {
+            'core' : False,
+            'to_perturb' : False
+        }
     },
 
     'month' : {
@@ -224,8 +501,17 @@ data_dict = {
         'geographic' : False,
         'target' : False,
         'graph_label' : 'Year',
-        'value_labels' : None
+        'value_labels' : None,
+        'perturbation' : {
+            'core' : False,
+            'to_perturb' : False
+        }
     },
+
+
+    #######################################
+    ########## Geographic Vars ############
+    #######################################
 
     # Geographic
     'LA_2023' : {
@@ -245,6 +531,10 @@ data_dict = {
             135.0: 'Islington', 147.0: 'Lewisham', 272.0: 'Tower Hamlets', 59.0: 'City of London', 30.0: 'Brent', 
             78.0: 'Ealing', 107.0: 'Greenwich', 117.0: 'Harrow', 196.0: 'Redbridge', 280.0: 'Wandsworth', 
             91.0: 'Enfield', 136.0: 'Kensington and Chelsea', 255.0: 'Sutton', 279.0: 'Waltham Forest'
+        },
+        'perturbation' : {
+            'core' : False,
+            'to_perturb' : False
         }
     },
 
@@ -259,6 +549,10 @@ data_dict = {
         'graph_label' : 'Inner/Outer',
         'value_labels' : {
             1.0: 'Outer', 2.0: 'Inner'
+        },
+        'perturbation' : {
+            'core' : False,
+            'to_perturb' : False
         }
     }
 }
