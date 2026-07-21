@@ -16,7 +16,8 @@ data_dict = {
         'value_labels' :  {1.0: 'Male', 2.0: 'Female', 3.0: 'Other'},
         'perturbation' : {
             'core' : True,
-            'to_perturb' : False
+            'to_perturb' : False, 
+            'encode' : True
             }
         },
     'Disab3' : {
@@ -31,7 +32,8 @@ data_dict = {
         'value_labels' : {1.0: 'Limiting disability', 2.0: 'Non-limiting disability', 3.0: 'No disability'},
         'perturbation' : {
             'core' : True,
-            'to_perturb' : False
+            'to_perturb' : False,
+            'encode' : True
             }
         },
     'Age9' : {
@@ -46,7 +48,8 @@ data_dict = {
         'value_labels' : {1.0: '14-15', 2.0: '16-24', 3.0: '25-34', 4.0: '35-44', 5.0: '45-54', 6.0: '55-64', 7.0: '65-74', 8.0: '75-84', 9.0: '85+'},
         'perturbation' : {
             'core' : True,
-            'to_perturb' : False
+            'to_perturb' : False,
+            'encode' : False
             }
         },
     'Eth7' : {
@@ -61,7 +64,8 @@ data_dict = {
         'value_labels' : {1.0: 'White British', 2.0: 'White Other', 3.0: 'Asian (excl. Chinese)', 4.0: 'Black', 5.0: 'Chinese', 6.0: 'Mixed', 7.0: 'Other ethnic group'},
         'perturbation' : {
             'core' : True,
-            'to_perturb' : False
+            'to_perturb' : False,
+            'encode' : True
             }
         },
     'NSSEC5' : {
@@ -76,7 +80,8 @@ data_dict = {
         'value_labels' : {1.0: 'NS SEC 1-2: Higher social groups', 2.0: 'NS SEC 3-5: Middle social groups', 3.0: 'NS SEC 6-8: Lower social groups', 4.0: 'NS SEC 9: Students and other / unclassified'},
         'perturbation' : {
             'core' : True,
-            'to_perturb' : False
+            'to_perturb' : False,
+            'encode' : False
             }
         },
 
@@ -93,7 +98,8 @@ data_dict = {
         'value_labels' : {1.0: 'Level 4 or above', 2.0: 'Level 3 and equivalents', 3.0: 'Level 2 and equivalents', 4.0: 'Level 1 and below', 5.0: 'Another type of qualification', 6.0: 'No qualifications'},
         'perturbation' : {
             'core' : True,
-            'to_perturb' : False
+            'to_perturb' : False,
+            'encode' : False
             }
         },
 
@@ -109,7 +115,8 @@ data_dict = {
         'value_labels' : {1.0: 'Most deprived decile', 2.0: 'Second most deprived decile', 3.0: 'Third most deprived decile', 4.0: 'Fourth most deprived decile', 5.0: 'Fifth most deprived decile', 6.0: 'Fifth least deprived decile', 7.0: 'Fourth least deprived decile', 8.0: 'Third least deprived decile', 9.0: 'Second least deprived decile', 10.0: 'Least deprived decile'},
         'perturbation' : {
             'core' : True,
-            'to_perturb' : False
+            'to_perturb' : False,
+            'encode' : False
             }
         },
     'nchild' : {
@@ -124,7 +131,8 @@ data_dict = {
         'value_labels' : None,
         'perturbation' : {
             'core' : True,
-            'to_perturb' : False
+            'to_perturb' : False,
+            'encode' : False
             }
         },
     'nadult' : {
@@ -139,7 +147,8 @@ data_dict = {
         'value_labels' : None,
         'perturbation' : {
             'core' : True,
-            'to_perturb' : False
+            'to_perturb' : False,
+            'encode' : False
             }
         },
     'WorkStat10' : {
@@ -154,23 +163,8 @@ data_dict = {
         'value_labels' : {1.0: 'Working full time', 2.0: 'Working part time', 3.0: 'Unemployed < 12mths', 4.0: 'Unemployed >12 mths', 5.0: 'Not working-retired', 6.0: 'Not working-looking after house/children', 7.0: 'Not working-long term sick or disabled', 8.0: 'Student full time', 9.0: 'Student part time', 10.0: 'Other'},
         'perturbation' : {
             'core' : True,
-            'to_perturb' : False
-            }
-        },
-    
-    'VolAny' : {
-        'type' : 'categorical',
-        'demographic' : False,
-        'geographic' : False,
-        'dummy_encode' : False,
-        'target' : False,
-        'clustering' : False,
-        'clustering_categorical' : False,
-        'graph_label' : 'Has Volunteered',
-        'value_labels' : {0 : 'Not volunteered' , 1 : 'Volunteered'},
-        'perturbation' : {
-            'core' : True,
-            'to_perturb' : False
+            'to_perturb' : False,
+            'encode' : True
             }
         },
             # Living Arrangements
@@ -197,7 +191,8 @@ data_dict = {
             12.0: 'Other/complex, children' },
         'perturbation' : {
             'core' : True,
-            'to_perturb' : False
+            'to_perturb' : False,
+            'encode' : True
             }
     },
 
@@ -217,7 +212,8 @@ data_dict = {
             'to_perturb' : True,
             'change' : -1,
             'max' : 5,
-            'min' : 1
+            'min' : 1,
+            'encode' : False
             }
         },   
     
@@ -233,7 +229,8 @@ data_dict = {
             'to_perturb' : True,
             'change' : 1,
             'max' : 5,
-            'min' : 1
+            'min' : 1,
+            'encode' : False
             }
         },
 
@@ -250,7 +247,8 @@ data_dict = {
             'to_perturb' : True,
             'change' : 1,
             'max' : 5,
-            'min' : 1
+            'min' : 1,
+            'encode' : False
             }
         },
     'indevtry' : {
@@ -265,7 +263,8 @@ data_dict = {
             'to_perturb' : True,
             'change' : 1,
             'max' : 5,
-            'min' : 1
+            'min' : 1,
+            'encode' : False
             }
         },
         # Social Cohesion
@@ -281,7 +280,8 @@ data_dict = {
             'to_perturb' : True,
             'change' : -1,
             'max' : 5,
-            'min' : 1
+            'min' : 1,
+            'encode' : False
             }
         },
         # you cant really perturb 'see similar people when excersise' - maybe can relate to social cohesion?
@@ -297,7 +297,8 @@ data_dict = {
             'to_perturb' : True,
             'change' : -1,
             'max' : 5,
-            'min' : 1
+            'min' : 1,
+            'encode' : False
             }
         },
     'inclus_c' : {
@@ -312,7 +313,8 @@ data_dict = {
             'to_perturb' : True,
             'change' : -1,
             'max' : 5,
-            'min' : 1
+            'min' : 1,
+            'encode' : False
             }
         },
     'comm1' : {
@@ -327,7 +329,8 @@ data_dict = {
             'to_perturb' : True,
             'change' : 1,
             'max' : 5,
-            'min' : 1
+            'min' : 1,
+            'encode' : False
             }
         },
     'comm2' : {
@@ -342,7 +345,8 @@ data_dict = {
             'to_perturb' : True,
             'change' : 1,
             'max' : 4,
-            'min' : -2
+            'min' : -2,
+            'encode' : False
             }
         },
         # Life Emotions
@@ -358,7 +362,8 @@ data_dict = {
             'to_perturb' : True,
             'change' : -1,
             'max' : 10,
-            'min' : 0
+            'min' : 0,
+            'encode' : False
             }
         },
     'happy' : {
@@ -373,24 +378,11 @@ data_dict = {
             'to_perturb' : True,
             'change' : 1,
             'max' : 10,
-            'min' : 0
+            'min' : 0,
+            'encode' : False
             }
         },
-    'lifesat' : {
-        'type' : 'ordinal',
-        'demographic' : False,
-        'dummy_encode' : False,
-        'target' : False,
-        'graph_label' : 'Life Satisfaction',
-        'value_labels' : {0.0: '0 Not at all satisfied', 1.0: '1', 2.0: '2', 3.0: '3', 4.0: '4', 5.0: '5', 6.0: '6', 7.0: '7', 8.0: '8', 9.0: '9', 10.0: '10 Completely satisfied'},
-        'perturbation' : {
-            'core' : False,
-            'to_perturb' : True,
-            'change' : 1,
-            'max' : 10,
-            'min' : 0
-            }
-        },
+
     'lone' : {
         'type' : 'ordinal',
         'demographic' : False,
@@ -401,9 +393,10 @@ data_dict = {
         'perturbation' : {
             'core' : False,
             'to_perturb' : True,
-            'change' : -1,
+            'change' : 1,
             'max' : 5,
-            'min' : 1
+            'min' : 1,
+            'encode' : False
             }
         },
     'worthw' : {
@@ -418,7 +411,8 @@ data_dict = {
             'to_perturb' : True,
             'change' : 1,
             'max' : 10,
-            'min' : 0
+            'min' : 0,
+            'encode' : False
             }
         },
   
@@ -438,7 +432,8 @@ data_dict = {
         'value_labels' : None,
         'perturbation' : {
             'core' : False,
-            'to_perturb' : False
+            'to_perturb' : False,
+            'encode' : False
         }
         },
     'LOG_MEMS7_ALL' : {
@@ -453,7 +448,8 @@ data_dict = {
         'value_labels' : None,
         'perturbation' : {
             'core' : False,
-            'to_perturb' : False
+            'to_perturb' : False,
+            'encode' : False
         }
         },
     'active' : {
@@ -468,7 +464,8 @@ data_dict = {
         'value_labels' : {0 : 'Not Active', 1 : 'Active' },
         'perturbation' : {
             'core' : True,
-            'to_perturb' : False
+            'to_perturb' : False,
+            'encode' : False
             }
         },
 
@@ -490,7 +487,8 @@ data_dict = {
         'value_labels' : None,
         'perturbation' : {
             'core' : False,
-            'to_perturb' : False
+            'to_perturb' : False,
+            'encode' : False
         }
     },
 
@@ -504,7 +502,8 @@ data_dict = {
         'value_labels' : None,
         'perturbation' : {
             'core' : False,
-            'to_perturb' : False
+            'to_perturb' : False,
+            'encode' : False
         }
     },
 
@@ -534,7 +533,8 @@ data_dict = {
         },
         'perturbation' : {
             'core' : False,
-            'to_perturb' : False
+            'to_perturb' : False,
+            'encode' : False
         }
     },
 
@@ -552,7 +552,48 @@ data_dict = {
         },
         'perturbation' : {
             'core' : False,
-            'to_perturb' : False
+            'to_perturb' : False,
+            'encode' : False
         }
     }
 }
+
+
+
+""" # had a 0.76 corr with happy so dropped lifesat
+    'lifesat' : {
+        'type' : 'ordinal',
+        'demographic' : False,
+        'dummy_encode' : False,
+        'target' : False,
+        'graph_label' : 'Life Satisfaction',
+        'value_labels' : {0.0: '0 Not at all satisfied', 1.0: '1', 2.0: '2', 3.0: '3', 4.0: '4', 5.0: '5', 6.0: '6', 7.0: '7', 8.0: '8', 9.0: '9', 10.0: '10 Completely satisfied'},
+        'perturbation' : {
+            'core' : False,
+            'to_perturb' : True,
+            'change' : 1,
+            'max' : 10,
+            'min' : 0,
+            'encode' : False
+            }
+        },
+"""
+
+"""
+    'VolAny' : {
+        'type' : 'categorical',
+        'demographic' : False,
+        'geographic' : False,
+        'dummy_encode' : False,
+        'target' : False,
+        'clustering' : False,
+        'clustering_categorical' : False,
+        'graph_label' : 'Has Volunteered',
+        'value_labels' : {0 : 'Not volunteered' , 1 : 'Volunteered'},
+        'perturbation' : {
+            'core' : True,
+            'to_perturb' : False,
+            'encode' : False
+            }
+        },
+"""

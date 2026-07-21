@@ -1,2 +1,1 @@
-import os
-print(os.cpu_count())
+x = ['happy', 'sad', 'ban']

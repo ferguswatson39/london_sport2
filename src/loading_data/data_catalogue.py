@@ -30,7 +30,7 @@ class DataCatalogue:
         vars = [key for key, value in self.data_dict.items()]
         return vars
     
-    def get_continuous_vars(self, with_targets : bool) -> list[str]:
+    def get_continuous_vars(self, with_targets : bool = False) -> list[str]:
         if with_targets:
             vars = [key for key, value in self.data_dict.items() if self.data_dict[key]['type'] == 'continuous']
             return vars
@@ -109,8 +109,28 @@ class DataCatalogue:
         return vars
     
     def get_perturbation_change(self, var_name):
-        return self.data_dict[var_name]['change']
+        return self.data_dict[var_name]['perturbation']['change']
     def get_perturbation_max(self, var_name):
-        return self.data_dict[var_name]['max']
+        return self.data_dict[var_name]['perturbation']['max']
     def get_perturbation_min(self, var_name):
-        return self.data_dict[var_name]['min']
+        return self.data_dict[var_name]['perturbation']['min']
+    
+    def get_perturbation_catogs(self):
+        vars = []
+        for key, value in self.data_dict.items():
+            if self.data_dict[key]['perturbation']['encode'] == True:
+                vars.append(key)
+        return vars
+    
+    def get_perturbation_contins(self):
+        """ Need to find a way to get the core continuous vars for pertubation"""
+        vars = []
+        for key, value in self.data_dict.items():
+            if self.data_dict[key]['perturbation']['core'] == True and self.data_dict[key]['type'] != 'categorical':
+                vars.append(key)
+        return vars
+
+dc = DataCatalogue()
+print(dc.get_perturbation_catogs())
+print(dc.get_perturbation_contins())
+print(dc.get_perturbation_vars())
