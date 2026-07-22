@@ -38,10 +38,10 @@ def sarima_forecast(df, t_train_cutoff, forecast_steps):
     
     return pd.DataFrame(final, columns=['borough', 'y_train', 'y_test', 'y_forecast', 'mape'])
 
-def tune_sarima(df, t_train_cutoff, forecast_steps):
+def tune_sarima(df, t_train_cutoff, forecast_steps, group_col='LA_Name'):
     final = []
     df = df.copy()
-    df['t'] = df.groupby('LA_Name').cumcount()
+    df['t'] = df.groupby(group_col).cumcount()
     if 'month' in df.columns:
         seasonal_period = 12
     elif 'quarter' in df.columns:
@@ -52,8 +52,8 @@ def tune_sarima(df, t_train_cutoff, forecast_steps):
     print("-------------------------")
     print("----- TUNING SARIMA -----")
     print("-------------------------")
-    for borough in tqdm(df['LA_Name'].unique()):
-        df_borough = df[df['LA_Name'] == borough]
+    for borough in tqdm(df[group_col].unique()):
+        df_borough = df[df[group_col] == borough]
 
         df_borough_train = df_borough[df_borough['t'] < t_train_cutoff]['MEMS7_ALL']
         df_borough_test = df_borough[df_borough['t'] >= t_train_cutoff]['MEMS7_ALL']
@@ -64,7 +64,7 @@ def tune_sarima(df, t_train_cutoff, forecast_steps):
         # borough, train, test, forecast results
         final.append([borough, df_borough_train.values, df_borough_test.values, forecast, calculate_mape(df_borough_test.values, forecast)])
     
-    return pd.DataFrame(final, columns=['borough', 'y_train', 'y_test', 'y_forecast', 'mape'])
+    return pd.DataFrame(final, columns=[group_col, 'y_train', 'y_test', 'y_forecast', 'mape'])
 
 def prophet_forecast(df, t_train_cutoff, forecast_steps, tuned=False, changepoint_prior_scale=0.05, seasonality_mode='additive', group_col='LA_Name'):
     final = []
@@ -167,7 +167,7 @@ def plot_cluster_forecasts(df, t_train_cutoff, xtick_positions, xtick_labels, UN
         ax.plot(t_all, y_all, color='black')
         ax.plot(t_forecast, row['y_forecast'], color='blue')
         ax.scatter(t_forecast, row['y_forecast'], color='black', s=7)
-        ax.fill_between(t_forecast, row['y_lower'], row['y_upper'], alpha=0.2, color='blue')
+        if UNCERTAINTY: ax.fill_between(t_forecast, row['y_lower'], row['y_upper'], alpha=0.2, color='blue')
         ax.set_xticks(xtick_positions)
         ax.set_ylim(0, max(y_all) * 1.3)
         ax.set_xticklabels(xtick_labels, rotation=45, fontsize=7)
