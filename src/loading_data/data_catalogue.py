@@ -76,6 +76,7 @@ class DataCatalogue:
             if self.data_dict[key]['clustering'] == True:
                 vars.append(key)
         return vars
+    
     def verify_categorical_vars(self, all_vars: list[str]):
         catog_vars = []
         for var in all_vars:
@@ -86,12 +87,13 @@ class DataCatalogue:
     def get_clustering_categoricals(self):
         vars = []
         for key, value in self.data_dict.items():
-            if self.data_dict[key]['clustering_categorical'] == True and self.data_dict[key]['clustering'] == True:
+            if value.get('clustering_categorical') == True and value.get('clustering') == True:
                 vars.append(key)
         return vars
+    
     def get_clustering_continuous(self):
         vars = []
         for key, value in self.data_dict.items():
-            if self.data_dict[key]['clustering_categorical'] == False and self.data_dict[key]['clustering'] == True:
+            if value.get('clustering_categorical') == False and value.get('clustering') == True:
                 vars.append(key)
         return vars
