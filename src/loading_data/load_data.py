@@ -42,6 +42,19 @@ def get_geographic_data() -> pd.DataFrame:
     print(f'>>> Shape {df.shape}')
     return df
 
+def get_modality_data() -> pd.DataFrame:
+    dc = DataCatalogue()
+    df_path = Path(ROOT / 'exploration' / 'data' / 'master_data' / '2016_to_2023_master_clustering_data_set.csv')
+    df = pd.read_csv(df_path)
+    df = df[['LCA_Class', 'LA_2023']]
+    df = df.dropna()
+    df['LA_Name'] = df['LA_2023'].map(dc.get_data_dict()['LA_2023']['value_labels']) 
+    df['LA_Name'] = df['LA_Name'].replace({'Richmond upon Thames': 'Richmond', 'Barking and Dagenham' : 'Barking/Dagenham'})
+    crosstab = pd.crosstab(df['LCA_Class'], df['LA_Name'], normalize = 'index') * 100
+    modes = crosstab.idxmax(axis = 1)
+    percentages = crosstab.max(axis = 1)
+    return pd.DataFrame({'LA': modes, 'Percentage' : percentages}).reset_index()
+    
 def get_2022_data() -> pd.DataFrame:
     vars = ['Gend3','HHLiv12','motivd_POP','Motiva_POP','WorkStat10','NSSEC5','Eth7','Age9', 'happy', 'lifesat', 'worthw', 'lone', 'Educ6', 'IMD10','MEMS7_ALL','LondInOut', 'comm1', 'inclus_a']
     df_path = Path(r"C:/Masters/London Sport/9288_ActiveLifeSurvey_2022_2023/UKDA-9288-spss/spss/spss28/active_lives_survey_nov_22-23_data_year_8_shared_20250103.sav")
