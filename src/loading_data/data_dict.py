@@ -21,7 +21,6 @@ data_dict = {
             }
         },
 
-
     'Disab2_POP' : {
         'type' : 'categorical',
         'demographic' : True,
@@ -127,16 +126,16 @@ data_dict = {
         'type' : 'categorical',
         'demographic' : False,
         'geographic' : False,
-        'dummy_encode' : False,
+        'dummy_encode' : True,
         'target' : False,
         'clustering' : True,
-        'clustering_categorical' : False,
+        'clustering_categorical' : True,
         'graph_label' : 'Number of Children in Household (Grouped)',
         'value_labels' : { 1.0 : 'None', 2.0 : 'one child', 3.0 : 'two children', 4.0 : 'three or more children'},
         'perturbation' : {
             'core' : True,
             'to_perturb' : False,
-            'encode' : False
+            'encode' : True
         }
     },
 
@@ -424,40 +423,9 @@ data_dict = {
             'core' : False,
             'to_perturb' : False,
             'encode' : False
-        }
-        },
-    'LOG_MEMS7_ALL' : {
-        'type' : 'continuous',
-        'demographic' : False,
-        'geographic' : False,
-        'dummy_encode' : False,
-        'target' : True,
-        'clustering' : False,
-        'clustering_categorical' : False,
-        'graph_label' : 'Log Minutes of Moderate Activity Per Week',
-        'value_labels' : None,
-        'perturbation' : {
-            'core' : False,
-            'to_perturb' : False,
-            'encode' : False
-        }
-        },
-    'active' : {
-        'type' : 'categorical',
-        'demographic' : False,
-        'geographic' : False,
-        'dummy_encode' : False,
-        'target' : True,
-        'clustering' : False,
-        'clustering_categorical' : False,
-        'graph_label' : 'Active Status',
-        'value_labels' : {0 : 'Not Active', 1 : 'Active' },
-        'perturbation' : {
-            'core' : True,
-            'to_perturb' : False,
-            'encode' : False
             }
         },
+
 
 
     #################################
@@ -656,6 +624,41 @@ data_dict = {
         'clustering_categorical' : False,
         'graph_label' : 'Num Children in Household',
         'value_labels' : None,
+        'perturbation' : {
+            'core' : True,
+            'to_perturb' : False,
+            'encode' : False
+            }
+        },
+
+"""
+"""
+   'LOG_MEMS7_ALL' : {
+        'type' : 'continuous',
+        'demographic' : False,
+        'geographic' : False,
+        'dummy_encode' : False,
+        'target' : True,
+        'clustering' : False,
+        'clustering_categorical' : False,
+        'graph_label' : 'Log Minutes of Moderate Activity Per Week',
+        'value_labels' : None,
+        'perturbation' : {
+            'core' : False,
+            'to_perturb' : False,
+            'encode' : False
+        }
+        },
+    'active' : {
+        'type' : 'categorical',
+        'demographic' : False,
+        'geographic' : False,
+        'dummy_encode' : False,
+        'target' : True,
+        'clustering' : False,
+        'clustering_categorical' : False,
+        'graph_label' : 'Active Status',
+        'value_labels' : {0 : 'Not Active', 1 : 'Active' },
         'perturbation' : {
             'core' : True,
             'to_perturb' : False,

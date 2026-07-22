@@ -6,6 +6,7 @@ import pyreadstat
 ROOT = Path(__file__).resolve().parent.parent.parent
 sys.path.append(str(ROOT))
 from src.loading_data.data_catalogue import DataCatalogue
+from sklearn.preprocessing import OneHotEncoder, StandardScaler
 
 def get_data() -> pd.DataFrame:
     dc = DataCatalogue()
@@ -48,7 +49,6 @@ def get_2022_data() -> pd.DataFrame:
     vars = vars + ['LondInOut', 'MEMS7_ALL']
     final_vars = [var for var in vars if var != 'active']
     print(final_vars)
-    # vars = ['Gend3','HHLiv12','motivd_POP','Motiva_POP','WorkStat10','NSSEC5','Eth7','Age9', 'happy', 'lifesat', 'worthw', 'lone', 'Educ6', 'IMD10','MEMS7_ALL','LondInOut', 'comm1', 'inclus_a']
     df_path = Path(r"C:/Masters/London Sport/9288_ActiveLifeSurvey_2022_2023/UKDA-9288-spss/spss/spss28/active_lives_survey_nov_22-23_data_year_8_shared_20250103.sav")
     df, meta = pyreadstat.read_sav(df_path, usecols = final_vars)
     df = df[df['LondInOut'].notna()]
@@ -68,9 +68,9 @@ def get_2022_data() -> pd.DataFrame:
 
 def get_master_2022_data():
     dc = DataCatalogue()
-    catogs = dc.get_perturbation_catogs()
-    contins = dc.get_perturbation_contins()
-    all = catogs + contins + ['serial', 'year', 'LCA_Class']
+    core_vars = dc.get_perturbation_core()
+    all = core_vars + ['serial', 'year', 'LCA_Class', 'MEMS7_ALL']
+    print(all)
     path = ROOT / 'data' / 'master_data' / '2016_to_2023_master_clustering_data_set.csv'
     df = pd.read_csv(path, usecols = all)
     missing = [var for var in all if var not in df.columns]
@@ -78,6 +78,7 @@ def get_master_2022_data():
         raise ValueError(f'{missing} MISSING')
     df = df[df['year'] == '2022/23']
     df = df[df['LCA_Class'].notna()]
+    df['active'] = df['MEMS7_ALL'] >= 150
     df['NSSEC5'] = df['NSSEC5'].fillna(5)
     missing = df.isna().sum()
     for idx, m in enumerate(missing):
@@ -89,10 +90,9 @@ def get_master_2022_data():
 def get_raw_2022_data():
     dc = DataCatalogue()
     to_perturb = dc.get_perturbation_vars()
-    full_cols = ['serial', 'MEMS7_ALL'] + to_perturb
+    full_cols = ['serial'] + to_perturb
     data_path = r"C:\Masters\London Sport\9288_ActiveLifeSurvey_2022_2023\UKDA-9288-spss\spss\spss28\active_lives_survey_nov_22-23_data_year_8_shared_20250103.sav"
     df, meta = pyreadstat.read_sav(data_path, usecols = full_cols)
-    df['active'] = df['MEMS7_ALL'] >= 150
     missing = [var for var in full_cols if var not in df.columns]
     if missing:
         raise ValueError(f'{missing} MISSING')
@@ -108,5 +108,15 @@ def get_clean_2022():
     secondary_frame = get_raw_2022_data()
     print('Loaded secondary frame...')
     combined = merge_frames(on = 'serial', primary_frame = primary_frame, secondary_frame = secondary_frame)
-    print('Done.')
+    print('Merged Frames.')
+    combined = combined.dropna()
+    print('Dropped NAN values')
     return combined
+
+def one_hot_encode_frame(df : pd.DataFrame):
+    dc = DataCatalogue()
+    discrete_vars = dc.get_perturbation_catogs()
+    encoder = OneHotEncoder(drop='first', handle_unknown = 'ignore', sparse_output = False).set_output(transform = 'pandas')
+    encoded = encoder.fit_transform(df[discrete_vars])
+    df_encoded = pd.concat([df, encoded], axis = 1).drop(columns = discrete_vars)
+    return df_encoded

@@ -129,4 +129,9 @@ class DataCatalogue:
             if self.data_dict[key]['perturbation']['core'] == True and self.data_dict[key]['type'] != 'categorical':
                 vars.append(key)
         return vars
-
+    def get_perturbation_core(self):
+        vars = []
+        for key, value in self.data_dict.items():
+            if self.data_dict[key]['perturbation']['core'] == True:
+                vars.append(key)
+        return vars

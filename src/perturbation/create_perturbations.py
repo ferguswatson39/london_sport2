@@ -5,8 +5,13 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent.parent
 sys.path.append(str(ROOT))
 from src.loading_data.data_catalogue import DataCatalogue
+from src.loading_data.load_data import get_clean_2022, one_hot_encode_frame
+from sklearn.preprocessing import StandardScaler
+from sklearn.model_selection import train_test_split
+from perturbation.models.logistic import Logistic
 
-def run_perturbation(df : pd.DataFrame, model : object, scaler : object):
+
+def create_perturbations(df : pd.DataFrame, model : object, scaler : object):
     """
     Perturbation Function.
 
@@ -50,10 +55,60 @@ def run_perturbation(df : pd.DataFrame, model : object, scaler : object):
         output_df.loc[mask, difference] = p_preds - non_p_preds
     return output_df
 
-def create_and_join_diff_series(df : pd.DataFrame):
+
+def create_and_join_diff_series(df : pd.DataFrame, group_by : str):
     series = []
     cols = [col for col in df.columns if 'DIFFERENCE' in col]
     for c in cols:
-       x = df.groupby('labels')[c].mean()
+       # where group_by is either cluster 'labels' or borough code ect
+       x = df.groupby(group_by)[c].mean()
        series.append(x)
     return pd.concat(series, axis=1).reset_index()
+
+def run_perturbations(group_by : str):
+    """
+    Purturbation Pipeline Function
+
+    Collects data from get_clean_2022 and implements one at a time sensitivity analysis following a 1 std change.
+
+    Returns the full perturbation dataset and also the grouped series of average changes by group_by.
+
+    For heatplot, use breakdowns.drop(columns='labels') then sns.heatmap....
+
+    if y != 'MEMS7_ALL' or y != 'active':
+        raise ValueError(f'{y} is not MEMS7_ALL or active')
+    
+    """
+    # Get data and encode categoricals
+    df = get_clean_2022()
+    print(f'These are the vars:\n{df.columns}')
+    df_encoded = one_hot_encode_frame(df)
+
+    drop_cols = ['serial', 'year', 'LCA_Class', 'MEMS7_ALL', 'active']
+    keep_vars = [var for var in df_encoded.columns if var not in drop_cols]
+    
+    labels = df_encoded['LCA_Class']
+    Y = df_encoded['active']
+    X = df_encoded[keep_vars]
+
+    X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.4, random_state = 42, stratify = labels)
+    test_set_clusters = df_encoded.loc[X_test.index, 'LCA_Class']
+
+    scaler = StandardScaler()
+    X_train_scaled = scaler.fit_transform(X_train)
+    
+    logistic = Logistic()
+    logistic.fit_logistic(X_train_scaled, Y_train)
+    
+    perturbed_df = create_perturbations(X_test, logistic, scaler)
+    coef = pd.Series(
+        logistic.get_model().coef_[0],
+        index=X_train.columns
+    )
+    print(f'Estimated Coefficients:\n{coef.sort_values()}')
+
+    perturbed_df['labels'] = test_set_clusters
+    breakdowns = create_and_join_diff_series(perturbed_df, group_by)
+    return perturbed_df, breakdowns
+
+# df, series = run_perturbations(group_by='labels')
