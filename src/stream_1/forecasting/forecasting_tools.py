@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 from sklearn.linear_model import BayesianRidge
 from prophet import Prophet
+import math
 import warnings
 import matplotlib.pyplot as plt
 warnings.filterwarnings('ignore')
@@ -37,10 +38,10 @@ def sarima_forecast(df, t_train_cutoff, forecast_steps):
     
     return pd.DataFrame(final, columns=['borough', 'y_train', 'y_test', 'y_forecast', 'mape'])
 
-def tune_sarima(df, t_train_cutoff, forecast_steps):
+def tune_sarima(df, t_train_cutoff, forecast_steps, group_col='LA_Name'):
     final = []
     df = df.copy()
-    df['t'] = df.groupby('LA_Name').cumcount()
+    df['t'] = df.groupby(group_col).cumcount()
     if 'month' in df.columns:
         seasonal_period = 12
     elif 'quarter' in df.columns:
@@ -51,8 +52,8 @@ def tune_sarima(df, t_train_cutoff, forecast_steps):
     print("-------------------------")
     print("----- TUNING SARIMA -----")
     print("-------------------------")
-    for borough in tqdm(df['LA_Name'].unique()):
-        df_borough = df[df['LA_Name'] == borough]
+    for borough in tqdm(df[group_col].unique()):
+        df_borough = df[df[group_col] == borough]
 
         df_borough_train = df_borough[df_borough['t'] < t_train_cutoff]['MEMS7_ALL']
         df_borough_test = df_borough[df_borough['t'] >= t_train_cutoff]['MEMS7_ALL']
@@ -63,15 +64,15 @@ def tune_sarima(df, t_train_cutoff, forecast_steps):
         # borough, train, test, forecast results
         final.append([borough, df_borough_train.values, df_borough_test.values, forecast, calculate_mape(df_borough_test.values, forecast)])
     
-    return pd.DataFrame(final, columns=['borough', 'y_train', 'y_test', 'y_forecast', 'mape'])
+    return pd.DataFrame(final, columns=[group_col, 'y_train', 'y_test', 'y_forecast', 'mape'])
 
-def prophet_forecast(df, t_train_cutoff, forecast_steps, tuned=False, changepoint_prior_scale=0.05, seasonality_mode='additive'):
+def prophet_forecast(df, t_train_cutoff, forecast_steps, tuned=False, changepoint_prior_scale=0.05, seasonality_mode='additive', group_col='LA_Name'):
     final = []
     df = df.copy()
-    df['t'] = df.groupby('LA_Name').cumcount()
+    df['t'] = df.groupby(group_col).cumcount()
 
-    for borough in df['LA_Name'].unique():
-        df_borough = df[df['LA_Name'] == borough]
+    for borough in df[group_col].unique():
+        df_borough = df[df[group_col] == borough]
 
         if 'month' in df.columns:
             dates = pd.to_datetime(df_borough[['year', 'month']].assign(day=1))
@@ -103,7 +104,7 @@ def prophet_forecast(df, t_train_cutoff, forecast_steps, tuned=False, changepoin
         # borough, train, test, forecast results
         final.append([borough, df_borough_train.values, df_borough_test.values, y_forecast, y_lower, y_upper, calculate_mape(df_borough_test.values, y_forecast)])
     
-    return pd.DataFrame(final, columns=['borough', 'y_train', 'y_test', 'y_forecast', 'y_lower', 'y_upper', 'mape'])
+    return pd.DataFrame(final, columns=[group_col, 'y_train', 'y_test', 'y_forecast', 'y_lower', 'y_upper', 'mape'])
 
 
 
@@ -152,11 +153,11 @@ def plot_borough_forecasts(df, t_train_cutoff, xtick_positions, xtick_labels, UN
     plt.tight_layout()
     plt.show()
 
-def plot_prophet_forecasts(df, t_train_cutoff, xtick_positions, xtick_labels, UNCERTAINTY=False):
+def plot_cluster_forecasts(df, t_train_cutoff, xtick_positions, xtick_labels, UNCERTAINTY=False, group_col='borough'):
     n_boroughs = len(df)
-    n_cols = 4
-    n_rows = n_boroughs // 4
-    fig, axes = plt.subplots(n_rows, n_cols, figsize=(20, 24))
+    n_cols = 3
+    n_rows = math.ceil(n_boroughs / 3)
+    fig, axes = plt.subplots(n_rows, n_cols, figsize=(20, 20))
     for ax, (idx, row) in zip(axes.flatten(), df.iterrows()):
         t_train = range(len(row['y_train']))
         t_test = range(t_train_cutoff, t_train_cutoff + len(row['y_test']))
@@ -166,12 +167,14 @@ def plot_prophet_forecasts(df, t_train_cutoff, xtick_positions, xtick_labels, UN
         ax.plot(t_all, y_all, color='black')
         ax.plot(t_forecast, row['y_forecast'], color='blue')
         ax.scatter(t_forecast, row['y_forecast'], color='black', s=7)
-        ax.fill_between(t_forecast, row['y_lower'], row['y_upper'], alpha=0.2, color='blue')
+        if UNCERTAINTY: ax.fill_between(t_forecast, row['y_lower'], row['y_upper'], alpha=0.2, color='blue')
         ax.set_xticks(xtick_positions)
-        ax.set_ylim(0, 1500)
+        ax.set_ylim(0, max(y_all) * 1.3)
         ax.set_xticklabels(xtick_labels, rotation=45, fontsize=7)
         ax.text(0.05, 0.95, f"MAPE: {row['mape']:.1f}%",fontsize=7, transform=ax.transAxes, verticalalignment='top')
-        ax.set_title(row['borough'], fontweight='bold', fontsize=8)
+        ax.set_title(f'Cluster {row[group_col]}', fontweight='bold', fontsize=8)
         ax.spines['right'].set_visible(False)
+    for ax in axes.flatten()[len(df):]:
+        ax.set_visible(False)
     plt.tight_layout()
     plt.show()
