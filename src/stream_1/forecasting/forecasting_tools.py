@@ -153,11 +153,11 @@ def plot_borough_forecasts(df, t_train_cutoff, xtick_positions, xtick_labels, UN
     plt.tight_layout()
     plt.show()
 
-def plot_prophet_forecasts(df, t_train_cutoff, xtick_positions, xtick_labels, UNCERTAINTY=False, group_col='borough'):
+def plot_cluster_forecasts(df, t_train_cutoff, xtick_positions, xtick_labels, UNCERTAINTY=False, group_col='borough'):
     n_boroughs = len(df)
-    n_cols = 4
-    n_rows = math.ceil(n_boroughs / 4)
-    fig, axes = plt.subplots(n_rows, n_cols, figsize=(20, 24))
+    n_cols = 3
+    n_rows = math.ceil(n_boroughs / 3)
+    fig, axes = plt.subplots(n_rows, n_cols, figsize=(20, 7))
     for ax, (idx, row) in zip(axes.flatten(), df.iterrows()):
         t_train = range(len(row['y_train']))
         t_test = range(t_train_cutoff, t_train_cutoff + len(row['y_test']))
@@ -172,7 +172,9 @@ def plot_prophet_forecasts(df, t_train_cutoff, xtick_positions, xtick_labels, UN
         ax.set_ylim(0, 1500)
         ax.set_xticklabels(xtick_labels, rotation=45, fontsize=7)
         ax.text(0.05, 0.95, f"MAPE: {row['mape']:.1f}%",fontsize=7, transform=ax.transAxes, verticalalignment='top')
-        ax.set_title(row[group_col], fontweight='bold', fontsize=8)
+        ax.set_title(f'Cluster {row[group_col]}', fontweight='bold', fontsize=8)
         ax.spines['right'].set_visible(False)
+    for ax in axes.flatten()[len(df):]:
+        ax.set_visible(False)
     plt.tight_layout()
     plt.show()
