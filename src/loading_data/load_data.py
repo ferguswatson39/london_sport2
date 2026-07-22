@@ -78,6 +78,12 @@ def get_master_2022_data():
         raise ValueError(f'{missing} MISSING')
     df = df[df['year'] == '2022/23']
     df = df[df['LCA_Class'].notna()]
+    df['NSSEC5'] = df['NSSEC5'].fillna(5)
+    missing = df.isna().sum()
+    for idx, m in enumerate(missing):
+        if m > 0:
+            raise ValueError(f'{missing.index[idx]} has missing Values')
+    print('Data loaded with zero missing values.')
     return df
 
 def get_raw_2022_data():
