@@ -7,16 +7,17 @@ ROOT = Path(__file__).resolve().parent.parent.parent
 sys.path.append(str(ROOT))
 from src.loading_data.load_data import get_geographic_data
 from src.loading_data.data_catalogue import DataCatalogue
-from covid_analysis import covid_adjustment, correct_year_and_month
+from covid_analysis import Covid
 
 def prepare_borough_data(target_col = 'MEMS7_ALL', ADJUST_COVID = True):
+    covid = Covid()
     borough_df = get_geographic_data()
-    borough_df = correct_year_and_month(borough_df)
+    borough_df = covid.correct_year_and_month(borough_df)
     borough_df[target_col] = borough_df[target_col].astype(float)
     if ADJUST_COVID:
         adjusted = []
         for borough in borough_df['LA_Name'].unique():
-            borough_adjusted = covid_adjustment(borough_df[borough_df['LA_Name'] == borough], target_col = target_col)
+            borough_adjusted = covid.covid_adjustment(borough_df[borough_df['LA_Name'] == borough], target_col = target_col)
             adjusted.append(borough_adjusted)
         borough_df = pd.concat(adjusted, ignore_index = True)
     borough_df = borough_df.groupby(['LA_2023', 'LA_Name', 'year'])[target_col].mean().reset_index()
@@ -25,9 +26,10 @@ def prepare_borough_data(target_col = 'MEMS7_ALL', ADJUST_COVID = True):
     return borough_df
 
 def prepare_national_data(target_col = 'MEMS7_ALL', ADJUST_COVID = True):
+    covid = Covid()
     national_df = get_geographic_data()
-    national_df['year'] = national_df['year'].str.split('/').str[1].astype(int) + 2000
-    if ADJUST_COVID: national_df = covid_adjustment(national_df, target_col = target_col)
+    national_df = covid.correct_year_and_month(national_df)
+    if ADJUST_COVID: national_df = covid.covid_adjustment(national_df, target_col = target_col)
     national_df = national_df.groupby('year')[target_col].mean()
     national_df = national_df.reset_index()
     return national_df
@@ -53,27 +55,4 @@ def prepare_grouped_boroughs():
     print(f'>>> Shape {borough_df.shape}')
     return borough_df
 
-# Initial Visualisation
-if __name__ == "__main__":
-    borough_df = prepare_borough_data()
-    g = sns.relplot(kind = 'scatter', 
-                data = borough_df, 
-                x = 'year', 
-                y = 'MEMS7_ALL', 
-                col = 'LA_Name', 
-                col_wrap = 8,
-                height = 2, 
-                aspect = 1.4,
-                s = 50,
-                palette = 'RdYlGn',
-                hue = 'MEMS7_ALL',
-                legend = False,
-                edgecolor = 'grey', 
-                linewidth = 1)
-    g.set_titles('{col_name}', weight = 'bold')
-    g.set(xlabel = 'Year', ylabel = 'Avg Sport Participation')
-    g.set_xticklabels([])
-    g.set_yticklabels([])
-    plt.savefig('src/stream_1/figures/Average Participation Boroughs', bbox_inches = 'tight')
-    plt.show()
     

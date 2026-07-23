@@ -81,9 +81,9 @@ class LogisticBoroughForecaster:
         g.set(xlabel = 'Year', ylabel = f'Avg {self.target_col.upper()}')
         g.set_xticklabels([])
         if self.ADJUST_COVID:
-            plt.savefig(f'src/stream_1/figures/Logistic Borough Forecast: {self.target_col.upper()} (COVID Adjusted)', bbox_inches = 'tight')
+            plt.savefig(f'src/stream_1/figures/Logistic Borough Forecast - {self.target_col.upper()} (COVID Adjusted)', bbox_inches = 'tight')
         else:
-            plt.savefig(f'src/stream_1/figures/Logistic Borough Forecast: {self.target_col.upper()}', bbox_inches = 'tight')
+            plt.savefig(f'src/stream_1/figures/Logistic Borough Forecast - {self.target_col.upper()}', bbox_inches = 'tight')
         plt.show()
         return g
     
