@@ -10,21 +10,19 @@ class Logistic:
 
     def fit(self, X_train, Y_train):
         self.model.fit(X_train, Y_train)
-        return self.get_model()
 
-    def get_class_preds(self, X_test):
-        model = self.get_model()
-        preds = model.predict(X_test)
-        return preds
-    def get_classification_report(self, Y_test):
-        preds = self.get_class_preds() 
-        return classification_report(Y_test, preds)
     def get_model(self):
         return self.model
     
-    def get_preds(self, X_test, Y_test):
+    def get_preds(self, X_test, Y_test, save_metric : bool):
         preds = self.model.predict_proba(X_test)[:, 1]
-        self.f1 = f1_score(Y_test, preds)
-        self.roc_auc = roc_auc_score(Y_test, preds)
+        if save_metric:
+            self.f1 = f1_score(Y_test, preds)
+            self.roc_auc = roc_auc_score(Y_test, preds)
         return preds
+    def get_roc_auc(self):
+        return self.roc_auc
+    def get_f1(self):
+        return self.f1
+
     

@@ -1,9 +1,16 @@
-from lightgbm import LGBMClassifier, early_stopping, log_evaluation
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import classification_report
+import pandas as pd
+from sklearn.model_selection import GridSearchCV
 from sklearn.model_selection import cross_val_score
 from sklearn.metrics import f1_score, roc_auc_score
 import optuna
 
-class LightGBMClassifier:
+class RFClassifier:
+    """ Random Forest Classifier class
+    Adapted from: https://medium.com/cloudvillains/random-forest-with-grid-search-b739fb0da311
+    
+    """
     def __init__(self):
         self.hyperparams = None
         self.model = None
@@ -16,24 +23,18 @@ class LightGBMClassifier:
         hyperparameters = {
             'max_depth' : trial.suggest_int('max_depth', 3, 30),
             'n_estimators' : trial.suggest_int('n_estimators', 100, 1000),
-            'learning_rate' : trial.suggest_float('learning_rate', 0.0001, 0.1, log=True),
-            'num_leaves' : trial.suggest_int('num_leaves', 5, 50),
-            'feature_fraction' : trial.suggest_float('feature_fraction', 0.5, 1.0),
-            'bagging_freq' : trial.suggest_int('bagging_freq', 1, 10),
-            'bagging_fraction' : trial.suggest_float('bagging_fraction', 0.5, 1.0),
-            'min_data_in_leaf' : trial.suggest_int('min_data_in_leaf', 10, 50)     
+            'max_features' : trial.suggest_categorical('max_features', ['sqrt', 'log2', 1.0]),
+            'min_samples_leaf' : trial.suggest_int('min_samples_leaf', 1, 20)            
         }
-        model = LGBMClassifier(**hyperparameters, random_state = 42)
-        # Scoring here is roc_auc but maybe i should try_ f1
+        model = RandomForestClassifier(**hyperparameters, random_state = 42)
         cv_score = cross_val_score(model, self.X_train, self.Y_train, cv=5, scoring = 'roc_auc', n_jobs = -1)
         return cv_score.mean()
     
     def run_study(self):
-        # direction = maximise as neg_mean_squared_error is score
         study = optuna.create_study(direction = 'maximize')
         study.optimize(self.objective, n_trials = 100)
         self.hyperparams = study.best_params
-        self.model = LGBMClassifier(**self.hyperparams, random_state = 42)
+        self.model = RandomForestClassifier(**self.hyperparams, random_state = 42)
         return study
     
     def fit(self, X_train, Y_train):
@@ -42,13 +43,21 @@ class LightGBMClassifier:
         self.run_study()
         print(f'Finished running study. Optimal hyperparameters found.')
         self.model.fit(X_train, Y_train)
-
-    def get_preds(self, X_test, Y_test):
+    
+    def get_preds(self, X_test, Y_test, save_metric : bool):
         preds = self.model.predict_proba(X_test)[:, 1]
-        self.f1 = f1_score(Y_test, preds)
-        self.roc_auc = roc_auc_score(Y_test, preds)
+        if save_metric:
+            self.f1 = f1_score(Y_test, preds)
+            self.roc_auc = roc_auc_score(Y_test, preds)
         return preds
-
+    
     def get_model(self):
         return self.model
-
+    
+    def get_roc_auc(self):
+        return self.roc_auc
+    def get_f1(self):
+        return self.f1
+    
+x = RFClassifier()
+print(x.__class__.__name__)

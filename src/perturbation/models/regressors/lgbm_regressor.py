@@ -42,9 +42,10 @@ class LightGBMRegressor:
         print(f'Finished running study. Optimal hyperparameters found.')
         self.model.fit(X_train, Y_train)
 
-    def get_preds(self, X_test, Y_test):
+    def get_preds(self, X_test, Y_test, save_metric : bool):
         preds = self.model.predict(X_test)
-        self.mse = mean_squared_error(Y_test, preds)
+        if save_metric:
+            self.mse = mean_squared_error(Y_test, preds)
         return preds
 
     def get_model(self):

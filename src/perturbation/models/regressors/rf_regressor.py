@@ -1,23 +1,18 @@
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import classification_report
-import pandas as pd
-from sklearn.model_selection import GridSearchCV
-from sklearn.model_selection import cross_val_score
-from sklearn.metrics import f1_score, roc_auc_score
+from sklearn.ensemble import RandomForestRegressor
 import optuna
+from sklearn.metrics import mean_squared_error
+from sklearn.model_selection import cross_val_score
 
-class RFClassifier:
-    """ Random Forest Classifier class
-    Adapted from: https://medium.com/cloudvillains/random-forest-with-grid-search-b739fb0da311
-    
-    """
+# optuna hp optimisation adapted from: 
+# https://medium.com/@sarahzouinina/a-deep-dive-into-lightgbm-how-to-choose-and-tune-parameters-7c584945842e
+
+class RFRegressor:
     def __init__(self):
         self.hyperparams = None
         self.model = None
         self.X_train = None
         self.Y_train = None
-        self.f1 = None
-        self.roc_auc_score = None
+        self.mse = None
 
     def objective(self, trial):
         hyperparameters = {
@@ -26,15 +21,15 @@ class RFClassifier:
             'max_features' : trial.suggest_categorical('max_features', ['sqrt', 'log2', 1.0]),
             'min_samples_leaf' : trial.suggest_int('min_samples_leaf', 1, 20)            
         }
-        model = RandomForestClassifier(**hyperparameters, random_state = 42)
-        cv_score = cross_val_score(model, self.X_train, self.Y_train, cv=5, scoring = 'roc_auc', n_jobs = -1)
+        model = RandomForestRegressor(**hyperparameters, random_state = 42)
+        cv_score = cross_val_score(model, self.X_train, self.Y_train, cv=5, scoring = 'neg_mean_squared_error', n_jobs = -1)
         return cv_score.mean()
     
     def run_study(self):
         study = optuna.create_study(direction = 'maximize')
         study.optimize(self.objective, n_trials = 100)
         self.hyperparams = study.best_params
-        self.model = RandomForestClassifier(**self.hyperparams, random_state = 42)
+        self.model = RandomForestRegressor(**self.hyperparams, random_state = 42)
         return study
     
     def fit(self, X_train, Y_train):
@@ -43,12 +38,15 @@ class RFClassifier:
         self.run_study()
         print(f'Finished running study. Optimal hyperparameters found.')
         self.model.fit(X_train, Y_train)
-    
-    def get_preds(self, X_test, Y_test):
-        preds = self.model.predict_proba(X_test)[:, 1]
-        self.f1 = f1_score(Y_test, preds)
-        self.roc_auc = roc_auc_score(Y_test, preds)
+
+    def get_preds(self, X_test, Y_test, save_metric : bool):
+        preds = self.model.predict(X_test)
+        if save_metric:
+            self.mse = mean_squared_error(Y_test, preds)
         return preds
-    
+
     def get_model(self):
         return self.model
+
+    def get_mse(self):
+        return self.mse
