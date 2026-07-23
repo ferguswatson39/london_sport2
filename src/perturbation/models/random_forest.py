@@ -3,17 +3,12 @@ from sklearn.metrics import classification_report
 import pandas as pd
 from sklearn.model_selection import GridSearchCV
 
-class RandomForest:
+class RFClassifier:
     """ Random Forest Classifier class
     Adapted from: https://medium.com/cloudvillains/random-forest-with-grid-search-b739fb0da311
     
     """
-    def __init__(self, X_train, X_test, Y_train, Y_test, X_cols):
-        self.X_train = X_train
-        self.X_test = X_test
-        self.Y_train = Y_train
-        self.Y_test = Y_test
-        self.X_cols = X_cols
+    def __init__(self):
         self.hyperparams = {
             # Lower max depth means less overfitting for smaller datasets
             'max_depth' : [3, 4, 5, 6, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, None],
@@ -25,10 +20,10 @@ class RandomForest:
         self.model = RandomForestClassifier(random_state = 42)
         self.grid = GridSearchCV(self.model, self.hyperparams, cv=3, scoring='f1', verbose=3, n_jobs=-1)
 
-    def fit_rf(self):
+    def fit(self, X_train, Y_train):
         best_params = self.search()
         self.model.set_params(**best_params)
-        self.model.fit(self.X_train, self.Y_train)
+        self.model.fit(X_train, Y_train)
         return self.get_model()
     def search(self):
         print('Tuning Random Forest Hyperparams.....')
@@ -51,8 +46,8 @@ class RandomForest:
     def get_classification_report(self):
         preds = self.get_class_preds() 
         return classification_report(self.Y_test, preds)
-    def get_feature_importance(self) -> pd.DataFrame:
-        features = pd.DataFrame(self.model.feature_importances_, index=self.X_cols) 
+    def get_feature_importance(self, X_cols : list[str]) -> pd.DataFrame:
+        features = pd.DataFrame(self.model.feature_importances_, index=X_cols) 
         return features
     def get_best_params(self):
         return self.best_params

@@ -5,7 +5,7 @@ class Logistic:
     def __init__(self):
         self.model = LogisticRegression(random_state=42)
 
-    def fit_logistic(self, X_train, Y_train):
+    def fit(self, X_train, Y_train):
         self.model.fit(X_train, Y_train)
         return self.get_model()
 

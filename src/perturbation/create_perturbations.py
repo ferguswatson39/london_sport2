@@ -98,7 +98,7 @@ def run_perturbations(group_by : str):
     X_train_scaled = scaler.fit_transform(X_train)
     
     logistic = Logistic()
-    logistic.fit_logistic(X_train_scaled, Y_train)
+    logistic.fit(X_train_scaled, Y_train)
     
     perturbed_df = create_perturbations(X_test, logistic, scaler)
     coef = pd.Series(
