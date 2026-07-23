@@ -30,7 +30,7 @@ class DataCatalogue:
         vars = [key for key, value in self.data_dict.items()]
         return vars
     
-    def get_continuous_vars(self, with_targets : bool) -> list[str]:
+    def get_continuous_vars(self, with_targets : bool = False) -> list[str]:
         if with_targets:
             vars = [key for key, value in self.data_dict.items() if self.data_dict[key]['type'] == 'continuous']
             return vars
@@ -76,6 +76,7 @@ class DataCatalogue:
             if self.data_dict[key]['clustering'] == True:
                 vars.append(key)
         return vars
+    
     def verify_categorical_vars(self, all_vars: list[str]):
         catog_vars = []
         for var in all_vars:
@@ -86,12 +87,53 @@ class DataCatalogue:
     def get_clustering_categoricals(self):
         vars = []
         for key, value in self.data_dict.items():
-            if self.data_dict[key]['clustering_categorical'] == True and self.data_dict[key]['clustering'] == True:
+            if value.get('clustering_categorical') == True and value.get('clustering') == True:
                 vars.append(key)
         return vars
+    
     def get_clustering_continuous(self):
         vars = []
         for key, value in self.data_dict.items():
-            if self.data_dict[key]['clustering_categorical'] == False and self.data_dict[key]['clustering'] == True:
+            if value.get('clustering_categorical') == False and value.get('clustering') == True:
+                vars.append(key)
+        return vars
+    def get_perturbation_df_vars(self):
+        vars = []
+        for key, value in self.data_dict.items():
+            if self.data_dict[key]['perturbation']['core'] == True or self.data_dict[key]['perturbation']['to_perturb'] == True:
+                vars.append(key)
+        return vars
+    def get_perturbation_vars(self):
+        vars = []
+        for key, value in self.data_dict.items():
+            if self.data_dict[key]['perturbation']['to_perturb'] == True:
+                vars.append(key)
+        return vars
+    
+    def get_perturbation_change(self, var_name):
+        return self.data_dict[var_name]['perturbation']['change']
+    def get_perturbation_max(self, var_name):
+        return self.data_dict[var_name]['perturbation']['max']
+    def get_perturbation_min(self, var_name):
+        return self.data_dict[var_name]['perturbation']['min']
+    
+    def get_perturbation_catogs(self):
+        vars = []
+        for key, value in self.data_dict.items():
+            if self.data_dict[key]['perturbation']['encode'] == True:
+                vars.append(key)
+        return vars
+    
+    def get_perturbation_contins(self):
+        """ Need to find a way to get the core continuous vars for pertubation"""
+        vars = []
+        for key, value in self.data_dict.items():
+            if self.data_dict[key]['perturbation']['core'] == True and self.data_dict[key]['type'] != 'categorical':
+                vars.append(key)
+        return vars
+    def get_perturbation_core(self):
+        vars = []
+        for key, value in self.data_dict.items():
+            if self.data_dict[key]['perturbation']['core'] == True:
                 vars.append(key)
         return vars

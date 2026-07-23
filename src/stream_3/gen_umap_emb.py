@@ -1,5 +1,5 @@
 import umap
-import umap.plot
+#import umap.plot
 import numpy as np
 import pandas as pd
 import sys
@@ -34,6 +34,7 @@ class GenerateUmapEmb:
         print(f'Categorical Columns for UMAP:\n {avail_cats}')
         print(f'Continuous Columns for UMAP\n{avail_contins}')
         return avail_cats, avail_contins
+    
     def scale_continuous(self, avail_contins : list[str]):
         standard_scaler = StandardScaler()
         X = self.df[avail_contins].values
@@ -65,7 +66,7 @@ class GenerateUmapEmb:
         self.categorical_umap = categorical
         self.intersection_umap = intersection
         print('UMAP fit complete!')
-        return self.get_intersection()
+        return self.get_intersection_umap()
     
     def fit_umap_using_gower(self, num_dimensions : int = 2):
         catogs = ['Eth7', 'Gend3', 'HHLiv12', 'WorkStat10']
@@ -79,6 +80,7 @@ class GenerateUmapEmb:
         return self.categorical_umap
     def get_continuous_umap(self):
         return self.continuous_umap
+    
     def get_intersection_umap(self):
         return self.intersection_umap
     def get_scaler(self):

@@ -6,7 +6,10 @@ unclean_data_dict = {
         'dummy_encode' : True,
         'target' : False,
         'graph_label' : 'Gender',
-        'value_labels' :  {1.0: 'Male', 2.0: 'Female', 3.0: 'Other'}
+        'value_labels' :  {1.0: 'Male', 2.0: 'Female', 3.0: 'Other'},
+        'perturbation' : {
+            'core' : True
+            }
         },
     'Disab3' : {
         'type' : 'categorical',
@@ -14,7 +17,10 @@ unclean_data_dict = {
         'dummy_encode' : True, 
         'target' : False,
         'graph_label' : 'Disability Status',
-        'value_labels' : {1.0: 'Limiting disability', 2.0: 'Non-limiting disability', 3.0: 'No disability'}
+        'value_labels' : {1.0: 'Limiting disability', 2.0: 'Non-limiting disability', 3.0: 'No disability'},
+        'perturbation' : {
+            'core' : True
+            }
         },
     'Age9' : {
         'type' : 'ordinal',
@@ -22,7 +28,10 @@ unclean_data_dict = {
         'dummy_encode' : True,
         'target' : False,
         'graph_label' : 'Age',
-        'value_labels' : {1.0: '14-15', 2.0: '16-24', 3.0: '25-34', 4.0: '35-44', 5.0: '45-54', 6.0: '55-64', 7.0: '65-74', 8.0: '75-84', 9.0: '85+'}
+        'value_labels' : {1.0: '14-15', 2.0: '16-24', 3.0: '25-34', 4.0: '35-44', 5.0: '45-54', 6.0: '55-64', 7.0: '65-74', 8.0: '75-84', 9.0: '85+'},
+        'perturbation' : {
+            'core' : True
+            }
         },
     'Eth7' : {
         'type' : 'categorical',
@@ -30,7 +39,10 @@ unclean_data_dict = {
         'dummy_encode' : True,
         'target' : False,
         'graph_label' : 'Ethnicity',
-        'value_labels' : {1.0: 'White British', 2.0: 'White Other', 3.0: 'Asian (excl. Chinese)', 4.0: 'Black', 5.0: 'Chinese', 6.0: 'Mixed', 7.0: 'Other ethnic group'}
+        'value_labels' : {1.0: 'White British', 2.0: 'White Other', 3.0: 'Asian (excl. Chinese)', 4.0: 'Black', 5.0: 'Chinese', 6.0: 'Mixed', 7.0: 'Other ethnic group'},
+        'perturbation' : {
+            'core' : True
+            }
         },
     'NSSEC5' : {
         'type' : 'ordinal',
@@ -38,7 +50,10 @@ unclean_data_dict = {
         'dummy_encode' : False,
         'target' : False,
         'graph_label' : 'NSSEC',
-        'value_labels' : {1.0: 'NS SEC 1-2: Higher social groups', 2.0: 'NS SEC 3-5: Middle social groups', 3.0: 'NS SEC 6-8: Lower social groups', 4.0: 'NS SEC 9: Students and other / unclassified'} 
+        'value_labels' : {1.0: 'NS SEC 1-2: Higher social groups', 2.0: 'NS SEC 3-5: Middle social groups', 3.0: 'NS SEC 6-8: Lower social groups', 4.0: 'NS SEC 9: Students and other / unclassified'},
+        'perturbation' : {
+            'core' : True
+            } 
         },
 
     'MEMS7_ALL' : {
@@ -55,6 +70,9 @@ unclean_data_dict = {
         'target' : True,
         'graph_label' : 'Active Status',
         'value_labels' : {0 : 'Not Active', 1 : 'Active' },
+        'perturbation' : {
+            'core' : True
+        }
         },
 
     # Explanatory Variables
@@ -64,7 +82,10 @@ unclean_data_dict = {
         'dummy_encode' : False,
         'target' : False,
         'graph_label' : 'Highest Qualification',
-        'value_labels' : {1.0: 'Level 4 or above', 2.0: 'Level 3 and equivalents', 3.0: 'Level 2 and equivalents', 4.0: 'Level 1 and below', 5.0: 'Another type of qualification', 6.0: 'No qualifications'}
+        'value_labels' : {1.0: 'Level 4 or above', 2.0: 'Level 3 and equivalents', 3.0: 'Level 2 and equivalents', 4.0: 'Level 1 and below', 5.0: 'Another type of qualification', 6.0: 'No qualifications'},
+        'perturbation' : {
+            'core' : True
+            }
         },
 
     'IMD10' : {
@@ -73,21 +94,30 @@ unclean_data_dict = {
         'dummy_encode' : False,
         'target' : False,
         'graph_label' : 'IMD',
-        'value_labels' : {1.0: 'Most deprived decile', 2.0: 'Second most deprived decile', 3.0: 'Third most deprived decile', 4.0: 'Fourth most deprived decile', 5.0: 'Fifth most deprived decile', 6.0: 'Fifth least deprived decile', 7.0: 'Fourth least deprived decile', 8.0: 'Third least deprived decile', 9.0: 'Second least deprived decile', 10.0: 'Least deprived decile'}
+        'value_labels' : {1.0: 'Most deprived decile', 2.0: 'Second most deprived decile', 3.0: 'Third most deprived decile', 4.0: 'Fourth most deprived decile', 5.0: 'Fifth most deprived decile', 6.0: 'Fifth least deprived decile', 7.0: 'Fourth least deprived decile', 8.0: 'Third least deprived decile', 9.0: 'Second least deprived decile', 10.0: 'Least deprived decile'},
+        'perturbation' : {
+            'core' : True
+        }
         },
     'nchild' : {
         'type' : 'continuous',
         'demographic' : False,
         'dummy_encode' : False,
         'target' : False,
-        'graph_label' : 'Num Children in Household'
+        'graph_label' : 'Num Children in Household',
+        'perturbation' : {
+            'core' : True
+        }
         },
     'nadult' : {
         'type' : 'continuous',
         'demographic' : False,
         'dummy_encode' : False,
         'target' : False,
-        'graph_label' : 'Num Adults in Household'
+        'graph_label' : 'Num Adults in Household',
+        'perturbation' : {
+            'core' : True
+        }
         },
     'WorkStat10' : {
         'type' : 'categorical',
@@ -95,7 +125,10 @@ unclean_data_dict = {
         'dummy_encode' : True,
         'target' : False,
         'graph_label' : 'Employment Status',
-        'value_labels' : {1.0: 'Working full time', 2.0: 'Working part time', 3.0: 'Unemployed < 12mths', 4.0: 'Unemployed >12 mths', 5.0: 'Not working-retired', 6.0: 'Not working-looking after house/children', 7.0: 'Not working-long term sick or disabled', 8.0: 'Student full time', 9.0: 'Student part time', 10.0: 'Other'}
+        'value_labels' : {1.0: 'Working full time', 2.0: 'Working part time', 3.0: 'Unemployed < 12mths', 4.0: 'Unemployed >12 mths', 5.0: 'Not working-retired', 6.0: 'Not working-looking after house/children', 7.0: 'Not working-long term sick or disabled', 8.0: 'Student full time', 9.0: 'Student part time', 10.0: 'Other'},
+        'perturbation' : {
+            'core' : True
+        }
         },
     'VolAny' : {
         'type' : 'categorical',
@@ -103,7 +136,10 @@ unclean_data_dict = {
         'dummy_encode' : False,
         'target' : False,
         'graph_label' : 'Has Volunteered',
-        'value_labels' : {0 : 'Not volunteered' , 1 : 'Volunteered'}
+        'value_labels' : {0 : 'Not volunteered' , 1 : 'Volunteered'},
+        'perturbation' : {
+            'core' : True
+        }
         },
         # Motivations
     'motivex2a' : {
@@ -139,14 +175,7 @@ unclean_data_dict = {
         'graph_label' : 'Exercise to challenge myself',
         'value_labels' : {1.0: 'Strongly agree', 2.0: 'Agree', 3.0: 'Neither agree nor disagree', 4.0: 'Disagree', 5.0: 'Strongly disagree'}
         },
-    'Motiva_POP': {
-        'type' : 'ordinal',
-        'demographic' : False,
-        'dummy_encode' : False,
-        'target' : False,
-        'graph_label' : 'Exercise enjoyable and satisfying',
-        'value_labels' : {1.0: 'Strongly agree', 2.0: 'Agree', 3.0: 'Neither agree nor disagree', 4.0: 'Disagree', 5.0: 'Strongly disagree'}
-          },
+
     'motivb_POP' : {
         'type' : 'ordinal',
         'demographic' : False,
@@ -163,14 +192,7 @@ unclean_data_dict = {
         'graph_label' : 'Guilt when no exercise',
         'value_labels' : {1.0: 'Strongly agree', 2.0: 'Agree', 3.0: 'Neither agree nor disagree', 4.0: 'Disagree', 5.0: 'Strongly disagree'}
         },
-    'motivd_POP' : {
-        'type' : 'ordinal',
-        'demographic' : False,
-        'dummy_encode' : False,
-        'target' : False,
-        'graph_label' : 'Exercise to prevent guilt from others',
-        'value_labels' : {1.0: 'Strongly agree', 2.0: 'Agree', 3.0: 'Neither agree nor disagree', 4.0: 'Disagree', 5.0: 'Strongly disagree'} 
-        },
+
     'motive_POP' : {
         'type' : 'ordinal',
         'demographic' : False,
@@ -180,13 +202,54 @@ unclean_data_dict = {
         'value_labels' : {1.0: 'Strongly agree', 2.0: 'Agree', 3.0: 'Neither agree nor disagree', 4.0: 'Disagree', 5.0: 'Strongly disagree'}
         },
         # Different Motivations
+ 
+ 
+    'Motiva_POP': {
+        'type' : 'ordinal',
+        'demographic' : False,
+        'dummy_encode' : False,
+        'target' : False,
+        'graph_label' : 'Exercise enjoyable and satisfying',
+        'value_labels' : {1.0: 'Strongly agree', 2.0: 'Agree', 3.0: 'Neither agree nor disagree', 4.0: 'Disagree', 5.0: 'Strongly disagree'},
+        'perturbation' : {
+            'core' : False,
+            'to_perturb' : True,
+            'change' : -1,
+            'max' : 5,
+            'min' : 1
+            }
+        },   
+    
+    'motivd_POP' : {
+        'type' : 'ordinal',
+        'demographic' : False,
+        'dummy_encode' : False,
+        'target' : False,
+        'graph_label' : 'Exercise to prevent guilt from others',
+        'value_labels' : {1.0: 'Strongly agree', 2.0: 'Agree', 3.0: 'Neither agree nor disagree', 4.0: 'Disagree', 5.0: 'Strongly disagree'},
+        'perturbation' : {
+            'core' : False,
+            'to_perturb' : True,
+            'change' : 1,
+            'max' : 5,
+            'min' : 1
+            }
+        },
+    
     'indev' : {
         'type' : 'ordinal',
         'demographic' : False,
         'dummy_encode' : False,
         'target' : False,
         'graph_label' : 'Can achieve goals',
-        'value_labels' : {1.0: 'Strongly disagree', 2.0: 'Disagree', 3.0: 'Neither agree nor disagree', 4.0: 'Agree', 5.0: 'Strongly agree'}
+        'value_labels' : {1.0: 'Strongly disagree', 2.0: 'Disagree', 3.0: 'Neither agree nor disagree', 4.0: 'Agree', 5.0: 'Strongly agree'},
+        'perturbation' : {
+            'core' : False,
+            'to_perturb' : True,
+            'change' : 1,
+            'max' : 5,
+            'min' : 1
+            }
         },
     'indevtry' : {
         'type' : 'ordinal',
@@ -194,7 +257,14 @@ unclean_data_dict = {
         'dummy_encode' : False,
         'target' : False,
         'graph_label' : 'Persistence (keep trying)',
-        'value_labels' : {1.0: 'Strongly disagree', 2.0: 'Disagree', 3.0: 'Neither agree nor disagree', 4.0: 'Agree', 5.0: 'Strongly agree'}
+        'value_labels' : {1.0: 'Strongly disagree', 2.0: 'Disagree', 3.0: 'Neither agree nor disagree', 4.0: 'Agree', 5.0: 'Strongly agree'},
+        'perturbation' : {
+            'core' : False,
+            'to_perturb' : True,
+            'change' : 1,
+            'max' : 5,
+            'min' : 1
+            }
         },
         # Social Cohesion
     'inclus_a' : {
@@ -203,15 +273,30 @@ unclean_data_dict = {
         'dummy_encode' : False,
         'target' : False,
         'graph_label' : 'Exercise areas inclusive and welcoming',
-        'value_labels' : {1.0: 'Strongly agree', 2.0: 'Agree', 3.0: 'Neither agree nor disagree', 4.0: 'Disagree', 5.0: 'Strongly disagree'}
+        'value_labels' : {1.0: 'Strongly agree', 2.0: 'Agree', 3.0: 'Neither agree nor disagree', 4.0: 'Disagree', 5.0: 'Strongly disagree'},
+        'perturbation' : {
+            'core' : False,
+            'to_perturb' : True,
+            'change' : -1,
+            'max' : 5,
+            'min' : 1
+            }
         },
+        # you cant really perturb 'see similar people when excersise' - maybe can relate to social cohesion?
     'inclus_b' : {
         'type' : 'ordinal',
         'demographic' : False,
         'dummy_encode' : False,
         'target' : False,
         'graph_label' : 'See similar people when exercise',
-        'value_labels' : {1.0: 'Strongly agree', 2.0: 'Agree', 3.0: 'Neither agree nor disagree', 4.0: 'Disagree', 5.0: 'Strongly disagree'}
+        'value_labels' : {1.0: 'Strongly agree', 2.0: 'Agree', 3.0: 'Neither agree nor disagree', 4.0: 'Disagree', 5.0: 'Strongly disagree'},
+        'perturbation' : {
+            'core' : False,
+            'to_perturb' : True,
+            'change' : -1,
+            'max' : 5,
+            'min' : 1
+            }
         },
     'inclus_c' : {
         'type' : 'ordinal',
@@ -219,7 +304,14 @@ unclean_data_dict = {
         'dummy_encode' : False,
         'target' : False,
         'graph_label' : 'Safe exercise places (public)',
-        'value_labels' : {1.0: 'Strongly agree', 2.0: 'Agree', 3.0: 'Neither agree nor disagree', 4.0: 'Disagree', 5.0: 'Strongly disagree'}
+        'value_labels' : {1.0: 'Strongly agree', 2.0: 'Agree', 3.0: 'Neither agree nor disagree', 4.0: 'Disagree', 5.0: 'Strongly disagree'},
+        'perturbation' : {
+            'core' : False,
+            'to_perturb' : True,
+            'change' : -1,
+            'max' : 5,
+            'min' : 1
+            }
         },
     'comm1' : {
         'type' : 'ordinal',
@@ -227,7 +319,14 @@ unclean_data_dict = {
         'dummy_encode' : False,
         'target' : False,
         'graph_label' : 'Trust local people',
-        'value_labels' : {1.0: 'Strongly disagree', 2.0: 'Disagree', 3.0: 'Neither agree nor disagree', 4.0: 'Agree', 5.0: 'Strongly agree'}
+        'value_labels' : {1.0: 'Strongly disagree', 2.0: 'Disagree', 3.0: 'Neither agree nor disagree', 4.0: 'Agree', 5.0: 'Strongly agree'},
+        'perturbation' : {
+            'core' : False,
+            'to_perturb' : True,
+            'change' : 1,
+            'max' : 5,
+            'min' : 1
+            }
         },
     'comm2' : {
         'type' : 'ordinal',
@@ -235,7 +334,14 @@ unclean_data_dict = {
         'dummy_encode' : False,
         'target' : False,
         'graph_label' : 'Local people from different backgrounds get on well',
-        'value_labels' : {-2.0: 'People in this area are all of the same background', -1.0: 'There are too few people in the local area', 1.0: 'Definitely disagree', 2.0: 'Tend to disagree', 3.0: 'Tend to agree', 4.0: 'Definitely agree'}
+        'value_labels' : {-2.0: 'People in this area are all of the same background', -1.0: 'There are too few people in the local area', 1.0: 'Definitely disagree', 2.0: 'Tend to disagree', 3.0: 'Tend to agree', 4.0: 'Definitely agree'},
+        'perturbation' : {
+            'core' : False,
+            'to_perturb' : True,
+            'change' : 1,
+            'max' : 4,
+            'min' : -2
+            }
         },
         # Life Emotions
     'anxious' : {
@@ -244,7 +350,14 @@ unclean_data_dict = {
         'dummy_encode' : False,
         'target' : False,
         'graph_label' : 'Anxious yesterday',
-        'value_labels' : {0.0: '0 Not at all anxious', 1.0: '1', 2.0: '2', 3.0: '3', 4.0: '4', 5.0: '5', 6.0: '6', 7.0: '7', 8.0: '8', 9.0: '9', 10.0: '10 Completely anxious'}
+        'value_labels' : {0.0: '0 Not at all anxious', 1.0: '1', 2.0: '2', 3.0: '3', 4.0: '4', 5.0: '5', 6.0: '6', 7.0: '7', 8.0: '8', 9.0: '9', 10.0: '10 Completely anxious'},
+        'perturbation' : {
+            'core' : False,
+            'to_perturb' : True,
+            'change' : -1,
+            'max' : 10,
+            'min' : 0
+            }
         },
     'happy' : {
         'type' : 'ordinal',
@@ -252,7 +365,14 @@ unclean_data_dict = {
         'dummy_encode' : False,
         'target' : False,
         'graph_label' : 'Happy yesterday',
-        'value_labels' : {0.0: '0 Not at all happy', 1.0: '1', 2.0: '2', 3.0: '3', 4.0: '4', 5.0: '5', 6.0: '6', 7.0: '7', 8.0: '8', 9.0: '9', 10.0: '10 Completely happy'}
+        'value_labels' : {0.0: '0 Not at all happy', 1.0: '1', 2.0: '2', 3.0: '3', 4.0: '4', 5.0: '5', 6.0: '6', 7.0: '7', 8.0: '8', 9.0: '9', 10.0: '10 Completely happy'},
+        'perturbation' : {
+            'core' : False,
+            'to_perturb' : True,
+            'change' : 1,
+            'max' : 10,
+            'min' : 0
+            }
         },
     'lifesat' : {
         'type' : 'ordinal',
@@ -260,7 +380,14 @@ unclean_data_dict = {
         'dummy_encode' : False,
         'target' : False,
         'graph_label' : 'Life Satisfaction',
-        'value_labels' : {0.0: '0 Not at all satisfied', 1.0: '1', 2.0: '2', 3.0: '3', 4.0: '4', 5.0: '5', 6.0: '6', 7.0: '7', 8.0: '8', 9.0: '9', 10.0: '10 Completely satisfied'}
+        'value_labels' : {0.0: '0 Not at all satisfied', 1.0: '1', 2.0: '2', 3.0: '3', 4.0: '4', 5.0: '5', 6.0: '6', 7.0: '7', 8.0: '8', 9.0: '9', 10.0: '10 Completely satisfied'},
+        'perturbation' : {
+            'core' : False,
+            'to_perturb' : True,
+            'change' : 1,
+            'max' : 10,
+            'min' : 0
+            }
         },
     'lone' : {
         'type' : 'ordinal',
@@ -268,7 +395,14 @@ unclean_data_dict = {
         'dummy_encode' : False,
         'target' : False,
         'graph_label' : 'Feeling lonely',
-        'value_labels' : {1.0: 'Often / always', 2.0: 'Some of the time', 3.0: 'Occasionally', 4.0: 'Hardly ever', 5.0: 'Never'}
+        'value_labels' : {1.0: 'Often / always', 2.0: 'Some of the time', 3.0: 'Occasionally', 4.0: 'Hardly ever', 5.0: 'Never'},
+        'perturbation' : {
+            'core' : False,
+            'to_perturb' : True,
+            'change' : 1,
+            'max' : 5,
+            'min' : 1
+            }
         },
     'worthw' : {
         'type' : 'ordinal',
@@ -276,8 +410,19 @@ unclean_data_dict = {
         'dummy_encode' : False,
         'target' : False,
         'graph_label' : 'Extent life worthwhile',
-        'value_labels' : {0.0: '0 Not at all worthwhile', 1.0: '1', 2.0: '2', 3.0: '3', 4.0: '4', 5.0: '5', 6.0: '6', 7.0: '7', 8.0: '8', 9.0: '9', 10.0: '10 Completely worthwhile'}
+        'value_labels' : {0.0: '0 Not at all worthwhile', 1.0: '1', 2.0: '2', 3.0: '3', 4.0: '4', 5.0: '5', 6.0: '6', 7.0: '7', 8.0: '8', 9.0: '9', 10.0: '10 Completely worthwhile'},
+        'perturbation' : {
+            'core' : False,
+            'to_perturb' : True,
+            'change' : 1,
+            'max' : 10,
+            'min' : 0
+            }
         },
+    
+
+    
+
         # Living Arrangements
     'HHLiv12' : {
         'type' : 'categorical',

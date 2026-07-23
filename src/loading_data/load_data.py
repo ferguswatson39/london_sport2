@@ -6,6 +6,7 @@ import pyreadstat
 ROOT = Path(__file__).resolve().parent.parent.parent
 sys.path.append(str(ROOT))
 from src.loading_data.data_catalogue import DataCatalogue
+from sklearn.preprocessing import OneHotEncoder, StandardScaler
 
 def get_data() -> pd.DataFrame:
     dc = DataCatalogue()
@@ -42,18 +43,35 @@ def get_geographic_data() -> pd.DataFrame:
     print(f'>>> Shape {df.shape}')
     return df
 
+def get_modality_data() -> pd.DataFrame:
+    dc = DataCatalogue()
+    df_path = Path(ROOT / 'exploration' / 'data' / 'master_data' / '2016_to_2023_master_clustering_data_set.csv')
+    df = pd.read_csv(df_path)
+    df = df[['LCA_Class', 'LA_2023']]
+    df = df.dropna()
+    df['LA_Name'] = df['LA_2023'].map(dc.get_data_dict()['LA_2023']['value_labels']) 
+    df['LA_Name'] = df['LA_Name'].replace({'Richmond upon Thames': 'Richmond', 'Barking and Dagenham' : 'Barking/Dagenham'})
+    crosstab = pd.crosstab(df['LCA_Class'], df['LA_Name'], normalize = 'index') * 100
+    modes = crosstab.idxmax(axis = 1)
+    percentages = crosstab.max(axis = 1)
+    return pd.DataFrame({'LA': modes, 'Percentage' : percentages}).reset_index()
+    
 def get_2022_data() -> pd.DataFrame:
-    vars = ['Gend3','HHLiv12','motivd_POP','Motiva_POP','WorkStat10','NSSEC5','Eth7','Age9', 'happy', 'lifesat', 'worthw', 'lone', 'Educ6', 'IMD10','MEMS7_ALL','LondInOut', 'comm1', 'inclus_a']
+    dc = DataCatalogue()
+    vars = dc.get_perturbation_df_vars()
+    vars = vars + ['LondInOut', 'MEMS7_ALL']
+    final_vars = [var for var in vars if var != 'active']
+    print(final_vars)
     df_path = Path(r"C:/Masters/London Sport/9288_ActiveLifeSurvey_2022_2023/UKDA-9288-spss/spss/spss28/active_lives_survey_nov_22-23_data_year_8_shared_20250103.sav")
-    df, meta = pyreadstat.read_sav(df_path, usecols = vars)
+    df, meta = pyreadstat.read_sav(df_path, usecols = final_vars)
     df = df[df['LondInOut'].notna()]
-    df['LOG_MEMS7_ALL'] = np.log1p(df['MEMS7_ALL'])
-    missing = [var for var in vars if var not in df.columns]
+    # df['LOG_MEMS7_ALL'] = np.log1p(df['MEMS7_ALL'])
+    missing = [var for var in final_vars if var not in df.columns]
     if len(missing):
         raise KeyError(f'Missing Variables:\n {missing}')
     df['active'] = df['MEMS7_ALL'] >= 150
-    # Removed LondInOut col after it has been used to filter df
-    df = df.drop(columns=('LondInOut'))
+    # Removed LondInOut and MEMS7_ALL col after it has been used to filter df and create active
+    df = df.drop(columns=(['LondInOut', 'MEMS7_ALL']))
     df = df.dropna()
     print(f'DataFrame Cleaned Successfully...')
     print('DataFrame Information:')
@@ -61,4 +79,57 @@ def get_2022_data() -> pd.DataFrame:
     print(f'>>> Shape {df.shape}')
     return df
 
+def get_master_2022_data():
+    dc = DataCatalogue()
+    core_vars = dc.get_perturbation_core()
+    all = core_vars + ['serial', 'year', 'LCA_Class', 'MEMS7_ALL']
+    print(all)
+    path = ROOT / 'data' / 'master_data' / '2016_to_2023_master_clustering_data_set.csv'
+    df = pd.read_csv(path, usecols = all)
+    missing = [var for var in all if var not in df.columns]
+    if missing:
+        raise ValueError(f'{missing} MISSING')
+    df = df[df['year'] == '2022/23']
+    df = df[df['LCA_Class'].notna()]
+    df['active'] = df['MEMS7_ALL'] >= 150
+    df['NSSEC5'] = df['NSSEC5'].fillna(5)
+    missing = df.isna().sum()
+    for idx, m in enumerate(missing):
+        if m > 0:
+            raise ValueError(f'{missing.index[idx]} has missing Values')
+    print('Data loaded with zero missing values.')
+    return df
 
+def get_raw_2022_data():
+    dc = DataCatalogue()
+    to_perturb = dc.get_perturbation_vars()
+    full_cols = ['serial'] + to_perturb
+    data_path = r"C:\Masters\London Sport\9288_ActiveLifeSurvey_2022_2023\UKDA-9288-spss\spss\spss28\active_lives_survey_nov_22-23_data_year_8_shared_20250103.sav"
+    df, meta = pyreadstat.read_sav(data_path, usecols = full_cols)
+    missing = [var for var in full_cols if var not in df.columns]
+    if missing:
+        raise ValueError(f'{missing} MISSING')
+    return df
+
+def merge_frames(on : str, primary_frame : pd.DataFrame, secondary_frame : pd.DataFrame ) -> pd.DataFrame:
+    combined = primary_frame.merge(secondary_frame, how = 'left', on = on )
+    return combined
+
+def get_clean_2022():
+    primary_frame = get_master_2022_data()
+    print('Loaded primary frame...')
+    secondary_frame = get_raw_2022_data()
+    print('Loaded secondary frame...')
+    combined = merge_frames(on = 'serial', primary_frame = primary_frame, secondary_frame = secondary_frame)
+    print('Merged Frames.')
+    combined = combined.dropna()
+    print('Dropped NAN values')
+    return combined
+
+def one_hot_encode_frame(df : pd.DataFrame):
+    dc = DataCatalogue()
+    discrete_vars = dc.get_perturbation_catogs()
+    encoder = OneHotEncoder(drop='first', handle_unknown = 'ignore', sparse_output = False).set_output(transform = 'pandas')
+    encoded = encoder.fit_transform(df[discrete_vars])
+    df_encoded = pd.concat([df, encoded], axis = 1).drop(columns = discrete_vars)
+    return df_encoded
