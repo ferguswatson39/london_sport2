@@ -65,7 +65,7 @@ def create_and_join_diff_series(df : pd.DataFrame, group_by : str):
        series.append(x)
     return pd.concat(series, axis=1).reset_index()
 
-def run_perturbations(group_by : str):
+def run_perturbations(model : object, group_by : str):
     """
     Purturbation Pipeline Function
 
@@ -97,15 +97,9 @@ def run_perturbations(group_by : str):
     scaler = StandardScaler()
     X_train_scaled = scaler.fit_transform(X_train)
     
-    logistic = Logistic()
-    logistic.fit(X_train_scaled, Y_train)
+    model.fit(X_train_scaled, Y_train)
     
-    perturbed_df = create_perturbations(X_test, logistic, scaler)
-    coef = pd.Series(
-        logistic.get_model().coef_[0],
-        index=X_train.columns
-    )
-    print(f'Estimated Coefficients:\n{coef.sort_values()}')
+    perturbed_df = create_perturbations(X_test, model, scaler)
 
     perturbed_df['labels'] = test_set_clusters
     breakdowns = create_and_join_diff_series(perturbed_df, group_by)
