@@ -28,7 +28,7 @@ def prepare_borough_data(target_col = 'MEMS7_ALL', ADJUST_COVID = True):
 def prepare_national_data(target_col = 'MEMS7_ALL', ADJUST_COVID = True):
     covid = Covid()
     national_df = get_geographic_data()
-    national_df['year'] = national_df['year'].str.split('/').str[1].astype(int) + 2000
+    national_df = covid.correct_year_and_month(national_df)
     if ADJUST_COVID: national_df = covid.covid_adjustment(national_df, target_col = target_col)
     national_df = national_df.groupby('year')[target_col].mean()
     national_df = national_df.reset_index()
