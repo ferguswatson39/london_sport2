@@ -1,0 +1,1 @@
+x = ['happy', 'sad', 'ban']
