@@ -438,6 +438,23 @@ data_dict = {
             'encode' : False
             }
         },
+    
+    'active' : {
+        'type' : 'categorical',
+        'demographic' : False,
+        'geographic' : False,
+        'dummy_encode' : False,
+        'target' : True,
+        'clustering' : False,
+        'clustering_categorical' : False,
+        'graph_label' : 'Active Status',
+        'value_labels' : {0 : 'Not Active', 1 : 'Active' },
+        'perturbation' : {
+            'core' : True,
+            'to_perturb' : False,
+            'encode' : False
+            }
+        },
 
 
 
@@ -661,22 +678,5 @@ data_dict = {
             'to_perturb' : False,
             'encode' : False
         }
-        },
-    'active' : {
-        'type' : 'categorical',
-        'demographic' : False,
-        'geographic' : False,
-        'dummy_encode' : False,
-        'target' : True,
-        'clustering' : False,
-        'clustering_categorical' : False,
-        'graph_label' : 'Active Status',
-        'value_labels' : {0 : 'Not Active', 1 : 'Active' },
-        'perturbation' : {
-            'core' : True,
-            'to_perturb' : False,
-            'encode' : False
-            }
-        },
-
+        }
 """
