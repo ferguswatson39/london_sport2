@@ -1,6 +1,8 @@
 from lightgbm import LGBMRegressor, early_stopping, log_evaluation
 from sklearn.model_selection import cross_val_score
+from sklearn.metrics import mean_squared_error
 import optuna
+
 
 class LightGBMRegressor:
     def __init__(self):
@@ -8,6 +10,7 @@ class LightGBMRegressor:
         self.model = None
         self.X_train = None
         self.Y_train = None
+        self.mse = None
 
     def objective(self, trial):
         hyperparameters = {
@@ -39,11 +42,16 @@ class LightGBMRegressor:
         print(f'Finished running study. Optimal hyperparameters found.')
         self.model.fit(X_train, Y_train)
 
-    def get_preds(self, X_test):
-        return self.model.predict(X_test)
+    def get_preds(self, X_test, Y_test):
+        preds = self.model.predict(X_test)
+        self.mse = mean_squared_error(Y_test, preds)
+        return preds
 
     def get_model(self):
         return self.model
+    
+    def get_mse(self):
+        return self.mse
 
 
 """

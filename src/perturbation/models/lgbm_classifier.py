@@ -1,5 +1,6 @@
 from lightgbm import LGBMClassifier, early_stopping, log_evaluation
 from sklearn.model_selection import cross_val_score
+from sklearn.metrics import f1_score, roc_auc_score
 import optuna
 
 class LightGBMClassifier:
@@ -8,6 +9,8 @@ class LightGBMClassifier:
         self.model = None
         self.X_train = None
         self.Y_train = None
+        self.f1 = None
+        self.roc_auc_score = None
 
     def objective(self, trial):
         hyperparameters = {
@@ -40,8 +43,12 @@ class LightGBMClassifier:
         print(f'Finished running study. Optimal hyperparameters found.')
         self.model.fit(X_train, Y_train)
 
-    def get_preds(self, X_test):
-        return self.model.predict_proba(X_test)[:, 1]
+    def get_preds(self, X_test, Y_test):
+        preds = self.model.predict_proba(X_test)[:, 1]
+        self.f1 = f1_score(Y_test, preds)
+        self.roc_auc = roc_auc_score(Y_test, preds)
+        return preds
 
     def get_model(self):
         return self.model
+
