@@ -7,6 +7,7 @@ ROOT = Path(__file__).resolve().parent.parent.parent
 sys.path.append(str(ROOT))
 from src.loading_data.data_catalogue import DataCatalogue
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
+from src.stream_1.covid_analysis import Covid
 
 SPORT_MAP = {
     'WALKALL' : 'Walking', 'CYCALL' : 'Cycling', 'RUNATHMULTI' : 'Running', 'ADVWATERSPORT' : 'Water Sports',
@@ -20,6 +21,9 @@ CATEGORY_MAP = {
     'Water Sports' : 'Water Sports', 'Dance/Gymnastics' : 'Dance/Gymnastics', 'Racket Sports' : 'Racket Sports',
     'Combat Sports' : 'Combat Sports', 'Winter Sports' : 'Winter Sports', 'Team Sports' : 'Team Sports'
 }
+
+MONTH_MAP = {1: 1, 2: 1, 3: 1, 4: 2, 5: 2, 6: 2, 7: 3, 8: 3, 9 : 3, 10: 4, 11: 4, 12: 4}
+QUARTER_MAP = {1: 2, 2: 5, 3: 8, 4: 11}
 
 def get_data() -> pd.DataFrame:
     dc = DataCatalogue()
@@ -87,6 +91,28 @@ def get_sporting_distributions(significance_threshold : float = 0.5):
     distribution_df.loc[distribution_df['Sport'] == 'Dance/Gymnastics', 'MEMS Contribution %'] += distribution_df.loc[distribution_df['Sport'] == 'Gymnastics', 'MEMS Contribution %'].sum()
     distribution_df = distribution_df[distribution_df['Sport'] != 'Gymnastics']
     return distribution_df
+
+def get_monthly_data(ADJUST_COVID = False):
+    df_path = Path(ROOT / 'data' / 'master_data' / '2016_to_2023_full_preprocessed_data_set.csv.gz')
+    monthly_df = pd.read_csv(df_path)
+    covid = Covid()
+    monthly_df = covid.correct_year_and_month(monthly_df)
+    if ADJUST_COVID: monthly_df = covid.covid_adjustment(monthly_df)
+    monthly_df = monthly_df.groupby(['year', 'month'])['MEMS7_ALL'].agg(['mean', 'count']).reset_index()
+    monthly_df['date'] = pd.to_datetime(monthly_df['year'].astype(str) + monthly_df['month'].astype(int).astype(str), format='%Y%m')
+    return monthly_df
+
+def get_quarterly_data(ADJUST_COVID = False):
+    df_path = Path(ROOT / 'data' / 'master_data' / '2016_to_2023_full_preprocessed_data_set.csv.gz')
+    quarterly_df = pd.read_csv(df_path)
+    covid = Covid()
+    quarterly_df = covid.correct_year_and_month(quarterly_df)
+    quarterly_df['quarter_num'] = quarterly_df['month'].map(MONTH_MAP)
+    quarterly_df['quarter_date'] = pd.to_datetime(quarterly_df['year'].astype(str) + quarterly_df['quarter_num'].map(QUARTER_MAP).astype(str), format='%Y%m')
+    quarterly_df = quarterly_df[~((quarterly_df['year'] == 2023) & (quarterly_df['quarter_num'] == 4))]
+    if ADJUST_COVID: quarterly_df = covid.covid_adjustment(quarterly_df)
+    quarterly_df = quarterly_df.groupby(['year', 'quarter_date', 'quarter_num'])['MEMS7_ALL'].agg(['mean', 'count']).reset_index()
+    return quarterly_df
     
 def get_2022_data() -> pd.DataFrame:
     dc = DataCatalogue()
