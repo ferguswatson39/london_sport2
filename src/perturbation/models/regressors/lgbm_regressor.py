@@ -3,6 +3,11 @@ from sklearn.model_selection import cross_val_score
 from sklearn.metrics import mean_squared_error
 import optuna
 import numpy as np
+import sys
+from pathlib import Path
+ROOT = Path(__file__).resolve().parent.parent.parent.parent.parent
+sys.append(str(ROOT))
+import pickle
 
 
 class LightGBMRegressor:
@@ -59,6 +64,12 @@ class LightGBMRegressor:
         return self.mse
     def get_rmse(self):
         return self.rmse
+    def save_class(self):
+        filename = f'{self.__class__.__name__}.sav'
+        path = ROOT / 'src' / 'perturbation' / 'models' / 'saved_models' / filename
+        with open(path, 'wb') as file:
+            pickle.dump(self, file)
+        print(f'{self.__class__.__name__} saved to: {path}')
 
 
 """

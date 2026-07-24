@@ -120,6 +120,9 @@ def build_perturbation_df(df : pd.DataFrame, model : object, target : str, group
     
     perturbed_df = create_perturbations(X_test, model, scaler, Y_test)
 
+    # Saves model to pkl file to be investigated later
+    model.save_class()
+
     perturbed_df['labels'] = test_set_clusters
     breakdowns = create_and_join_diff_series(perturbed_df, group_by)
     return perturbed_df, breakdowns

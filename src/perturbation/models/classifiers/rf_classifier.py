@@ -7,6 +7,7 @@ from sklearn.metrics import f1_score, roc_auc_score
 import optuna
 from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent.parent.parent.parent
+import pickle
 
 class RFClassifier:
     """ Random Forest Classifier class
@@ -65,4 +66,11 @@ class RFClassifier:
         return self.roc_auc
     def get_f1(self):
         return self.f1
+    
+    def save_class(self):
+        filename = f'{self.__class__.__name__}.sav'
+        path = ROOT / 'src' / 'perturbation' / 'models' / 'saved_models' / filename
+        with open(path, 'wb') as file:
+            pickle.dump(self, file)
+        print(f'{self.__class__.__name__} saved to: {path}')
     

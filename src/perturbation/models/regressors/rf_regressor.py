@@ -3,6 +3,11 @@ import optuna
 from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import cross_val_score
 import numpy as np
+import sys
+from pathlib import Path
+ROOT = Path(__file__).resolve().parent.parent.parent.parent.parent
+sys.append(str(ROOT))
+import pickle
 
 # optuna hp optimisation adapted from: 
 # https://medium.com/@sarahzouinina/a-deep-dive-into-lightgbm-how-to-choose-and-tune-parameters-7c584945842e
@@ -39,7 +44,7 @@ class RFRegressor:
         print(f'Starting to run study....')
         self.run_study()
         print(f'Finished running study. Optimal hyperparameters found.')
-        print(f'Fitting {RFRegressor.__name__}...')
+        print(f'Fitting {self.__class__.__name__}...')
         self.model.fit(X_train, Y_train)
 
     def get_preds(self, X_test, Y_test, save_metric : bool):
@@ -56,5 +61,10 @@ class RFRegressor:
         return self.mse
     def get_rmse(self):
         return self.rmse
-    
-    
+    def save_class(self):
+        filename = f'{self.__class__.__name__}.sav'
+        path = ROOT / 'src' / 'perturbation' / 'models' / 'saved_models' / filename
+        with open(path, 'wb') as file:
+            pickle.dump(self, file)
+        print(f'{self.__class__.__name__} saved to: {path}')
+

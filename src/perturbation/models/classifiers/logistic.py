@@ -3,6 +3,7 @@ from sklearn.metrics import classification_report
 from sklearn.metrics import f1_score, roc_auc_score
 from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent.parent.parent.parent
+import pickle
 
 class Logistic:
     def __init__(self):
@@ -33,4 +34,11 @@ class Logistic:
         return self.f1
     def get_name(self):
         return self.name
+    
+    def save_class(self):
+        filename = f'{self.__class__.__name__}.sav'
+        path = ROOT / 'src' / 'perturbation' / 'models' / 'saved_models' / filename
+        with open(path, 'wb') as file:
+            pickle.dump(self, file)
+        print(f'{self.__class__.__name__} saved to: {path}')
     
