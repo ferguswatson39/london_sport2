@@ -136,7 +136,8 @@ def create_save_heatplot(breakdowns : pd.Series, target : str, heatplot_name : s
     sns.heatmap(
         heat,
         annot=True,
-        cmap="YlOrBr"
+        cmap="YlOrBr",
+        fmt='g'
     )
     plt.title(title)
     plt.ylabel('Clusters')
@@ -145,6 +146,13 @@ def create_save_heatplot(breakdowns : pd.Series, target : str, heatplot_name : s
 
 
 def execute_perturbation_pipeline(df : pd.DataFrame, run_cases : dict):
+    """
+    Main perturbation function.
+
+    Iterates through run cases, optimises and then trains models. 
+
+    Saves perturbed dfs and perturbed heatplots
+    """
     save_path = ROOT / 'results' / 'perturbation'
 
     for key, value in run_cases.items():
