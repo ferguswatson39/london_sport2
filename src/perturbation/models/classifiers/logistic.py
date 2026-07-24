@@ -1,12 +1,14 @@
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import classification_report
 from sklearn.metrics import f1_score, roc_auc_score
+from pathlib import Path
 
 class Logistic:
     def __init__(self):
         self.model = LogisticRegression(random_state=42)
         self.f1 = None
         self.roc_auc = None
+        self.save_path = 
 
     def fit(self, X_train, Y_train):
         self.model.fit(X_train, Y_train)

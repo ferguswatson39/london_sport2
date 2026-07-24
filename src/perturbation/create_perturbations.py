@@ -4,12 +4,27 @@ import sys
 from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent.parent
 sys.path.append(str(ROOT))
+import matplotlib.pyplot as plt
+import seaborn as sns
 from src.loading_data.data_catalogue import DataCatalogue
 from src.loading_data.load_data import get_clean_2022, one_hot_encode_frame
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 from perturbation.models.classifiers.logistic import Logistic
+from perturbation.models.classifiers.lgbm_classifier import LightGBMClassifier
+from perturbation.models.classifiers.rf_classifier import RFClassifier
+from perturbation.models.regressors.OLS_regressor import OLSRegressor
+from perturbation.models.regressors.lgbm_regressor import LightGBMRegressor
+from perturbation.models.regressors.rf_regressor import RFRegressor
 
+run_cases = {
+    0 : {'model' : Logistic(),'target' : 'active'},
+    1 : {'model' : RFClassifier(),'target' : 'active'},
+    2 : {'model' : LightGBMClassifier(),'target' : 'active'},
+    3 : {'model' : OLSRegressor(), 'target' : 'MEMS7_ALL',},
+    4 : {'model' : RFRegressor(), 'target' : 'MEMS7_ALL'},
+    5 : {'model' : LightGBMRegressor(),'target' : 'MEMS7_ALL'}
+} 
 
 def create_perturbations(df : pd.DataFrame, model : object, scaler : object, Y_test : pd.DataFrame):
     """
@@ -45,7 +60,7 @@ def create_perturbations(df : pd.DataFrame, model : object, scaler : object, Y_t
         elif var_change > 0:
             mask = np.where(var_values < var_max, True, False)
 
-        X_scaled = scale_data(scaler, model, new[mask], fit_transform = False)
+        X_scaled = scaler.transform(new[mask])
 
         # We only want to save the accuracy or mse metrics for the non perturbed set
         # So use save_metric = True only for the first prediction generation
@@ -68,7 +83,7 @@ def create_and_join_diff_series(df : pd.DataFrame, group_by : str):
        series.append(x)
     return pd.concat(series, axis=1).reset_index()
 
-def run_perturbations(df : pd.DataFrame, model : object, target : str, group_by : str, cluster_col : str):
+def build_perturbation_df(df : pd.DataFrame, model : object, target : str, group_by : str, cluster_col : str):
     """
     Purturbation Pipeline Function
 
@@ -98,7 +113,7 @@ def run_perturbations(df : pd.DataFrame, model : object, target : str, group_by 
     test_set_clusters = df_encoded.loc[X_test.index, cluster_col]
 
     scaler = StandardScaler()
-    X_train_scaled = scale_data(scaler, model, X_train, fit_transform = True)
+    X_train_scaled = scaler.fit_transform(X_train)
     
     model.fit(X_train_scaled, Y_train)
     
@@ -108,28 +123,44 @@ def run_perturbations(df : pd.DataFrame, model : object, target : str, group_by 
     breakdowns = create_and_join_diff_series(perturbed_df, group_by)
     return perturbed_df, breakdowns
 
-#################
-##### FIX #######
-#################
-# Perturbation relies on scaling data so its important that all data is scaled and 1sdev added to each var
-
-def scale_data(scaler : object, model : object, X_train : pd.DataFrame, fit_transform : bool):
-    """
-    Tree models dont require data to be scaled.
-
-    Function returns data as is for tree models and scales other models.
-
-    Also if fit_transform = False, function assumes that scaler has already been fit and only applies transformation
-    
-    """
-    trees = ['RFClassifier', 'LightGBMClassifier', 'RFRegressor', 'LightGBMRegressor']
-    name = model.__class__.__name__
-    if name in trees:
-        return X_train
-    if fit_transform:
-        return scaler.fit_transform(X_train)
-    return scaler.transform(X_train)
+def create_save_heatplot(breakdowns : pd.Series, target : str, heatplot_name : str):
+    heatplot_path = ROOT / 'figures' / 'perturbation'
+    if target == 'active':
+        title = 'Average Change in the Probability of Participating in Over 150 Minutes of Moderate Activity Per Week'
+    elif target == 'MEMS7_ALL':
+        title = 'Average Change in the Minutes of Moderate Activity per week'
+    heat = breakdowns.drop(columns = 'labels')
+    plt.figure(figsize=(15, 10))
+    sns.heatmap(
+        heat,
+        annot=True,
+        cmap="YlOrBr"
+    )
+    plt.title(title)
+    plt.ylabel('Clusters')
+    plt.savefig(heatplot_path / heatplot_name)
+    print(f'Saved hatplot figure to: {heatplot_path / heatplot_name}')
 
 
-# df = get_clean_2022()
-# df, series = run_perturbations(group_by='labels')
+def execute_perturbation_pipeline(df : pd.DataFrame, run_cases : dict):
+    save_path = ROOT / 'results' / 'perturbation'
+
+    for key, value in run_cases.items():
+  
+        model = run_cases[key]['model']
+        target = run_cases[key]['target']
+
+        group_by = 'labels'
+        cluster_col = 'LCA_Class'
+
+        df_name = f'{key}_{model.__class__.__name__}_perturbation_results.csv'
+        heatplot_name = f'{model.__class__.__name__}_perturbation_heatplot.png'
+
+        print(f'Starting Perturbation for {model.__class__.__name__}')
+        perturbed_df, breakdowns = build_perturbation_df(df, model, target, group_by, cluster_col)
+
+        perturbed_df.to_csv(save_path / df_name, index = False)
+        print(f'Saved pertubation results to: {save_path / df_name}')
+        
+        create_save_heatplot(breakdowns, target, heatplot_name)
+        print(f'Finished perturbaiton for {model.__class__.__name__}')
