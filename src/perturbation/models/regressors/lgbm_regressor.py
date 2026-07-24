@@ -2,6 +2,7 @@ from lightgbm import LGBMRegressor, early_stopping, log_evaluation
 from sklearn.model_selection import cross_val_score
 from sklearn.metrics import mean_squared_error
 import optuna
+import numpy as np
 
 
 class LightGBMRegressor:
@@ -11,6 +12,7 @@ class LightGBMRegressor:
         self.X_train = None
         self.Y_train = None
         self.mse = None
+        self.rmse = None
 
     def objective(self, trial):
         hyperparameters = {
@@ -24,7 +26,7 @@ class LightGBMRegressor:
             'min_data_in_leaf' : trial.suggest_int('min_data_in_leaf', 10, 50)     
         }
         model = LGBMRegressor(**hyperparameters, random_state = 42)
-        cv_score = cross_val_score(model, self.X_train, self.Y_train, cv=5, scoring = 'neg_mean_squared_error', n_jobs = -1)
+        cv_score = cross_val_score(model, self.X_train, self.Y_train, cv=5, scoring = 'neg_mean_squared_error')
         return cv_score.mean()
     
     def run_study(self):
@@ -47,6 +49,7 @@ class LightGBMRegressor:
         preds = self.model.predict(X_test)
         if save_metric:
             self.mse = mean_squared_error(Y_test, preds)
+            self.rmse = np.sqrt(self.get_mse())
         return preds
 
     def get_model(self):
@@ -54,6 +57,8 @@ class LightGBMRegressor:
     
     def get_mse(self):
         return self.mse
+    def get_rmse(self):
+        return self.rmse
 
 
 """

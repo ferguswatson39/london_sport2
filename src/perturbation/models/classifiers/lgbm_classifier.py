@@ -29,7 +29,7 @@ class LightGBMClassifier:
         }
         model = LGBMClassifier(**hyperparameters, random_state = 42)
         # Scoring here is roc_auc but maybe i should try_ f1
-        cv_score = cross_val_score(model, self.X_train, self.Y_train, cv=5, scoring = 'roc_auc', n_jobs = -1)
+        cv_score = cross_val_score(model, self.X_train, self.Y_train, cv=5, scoring = 'roc_auc')
         return cv_score.mean()
     
     def run_study(self):

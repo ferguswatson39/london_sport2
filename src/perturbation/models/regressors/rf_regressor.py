@@ -2,6 +2,7 @@ from sklearn.ensemble import RandomForestRegressor
 import optuna
 from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import cross_val_score
+import numpy as np
 
 # optuna hp optimisation adapted from: 
 # https://medium.com/@sarahzouinina/a-deep-dive-into-lightgbm-how-to-choose-and-tune-parameters-7c584945842e
@@ -13,6 +14,7 @@ class RFRegressor:
         self.X_train = None
         self.Y_train = None
         self.mse = None
+        self.rmse = None
 
     def objective(self, trial):
         hyperparameters = {
@@ -22,7 +24,7 @@ class RFRegressor:
             'min_samples_leaf' : trial.suggest_int('min_samples_leaf', 1, 20)            
         }
         model = RandomForestRegressor(**hyperparameters, random_state = 42)
-        cv_score = cross_val_score(model, self.X_train, self.Y_train, cv=5, scoring = 'neg_mean_squared_error', n_jobs = -1)
+        cv_score = cross_val_score(model, self.X_train, self.Y_train, cv=5, scoring = 'neg_mean_squared_error')
         return cv_score.mean()
     
     def run_study(self):
@@ -44,6 +46,7 @@ class RFRegressor:
         preds = self.model.predict(X_test)
         if save_metric:
             self.mse = mean_squared_error(Y_test, preds)
+            self.rmse = np.sqrt(self.get_mse())
         return preds
 
     def get_model(self):
@@ -51,3 +54,7 @@ class RFRegressor:
 
     def get_mse(self):
         return self.mse
+    def get_rmse(self):
+        return self.rmse
+    
+    

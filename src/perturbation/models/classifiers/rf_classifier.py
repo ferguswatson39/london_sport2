@@ -31,7 +31,7 @@ class RFClassifier:
             'min_samples_leaf' : trial.suggest_int('min_samples_leaf', 1, 20)            
         }
         model = RandomForestClassifier(**hyperparameters, random_state = 42)
-        cv_score = cross_val_score(model, self.X_train, self.Y_train, cv=5, scoring = 'roc_auc', n_jobs = -1)
+        cv_score = cross_val_score(model, self.X_train, self.Y_train, cv=5, scoring = 'roc_auc')
         return cv_score.mean()
     
     def run_study(self):
