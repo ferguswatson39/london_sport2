@@ -61,12 +61,13 @@ def create_perturbations(df : pd.DataFrame, model : object, scaler : object, Y_t
             mask = np.where(var_values < var_max, True, False)
 
         X_scaled = scaler.transform(new[mask])
+        Y_test_masked = Y_test[mask]
 
         # We only want to save the accuracy or mse metrics for the non perturbed set
         # So use save_metric = True only for the first prediction generation
-        non_p_preds = model.get_preds(X_scaled, Y_test, save_metric=True)
+        non_p_preds = model.get_preds(X_scaled, Y_test_masked, save_metric=True)
         X_scaled[:, var_idx] = X_scaled[:, var_idx] + var_change
-        p_preds = model.get_preds(X_scaled, Y_test, save_metric=False)
+        p_preds = model.get_preds(X_scaled, Y_test_masked, save_metric=False)
 
         output_df.loc[mask, old_var_name] = non_p_preds
         output_df.loc[mask, new_var_name] = p_preds
@@ -127,8 +128,9 @@ def create_save_heatplot(breakdowns : pd.Series, target : str, heatplot_name : s
     heatplot_path = ROOT / 'figures' / 'perturbation'
     if target == 'active':
         title = 'Average Change in the Probability of Participating in Over 150 Minutes of Moderate Activity Per Week'
-    elif target == 'MEMS7_ALL':
+    else:
         title = 'Average Change in the Minutes of Moderate Activity per week'
+
     heat = breakdowns.drop(columns = 'labels')
     plt.figure(figsize=(15, 10))
     sns.heatmap(
@@ -161,6 +163,10 @@ def execute_perturbation_pipeline(df : pd.DataFrame, run_cases : dict):
 
         perturbed_df.to_csv(save_path / df_name, index = False)
         print(f'Saved pertubation results to: {save_path / df_name}')
-        
+
         create_save_heatplot(breakdowns, target, heatplot_name)
         print(f'Finished perturbaiton for {model.__class__.__name__}')
+
+if __name__ == '__main__':
+    df = get_clean_2022()
+    execute_perturbation_pipeline(df, run_cases)

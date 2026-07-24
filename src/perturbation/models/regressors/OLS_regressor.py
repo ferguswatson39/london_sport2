@@ -8,6 +8,7 @@ class OLSRegressor:
         self.mse = None
 
     def fit(self, X_train, Y_train):
+        print(f'Fitting {OLSRegressor.__name__}...')
         self.model.fit(X_train, Y_train)
     
     def get_model(self):

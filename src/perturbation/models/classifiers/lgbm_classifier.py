@@ -2,6 +2,8 @@ from lightgbm import LGBMClassifier, early_stopping, log_evaluation
 from sklearn.model_selection import cross_val_score
 from sklearn.metrics import f1_score, roc_auc_score
 import optuna
+from pathlib import Path
+ROOT = Path(__file__).resolve().parent.parent.parent.parent.parent
 
 class LightGBMClassifier:
     def __init__(self):
@@ -11,6 +13,8 @@ class LightGBMClassifier:
         self.Y_train = None
         self.f1 = None
         self.roc_auc_score = None
+        self.name = LightGBMClassifier.__name__
+        self.save_path = ROOT / 'src' / 'perturbation' / 'models' / 'saved_models' 
 
     def objective(self, trial):
         hyperparameters = {
@@ -41,14 +45,16 @@ class LightGBMClassifier:
         print(f'Starting to run study....')
         self.run_study()
         print(f'Finished running study. Optimal hyperparameters found.')
+        print(f'Fitting {LightGBMClassifier.__name__}...')
         self.model.fit(X_train, Y_train)
 
     def get_preds(self, X_test, Y_test, save_metric : bool):
-        preds = self.model.predict_proba(X_test)[:, 1]
+        preds_prob = self.model.predict_proba(X_test)[:, 1]
+        preds_class = self.model.predict(X_test)
         if save_metric:
-            self.f1 = f1_score(Y_test, preds)
-            self.roc_auc = roc_auc_score(Y_test, preds)
-        return preds
+            self.f1 = f1_score(Y_test, preds_class)
+            self.roc_auc = roc_auc_score(Y_test, preds_prob)
+        return preds_prob
 
     def get_model(self):
         return self.model

@@ -37,6 +37,7 @@ class RFRegressor:
         print(f'Starting to run study....')
         self.run_study()
         print(f'Finished running study. Optimal hyperparameters found.')
+        print(f'Fitting {RFRegressor.__name__}...')
         self.model.fit(X_train, Y_train)
 
     def get_preds(self, X_test, Y_test, save_metric : bool):
