@@ -27,6 +27,7 @@ class GenerateUmapEmb:
         self.intersection_umap = None
         self.encoder = None
         self.gower_umap = None
+        self.sports_umap = None
 
     def gen_splits(self):
         avail_cats = [c for c in self.df_cols if c in self.dc.get_clustering_categoricals()]
@@ -72,15 +73,18 @@ class GenerateUmapEmb:
         catogs = ['Eth7', 'Gend3', 'HHLiv12', 'WorkStat10']
         contins = ['Age9', 'Educ6', 'IMD10', 'NSSEC5', 'Motiva_POP', 'motivd_POP', 'happy', 'lifesat', 'lone', 'worthw', 'comm1', 'inclus_a']
         distances = get_gower(self.df[catogs + contins], catogs)
-        emb = umap.UMAP(min_dist=0.0, n_components = num_dimensions, n_neighbors = 15, random_state = 42).fit(distances)
+        emb = umap.UMAP(min_dist = 0.1, n_components = num_dimensions, n_neighbors = 25, random_state = 42).fit(distances)
         self.gower_umap = emb
         return self.get_gower_umap()
+    
+    def fit_umap_sports(self, metric : str = 'jaccard', num_neighbours : int = 25, num_dimensions : int = 2):
+        self.sports_umap = umap.UMAP(min_dist = 0.1, n_components = num_dimensions, n_neighbors = num_neighbours, random_state = 42, metric = metric, init = 'random').fit(self.df.values)
+        return self.sports_umap
 
     def get_categorical_umap(self):
         return self.categorical_umap
     def get_continuous_umap(self):
         return self.continuous_umap
-    
     def get_intersection_umap(self):
         return self.intersection_umap
     def get_scaler(self):
@@ -89,5 +93,7 @@ class GenerateUmapEmb:
         return self.encoder
     def get_gower_umap(self):
         return self.gower_umap
+    def get_sports_umap(self):
+        return self.sports_umap
     
 
