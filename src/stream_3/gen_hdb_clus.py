@@ -6,6 +6,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent.parent
 sys.path.append(str(ROOT))
 from tqdm import tqdm
+import pickle
+
 
 class GenerateHDBSCAN:
     """
@@ -94,11 +96,14 @@ class GenerateHDBSCAN2:
         self.min_cluster_size = [50, 100, 150, 200, 250, 300, 350, 400, 450, 500]
         self.cluster_selection_method = ['eom', 'leaf']
         self.metric = ['euclidean', 'manhattan']
+        self.name = GenerateHDBSCAN2.__name__
+        self.save_path = ROOT / 'src' / 'stream_3' / 'saved_models'
 
     def fit(self, emb : np.array):
         self.tune_hyperparams(emb)
         self.model = hdbscan.HDBSCAN(**self.hyperparams)
         print('HBDCSAN fit successfully.')
+        self.save_class()
 
     def tune_hyperparams(self, emb : np.array):
         ## Adapted From: https://towardsdatascience.com/tuning-with-hdbscan-149865ac2970/
@@ -147,3 +152,10 @@ class GenerateHDBSCAN2:
         return self.model.condensed_tree_.plot(select_clusters=True)
     def get_single_linkage_tree(self):
         return self.model.single_linkage_tree_.plot()
+
+    def save_class(self):
+        filename = f'{self.__class__.__name__}.sav'
+        path = self.save_path / filename
+        with open(path, 'wb') as file:
+            pickle.dump(self, file)
+        print(f'{self.__class__.__name__} saved to: {path}')

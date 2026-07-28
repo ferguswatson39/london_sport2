@@ -3,6 +3,11 @@ from sklearn.cluster import KMeans
 import numpy as np
 import pandas as pd
 from tqdm import tqdm
+import pickle
+import sys
+from pathlib import Path
+ROOT = Path(__file__).resolve().parent.parent.parent
+sys.path.append(str(ROOT))
 
 class GenerateKMEANS:
     def __init__(self):
@@ -14,10 +19,12 @@ class GenerateKMEANS:
             # Discuss this for write up
             'init' : 'k-means++'
         }
+        self.save_path = ROOT / 'src' / 'stream_3' / 'saved_models'
 
     def fit(self, emb : np.array):
         self.tune_hyperparams(emb)
         print('K-Means fit successfully.')
+        self.save_class()
 
     def tune_hyperparams(self, emb : np.array):
         best_results = {
@@ -45,6 +52,13 @@ class GenerateKMEANS:
         self.model = best_results['best_model']
     def get_model(self):
         return self.model
+
+    def save_class(self):
+        filename = f'{self.__class__.__name__}.sav'
+        path = self.save_path / filename
+        with open(path, 'wb') as file:
+            pickle.dump(self, file)
+        print(f'{self.__class__.__name__} saved to: {path}')
 
 
 
