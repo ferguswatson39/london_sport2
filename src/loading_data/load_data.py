@@ -92,19 +92,18 @@ def get_sporting_distributions(significance_threshold : float = 0.5):
     distribution_df = distribution_df[distribution_df['Sport'] != 'Gymnastics']
     return distribution_df
 
-def get_sports_matrix(minutes_threshold : int = 0, participants_threshold : int = 50):
-    df_path = Path(ROOT / 'data' / 'active_lives_survey_nov_22-23_data_year_8_shared_20250103.sav')
+def get_sports_matrix(minutes_threshold : int = 0):
+    df_path = Path(ROOT / 'data' / 'raw_datasets' / 'active_lives_survey_nov_2022_23_data_shared_20250103.sav')
     _, meta = pyreadstat.read_sav(df_path, metadataonly = True)
     exclude = ['MEMS7_ALL', 'A0', 'B0', 'WALKALLRUN', 'ACTTRAV', 'C0', 'C1', 'CAPPED']
-    MEMS_COLS = [col for col in meta.column_names if col.startswith('MEMS7_') and not any(ex in col for ex in exclude)] + ['LondInOut', 'MEMS7_CYCALL_C02', 'MEMS7_WALKALL_C01']
-    sports_df, _ = pyreadstat.read_sav(df_path, usecols = MEMS_COLS)
+    MEMS_COLS = [col for col in meta.column_names if col.startswith('MEMS7_') and not any(ex in col for ex in exclude)] + ['MEMS7_CYCALL_C02', 'MEMS7_WALKALL_C01']
+    ALL_COLS = MEMS_COLS + ['LondInOut', 'serial']
+    sports_df, _ = pyreadstat.read_sav(df_path, usecols = ALL_COLS)
     sports_df = sports_df.dropna(subset = ['LondInOut'])
     sports_df = sports_df.drop(columns = 'LondInOut')
-    sports_df.columns = sports_df.columns.str.split('_').str[1]
-    sports_df = (sports_df.fillna(0) > minutes_threshold).astype(int)
-    sports_df = sports_df.loc[: , sports_df.sum(axis = 0) >= participants_threshold]
-    print(sports_df.shape)
-    return sports_df, sports_df.columns.tolist()
+    sports_df[MEMS_COLS] = (sports_df[MEMS_COLS].fillna(0) > minutes_threshold).astype(int)
+    sports_df = sports_df.rename(columns = {col : col.split('_')[1] for col in MEMS_COLS})
+    return sports_df
 
 def get_monthly_data(ADJUST_COVID = False):
     df_path = Path(ROOT / 'data' / 'master_data' / '2016_to_2023_full_preprocessed_data_set.csv.gz')
