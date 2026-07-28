@@ -49,16 +49,16 @@ class GenerateUmapEmb:
         self.encoder = encoder
         return X_categoricals.values
 
-    def fit_umap(self, num_dimensions : int = 2):
+    def fit_fuzzy_umap(self, num_dimensions : int = 2):
         avail_cats, avail_contins = self.gen_splits()
         X_scaled_continuous = self.scale_continuous(avail_contins)
         print(f'Continuous Shape: {X_scaled_continuous.shape}')
         X_categoricals = self.dummy_encode(avail_cats)
         print(f'Categorical Shape: {X_categoricals.shape}')
         assert X_scaled_continuous.shape[0] == X_categoricals.shape[0] == len(self.df)
-        continuous = umap.UMAP(min_dist = 0.0, n_components = num_dimensions, n_neighbors = 15, metric = 'euclidean', random_state=42).fit(X_scaled_continuous)
+        continuous = umap.UMAP(min_dist = 0.0, n_components = num_dimensions, n_neighbors = 50, metric = 'euclidean').fit(X_scaled_continuous)
         print('Finished fitting continuous....')
-        categorical = umap.UMAP(min_dist = 0.0, n_components = num_dimensions, n_neighbors = 100, metric = 'dice', random_state=42).fit(X_categoricals)
+        categorical = umap.UMAP(min_dist = 0.0, n_components = num_dimensions, n_neighbors = 100, metric = 'dice').fit(X_categoricals)
         print('Finished fitting categorical....')
         intersection = continuous * categorical
         print('Finished computing intersection...')
@@ -67,7 +67,7 @@ class GenerateUmapEmb:
         self.intersection_umap = intersection
         print('UMAP fit complete!')
         return self.get_intersection_umap()
-    
+
     def fit_umap_using_gower(self, num_dimensions : int = 2):
         catogs = ['Eth7', 'Gend3', 'HHLiv12', 'WorkStat10']
         contins = ['Age9', 'Educ6', 'IMD10', 'NSSEC5', 'Motiva_POP', 'motivd_POP', 'happy', 'lifesat', 'lone', 'worthw', 'comm1', 'inclus_a']
