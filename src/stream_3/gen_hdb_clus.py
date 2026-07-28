@@ -74,3 +74,76 @@ class GenerateHDBSCAN:
         return best
     def get_clusterer(self):
         return self.clusterer
+
+class GenerateHDBSCAN2:
+    """
+    HDBSCAN2 Class.
+
+    Uses grid search approach, using dbcv for density based optimisation for hyperparams
+
+    """
+    def __init__(self):
+        self.model = None
+        self.hyperparams = {
+            'min_samples' : None,
+            'min_cluster_size' : None,
+            'cluster_selection_method' : None,
+            'metric' : None
+        }
+        self.min_samples = [5, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
+        self.min_cluster_size = [50, 100, 150, 200, 250, 300, 350, 400, 450, 500]
+        self.cluster_selection_method = ['eom', 'leaf']
+        self.metric = ['euclidean', 'manhattan']
+
+    def fit(self, emb : np.array):
+        self.tune_hyperparams(emb)
+        self.model = hdbscan.HDBSCAN(**self.hyperparams)
+        print('HBDCSAN fit successfully.')
+
+    def tune_hyperparams(self, emb : np.array):
+        ## Adapted From: https://towardsdatascience.com/tuning-with-hdbscan-149865ac2970/
+        frames = []
+        best = {
+            'min_samples': 0,
+            'min_cluster_size': 0,
+            'cluster_selection_method': 0,
+            'metric' : '',
+            'num_clusters' : 0,
+            'unclustered_prop' : 0,
+            'dbcv' : float('-inf')
+        }
+        for min_sample in self.min_samples:
+            for min_cluster_size in self.min_cluster_size:
+                for cluster_selection_method in self.cluster_selection_method:
+                    for metric in self.metric:
+                        hdb = hdbscan.HDBSCAN(
+                            min_samples = min_sample,
+                            min_cluster_size = min_cluster_size,
+                            cluster_selection_method = cluster_selection_method,
+                            metric = metric,
+                            gen_min_span_tree = True
+                        ).fit(emb) 
+                        num_clusters = len(set(hdb.labels_))
+                        unclustered_prop = len([c for c in hdb.labels_ if c == -1])/len(hdb.labels_)
+                        dbcv = hdb.relative_validity_
+                        if dbcv > best['dbcv']:
+                            best['min_samples'] = min_sample
+                            best['min_cluster_size'] = min_cluster_size
+                            best['cluster_selection_method'] = cluster_selection_method
+                            best['metric'] = metric
+                            best['num_clusters'] = num_clusters
+                            best['unclustered_prop'] = unclustered_prop
+                            best['dbcv'] = dbcv
+                        frames.append([min_sample, min_cluster_size, cluster_selection_method, metric, num_clusters, unclustered_prop, dbcv])
+        df_output = pd.DataFrame(frames, columns = ['min_sample', 'min_cluster', 'cluster_selection','metric', 'num_clusters', 'unclustered_prop', 'dbcv'])
+        print(df_output.sort_values('dbcv', ascending=False).head())
+        self.hyperparams['min_samples'] = best['min_samples']
+        self.hyperparams['min_cluster_size'] = best['min_cluster_size']
+        self.hyperparams['cluster_selection_method'] = best['cluster_selection_method']
+        self.hyperparams['metric'] = best['metric']
+    def get_model(self):
+        return self.model
+    def get_condensed_tree(self):
+        return self.model.condensed_tree_.plot(select_clusters=True)
+    def get_single_linkage_tree(self):
+        return self.model.single_linkage_tree_.plot()

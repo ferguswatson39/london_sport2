@@ -43,6 +43,8 @@ class GenerateKMEANS:
         print(output.sort_values('silh_score', ascending=False).head())
         self.hyperparams['n_clusters'] = best_results['best_k']
         self.model = best_results['best_model']
+    def get_model(self):
+        return self.model
 
 
 
