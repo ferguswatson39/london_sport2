@@ -1,0 +1,12 @@
+cluster_cols = ["Age9",
+                "Gend3",
+                "Eth7",
+                "Disab2_POP",
+                "Educ6",
+                "NSSEC5",
+                "IMD10",
+                "WorkStat8",
+                "Child4",
+                "HHLiv9",
+                "Motivation_PC_Q",
+                "motivd_POP"]
