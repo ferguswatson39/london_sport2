@@ -65,11 +65,11 @@ class LatentClassAnalysis:
         with open(path, "wb") as f:
             pickle.dump(self.model, f)
 
-    @classmethod
-    def load(cls, path):
-        with open(path, "rb") as f:
-            model = pickle.load(f)
-        lca = cls(n_components=model.n_components)
-        lca.model = model
+def load_model(path):
+    with open(path, "rb") as f:
+        model = pickle.load(f)
 
-        return lca
+    lca = LatentClassAnalysis(n_components=model.n_components)
+    lca.model = model
+
+    return lca
