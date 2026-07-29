@@ -8,6 +8,7 @@ from src.stream_3.gen_umap_emb import GenerateUmapEmb
 from src.stream_3.gen_hdb_clus import GenerateHDBSCAN
 import seaborn as sns
 import matplotlib.pyplot as plt
+import plotly.express as px
 
 SPORTS_NO_OVERLAP = ['WALKALL', 'RUNNING', 'ATHLETICS', 'HILLWALK', 'CYCALL', # Walking, Running, Cycling
                      'GYM', 'EXMACHINES', 'WEIGHTS', 'BODYWEIGHT', # Strength and Conditioning
@@ -114,6 +115,31 @@ class SportsClustering:
         plt.savefig(f"figures/co-occurence.png", bbox_inches = 'tight', dpi = 500)
         plt.show()
 
+    def prepare_persona_proportions(self) -> pd.DataFrame:
+        df_path = Path(ROOT / 'data' / 'master_data' / '2016_to_2023_master_clustering_data_set.csv')
+        clustering_df = pd.read_csv(df_path)
+        clustering_df = clustering_df[clustering_df['year'] == self.target_year].dropna(subset = ['LCA_Class'])
+        self.sports_matrix_labeled['serial'] = self.serials
+        merged_df = pd.merge(self.sports_matrix_labeled[['serial', 'LABEL']], clustering_df[['serial', 'motivd_POP', 'NSSEC5', 'Age9', 'Disab2_POP', 'IMD10']], on = 'serial', how = 'inner')
+        merged_df['Deprived %'] = merged_df['IMD10'].isin([1, 2, 3]).astype(int)
+        merged_df['Older %'] = merged_df['Age9'].isin([7, 8, 9]).astype(int)
+        merged_df['Affluent %'] = merged_df['NSSEC5'].isin([1, 2]).astype(int)
+        merged_df['Extrinsically Motivated %'] = merged_df['motivd_POP'].isin([1, 2]).astype(int)
+        merged_df['Disabled %'] = merged_df['Disab2_POP'].isin([1]).astype(int)
+        cols = ['Deprived %', 'Older %', 'Affluent %', 'Extrinsically Motivated %', 'Disabled %']
+        proportions = merged_df.groupby('LABEL')[cols].mean() * 100
+        proportions = proportions.div(proportions.max(axis = 0), axis = 1) * 100
+        return proportions.reset_index()
+
+    def plot_radar(self, dataframe: pd.DataFrame, sports : list = [0, 2, 4, 6]):
+        dataframe['Sport'] = dataframe['LABEL'].map(SPORTS_DESCRIPTIONS)
+        dataframe = dataframe[dataframe['LABEL'].isin(sports)].drop(columns = ['LABEL'])
+        dataframe = dataframe.melt(id_vars = ['Sport'], var_name = 'Trait', value_name = 'Percentage')
+        fig = px.line_polar(data_frame = dataframe, r = 'Percentage', theta = 'Trait', color = 'Sport', markers = True, line_close = True, template = 'simple_white')
+        fig.update_layout(polar = dict(radialaxis = dict(visible = False)))
+        fig.write_image("figures/radar.png")
+        fig.show()
+
 if __name__ == "__main__":
     sc = SportsClustering()
     sports_matrix = get_sports_matrix()
@@ -134,3 +160,5 @@ if __name__ == "__main__":
     sc.plot_lift_matrix(lift_matrix)
     merged_df = sc.merge_clustering_data()
     sc.plot_co_occurence(merged_df)
+    proportions = sc.prepare_persona_proportions()
+    sc.plot_radar(proportions)
