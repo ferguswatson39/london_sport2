@@ -39,11 +39,11 @@ master_df = create_master_dataset(overall_df, cluster_df)
 
 forecasting_summary = create_forecasting_summary(master_df)
 
-class_summary.to_csv(class_summary_path, index=False)
+# class_summary.to_csv(class_summary_path, index=False)
 
-master_df.to_csv(master_path, index=False)
+# master_df.to_csv(master_path, index=False)
 
-forecasting_summary.to_csv(forecasting_path, index=False)
+# forecasting_summary.to_csv(forecasting_path, index=False)
 
 dominance = calculate_dominance(class_probabilities, class_sizes, cluster_df)
 
