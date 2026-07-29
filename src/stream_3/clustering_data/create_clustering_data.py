@@ -14,4 +14,4 @@ master_df, loadings = create_motivation_pc(master_df)
 
 cluster_df = prepare_clustering_dataset(master_df)
 
-cluster_df.to_csv(output_path, index=False)
+# cluster_df.to_csv(output_path, index=False)
