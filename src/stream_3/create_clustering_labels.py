@@ -9,38 +9,24 @@ from sklearn.preprocessing import OneHotEncoder
 from src.stream_3.gen_kmean_clus import GenerateKMEANS
 from src.stream_3.gen_kprototypes_clus import GenerateKprototypes
 from src.stream_3.gen_hdb_clus import GenerateHDBSCAN2
-from src.stream_3.gen_umap_emb import GenerateUmapEmb
 
 
-
-def create_clustering_labels(input_df : pd.DataFrame, categorical_cols : list[str]) -> pd.DataFrame:
+if __name__ == '__main__':
+    arr_path = ROOT / 'src' / 'stream_3' / 'embeddings' / # Enter umap emb .npy file
+    save_path = ROOT / 'src' / 'stream_3' / 'cluster_labels' 
+    arr = np.load(arr_path)
     models = [GenerateKMEANS(), GenerateKprototypes(), GenerateHDBSCAN2()]
-    df = input_df.copy()
-    output_df = input_df.copy()
-
     for model in models:
+        model_name = model.__class__.__name__
+        if model_name != 'GenerateKprototypes' :
+            model.fit(arr)
+        else:
+            scaler = StandardScaler()
+            df[continuous_cols] = scaler.fit_transform(df[continuous_cols])
+            model.fit(df, categorical_cols)
 
-        process(df, model, categorical_cols, continuous_cols)
         labels = model.get_model().labels_
-        output_df[f'{model.__class__.__name__}_labels'] = labels
-    return output_df
+        np.save(save_path / f'{model_name}_labels.npy', labels)
 
-def process(df : pd.DataFrame, model : object, categorical_cols : list[str], continuous_cols : list[str]):
-    scaler = StandardScaler()
-    if model.__class__.__name__ == 'GenerateKprototypes':
-
-        """
-        scale continuous vars for k prototypes
-        """
-        df[continuous_cols] = scaler.fit_transform(df[continuous_cols])
-        model.fit(df)
-    else:
-        encoder = OneHotEncoder(sparse_output = False).set_output(transform = 'pandas')
-        categoricals = df[categorical_cols]
-        encoded_cats = encoder.fit_transform(categoricals)
-        df_encoded = pd.concat([df, encoded_cats], axis = 1).drop(columns = categorical_cols)
-        X_scaled = scaler.fit_transform(df_encoded)
-        model.fit(X_scaled)
-
-
-
+        
+            
