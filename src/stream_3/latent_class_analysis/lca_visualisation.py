@@ -82,7 +82,7 @@ def plot_heatmap(class_probabilities, cluster_df):
 def plot_mems_trends(forecasting_summary, metric = "Median_MEMS7_ALL"):
 
     n_classes = forecasting_summary["LCA_Class"].nunique()
-    ncols = 4
+    ncols = 5
     nrows = math.ceil(n_classes / ncols)
 
     fig, axes = plt.subplots(nrows, ncols, figsize=(5 * ncols, 3.5 * nrows), sharex=True, sharey=True)
