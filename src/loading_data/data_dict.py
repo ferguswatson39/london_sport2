@@ -28,7 +28,7 @@ data_dict = {
         'dummy_encode' : False, 
         'target' : False,
         'clustering' : True,
-        'clustering_categorical' : False, # Investigate what clustering categorical is as
+        'clustering_categorical' : True, # Investigate what clustering categorical is as
         'graph_label' : 'Physically Limiting Disability',
         'value_labels' : {1.0: 'Disability', 2.0: 'No Physically Limitting Disability'},
         'perturbation' : {
@@ -123,13 +123,13 @@ data_dict = {
         },
 
     'Child4' : {
-        'type' : 'categorical',
+        'type' : 'ordinal',
         'demographic' : False,
         'geographic' : False,
         'dummy_encode' : True,
         'target' : False,
         'clustering' : True,
-        'clustering_categorical' : True,
+        'clustering_categorical' : False,
         'graph_label' : 'Number of Children in Household (Grouped)',
         'value_labels' : { 1.0 : 'None', 2.0 : 'one child', 3.0 : 'two children', 4.0 : 'three or more children'},
         'perturbation' : {
@@ -194,6 +194,8 @@ data_dict = {
         'dummy_encode' : False,
         'geographic' : False,
         'target' : False,
+        'clustering' : True,
+        'clustering_categorical' : False,
         'graph_label' : 'Exercise enjoyable and satisfying',
         'value_labels' : {1.0: 'Strongly agree', 2.0: 'Agree', 3.0: 'Neither agree nor disagree', 4.0: 'Disagree', 5.0: 'Strongly disagree'},
         'perturbation' : {
@@ -214,6 +216,8 @@ data_dict = {
         'dummy_encode' : False,
         'geographic' : False,
         'target' : False,
+        'clustering' : True,
+        'clustering_categorical' : False,
         'graph_label' : 'Exercise to prevent guilt from others',
         'value_labels' : {1.0: 'Strongly agree', 2.0: 'Agree', 3.0: 'Neither agree nor disagree', 4.0: 'Disagree', 5.0: 'Strongly disagree'},
         'perturbation' : {
@@ -232,6 +236,7 @@ data_dict = {
         'dummy_encode' : False,
         'geographic' : False,
         'target' : False,
+        'clustering' : False,
         'graph_label' : 'Can achieve goals',
         'value_labels' : {1.0: 'Strongly disagree', 2.0: 'Disagree', 3.0: 'Neither agree nor disagree', 4.0: 'Agree', 5.0: 'Strongly agree'},
         'perturbation' : {
@@ -249,6 +254,7 @@ data_dict = {
         'dummy_encode' : False,
         'geographic' : False,
         'target' : False,
+        'clustering' : False,
         'graph_label' : 'Persistence (keep trying)',
         'value_labels' : {1.0: 'Strongly disagree', 2.0: 'Disagree', 3.0: 'Neither agree nor disagree', 4.0: 'Agree', 5.0: 'Strongly agree'},
         'perturbation' : {
@@ -267,6 +273,7 @@ data_dict = {
         'dummy_encode' : False,
         'geographic' : False,
         'target' : False,
+        'clustering' : False,
         'graph_label' : 'Exercise areas inclusive and welcoming',
         'value_labels' : {1.0: 'Strongly agree', 2.0: 'Agree', 3.0: 'Neither agree nor disagree', 4.0: 'Disagree', 5.0: 'Strongly disagree'},
         'perturbation' : {
@@ -284,6 +291,7 @@ data_dict = {
         'demographic' : False,
         'dummy_encode' : False,
         'target' : False,
+        'clustering' : False,
         'geographic' : False,
         'graph_label' : 'See similar people when exercise',
         'value_labels' : {1.0: 'Strongly agree', 2.0: 'Agree', 3.0: 'Neither agree nor disagree', 4.0: 'Disagree', 5.0: 'Strongly disagree'},
@@ -301,6 +309,7 @@ data_dict = {
         'demographic' : False,
         'dummy_encode' : False,
         'target' : False,
+        'clustering' : False,
         'geographic' : False,
         'graph_label' : 'Safe exercise places (public)',
         'value_labels' : {1.0: 'Strongly agree', 2.0: 'Agree', 3.0: 'Neither agree nor disagree', 4.0: 'Disagree', 5.0: 'Strongly disagree'},
@@ -319,6 +328,7 @@ data_dict = {
         'geographic' : False,
         'dummy_encode' : False,
         'target' : False,
+        'clustering' : False,
         'graph_label' : 'Trust local people',
         'value_labels' : {1.0: 'Strongly disagree', 2.0: 'Disagree', 3.0: 'Neither agree nor disagree', 4.0: 'Agree', 5.0: 'Strongly agree'},
         'perturbation' : {
@@ -336,6 +346,7 @@ data_dict = {
         'dummy_encode' : False,
         'geographic' : False,
         'target' : False,
+        'clustering' : False,
         'graph_label' : 'Local people from different backgrounds get on well',
         'value_labels' : {-2.0: 'People in this area are all of the same background', -1.0: 'There are too few people in the local area', 1.0: 'Definitely disagree', 2.0: 'Tend to disagree', 3.0: 'Tend to agree', 4.0: 'Definitely agree'},
         'perturbation' : {
@@ -354,6 +365,7 @@ data_dict = {
         'dummy_encode' : False,
         'geographic' : False,
         'target' : False,
+        'clustering' : False,
         'graph_label' : 'Anxious yesterday',
         'value_labels' : {0.0: '0 Not at all anxious', 1.0: '1', 2.0: '2', 3.0: '3', 4.0: '4', 5.0: '5', 6.0: '6', 7.0: '7', 8.0: '8', 9.0: '9', 10.0: '10 Completely anxious'},
         'perturbation' : {
@@ -371,6 +383,7 @@ data_dict = {
         'dummy_encode' : False,
         'geographic' : False,
         'target' : False,
+        'clustering' : False,
         'graph_label' : 'Happy yesterday',
         'value_labels' : {0.0: '0 Not at all happy', 1.0: '1', 2.0: '2', 3.0: '3', 4.0: '4', 5.0: '5', 6.0: '6', 7.0: '7', 8.0: '8', 9.0: '9', 10.0: '10 Completely happy'},
         'perturbation' : {
@@ -389,6 +402,7 @@ data_dict = {
         'dummy_encode' : False,
         'geographic' : False,
         'target' : False,
+        'clustering' : False,
         'graph_label' : 'Feeling lonely',
         'value_labels' : {1.0: 'Often / always', 2.0: 'Some of the time', 3.0: 'Occasionally', 4.0: 'Hardly ever', 5.0: 'Never'},
         'perturbation' : {
@@ -406,6 +420,7 @@ data_dict = {
         'geographic' : False,
         'dummy_encode' : False,
         'target' : False,
+        'clustering' : False,
         'graph_label' : 'Extent life worthwhile',
         'value_labels' : {0.0: '0 Not at all worthwhile', 1.0: '1', 2.0: '2', 3.0: '3', 4.0: '4', 5.0: '5', 6.0: '6', 7.0: '7', 8.0: '8', 9.0: '9', 10.0: '10 Completely worthwhile'},
         'perturbation' : {
@@ -486,6 +501,7 @@ data_dict = {
         'dummy_encode' : False,
         'geographic' : False,
         'target' : False,
+        'clustering' : False,
         'graph_label' : 'Year',
         'value_labels' : None,
         'perturbation' : {
