@@ -8,9 +8,9 @@ def bayesian_ridge_forecast_classes(forecasting_df, target_col):
     X_train = (np.array(included_years) - included_years[0]).reshape(-1, 1)
     X_forecast = (np.array(forecast_years) - included_years[0]).reshape(-1, 1)
 
-    for cls in sorted(forecasting_df["Class"].unique()):
+    for cls in sorted(forecasting_df["LCA_Class"].unique()):
 
-        tmp = (forecasting_df[(forecasting_df["Class"] == cls) & (forecasting_df["year"].isin(included_years))].sort_values("year"))
+        tmp = (forecasting_df[(forecasting_df["LCA_Class"] == cls) & (forecasting_df["year"].isin(included_years))].sort_values("year"))
 
         if len(tmp) != len(included_years):
             print(f"Skipping Class {cls}: missing years.")
@@ -30,6 +30,6 @@ def bayesian_ridge_forecast_classes(forecasting_df, target_col):
         error_full = np.concatenate((np.zeros(len(y_train)), forecast_std))
 
         for year, value, error in zip(years_full, values_full, error_full):
-            output.append({"Class": cls, "year": year, "value": value, "error": error, "R2": r2})
+            output.append({"LCA_Class": cls, "year": year, "value": value, "error": error, "R2": r2})
 
     return pd.DataFrame(output)

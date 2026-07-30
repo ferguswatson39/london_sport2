@@ -4,7 +4,7 @@ import seaborn as sns
 
 def plot_forecasts(forecast_df, target_col, save_path = None):
     plot_df = forecast_df.copy()
-    plot_df["ClassName"] = plot_df["Class"].map(class_names)
+    plot_df["ClassName"] = plot_df["LCA_Class"].map(class_names)
     plot_df["Forecast"] = plot_df["year"].isin(forecast_years)
     colours = (["#808080"] * len(included_years) + ["#00BFFF"] * len(forecast_years))
 

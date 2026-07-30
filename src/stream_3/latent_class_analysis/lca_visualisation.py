@@ -113,5 +113,5 @@ def plot_mems_trends(forecasting_summary, metric = "Median_MEMS7_ALL"):
             ax.set_ylabel(f"{metric.replace('_', ' ').title()}", fontsize=9)
 
     fig.suptitle(f"{metric.replace('_', ' ').title()} over time by latent class", fontsize=16, fontweight="bold")
-    plt.tight_layout(rect=[0, 0, 1, 0.96]) # type: ignore
+    plt.tight_layout(rect=[0, 0, 1, 0.96])
     plt.show()
