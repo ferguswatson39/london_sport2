@@ -129,6 +129,13 @@ class GenerateUmapEmb2:
         self.intersection_umap = None
         self.encoder = None
         self.sports_umap = None
+        self.emb = None
+        self.save_path = ROOT / 'src' / 'stream_3' / 'embeddings'
+        if self.save_path.exists():
+            print('Save path found.')
+        else:
+            raise FileNotFoundError(f'{self.save_path} not found.')
+
 
     def scale_continuous(self, df : pd.DataFrame, avail_contins : list[str]):
         scaler = StandardScaler()
@@ -175,14 +182,19 @@ class GenerateUmapEmb2:
         print('Computing fuzzy set intersection...')
         if operator == '*':
             intersection = continuous * categorical
+            x = 'multip'
         elif operator == '+':
             intersection = continuous + categorical
+            x = 'plus'
         print('Finished computing intersection...')
 
         self.continuous_umap = continuous
         self.categorical_umap = categorical
         self.intersection_umap = intersection
         print('UMAP fit complete!')
+        self.emb = self.get_intersection_umap().embedding_
+        np.save(self.save_path / f'umap_emb_conn_{continuous_neighbors}_catn_{categorical_neighbors}_conm_{continuous_metric}_catm_{categorical_metric}_{x}.npy', self.emb)
+        print(f'Embedding saved to\n {self.save_path}')
 
         return self.get_intersection_umap()
 
