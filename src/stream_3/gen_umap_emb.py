@@ -112,3 +112,81 @@ class GenerateUmapEmb:
         return self.sports_umap
     
 
+class GenerateUmapEmb2:
+    """
+    Generates n dimensional umap embedding
+    Splits data into continuous and categorical and applied separate umap models using euclidean and dice distance respectively
+    Then performs a fuzzy set intersection which combined the two fuzzy graphs then re-embeds using the combined graph
+    
+    """
+
+    def __init__(self):
+
+        self.dc = DataCatalogue()
+        self.scaler = None
+        self.categorical_umap = None
+        self.continuous_umap = None
+        self.intersection_umap = None
+        self.encoder = None
+        self.sports_umap = None
+
+    def scale_continuous(self, df : pd.DataFrame, avail_contins : list[str]):
+        scaler = StandardScaler()
+        X = df[avail_contins]
+        X_scaled = scaler.fit_transform(X)
+        self.scaler = scaler
+        return X_scaled
+
+    def dummy_encode(self, df : pd.DataFrame, avail_cats : list[str]):
+        encoder = OneHotEncoder(sparse_output = True)
+        categoricals = df[avail_cats]
+        X_categoricals = encoder.fit_transform(categoricals)
+        self.encoder = encoder
+        return X_categoricals
+
+    def fit_fuzzy_umap(self,
+                        df : pd.DataFrame,
+                        avail_contins : list[str],
+                        avail_cats : list[str],
+                        continuous_neighbors : int,
+                        categorical_neighbors : int,
+                        continuous_metric : str,
+                        categorical_metric : str,
+                        operator : str,
+                        num_dimensions : int = 2):
+
+        if operator not in ['+', '*']:
+            raise ValueError(f'{operator} | not a valid operator')
+        
+        X_scaled_continuous = self.scale_continuous(df, avail_contins)
+        print(f'Continuous Shape: {X_scaled_continuous.shape}')
+
+        X_categoricals = self.dummy_encode(df, avail_cats)
+        print(f'Categorical Shape: {X_categoricals.shape}')
+
+        assert X_scaled_continuous.shape[0] == X_categoricals.shape[0] == len(df)
+
+        continuous = umap.UMAP(min_dist = 0.0, n_components = num_dimensions, n_neighbors = continuous_neighbors, metric = continuous_metric).fit(X_scaled_continuous)
+        print('Finished fitting continuous....')
+
+        categorical = umap.UMAP(min_dist = 0.0, n_components = num_dimensions, n_neighbors = categorical_neighbors, metric = categorical_metric).fit(X_categoricals)
+        print('Finished fitting categorical...')
+
+        print('Computing fuzzy set intersection...')
+        if operator == '*':
+            intersection = continuous * categorical
+        elif operator == '+':
+            intersection = continuous + categorical
+        print('Finished computing intersection...')
+
+        self.continuous_umap = continuous
+        self.categorical_umap = categorical
+        self.intersection_umap = intersection
+        print('UMAP fit complete!')
+
+        return self.get_intersection_umap()
+
+    def get_intersection_umap(self):
+        return self.intersection_umap
+    
+    

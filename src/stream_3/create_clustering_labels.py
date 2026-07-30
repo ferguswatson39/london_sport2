@@ -9,6 +9,7 @@ from sklearn.preprocessing import OneHotEncoder
 from src.stream_3.gen_kmean_clus import GenerateKMEANS
 from src.stream_3.gen_kprototypes_clus import GenerateKprototypes
 from src.stream_3.gen_hdb_clus import GenerateHDBSCAN2
+from src.stream_3.gen_umap_emb import GenerateUmapEmb
 
 
 
