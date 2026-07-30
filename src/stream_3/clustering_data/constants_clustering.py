@@ -1,0 +1,42 @@
+motivation_cols = ["Motiva_POP",
+                   "motivb_POP",
+                   "motivc_POP"]
+
+workstat_mapping = {1: 1,
+                    2: 2,
+                    3: 3,
+                    4: 3,
+                    5: 4,
+                    6: 5,
+                    7: 6,
+                    8: 7,
+                    9: 7,
+                    10: 8}
+
+hhliv_mapping = {1: 1,
+                 2: 2,
+                 3: 3,
+                 4: 3,
+                 5: 4,
+                 6: 5,
+                 7: 6,
+                 8: 7,
+                 9: 7,
+                 10: 8,
+                 11: 9,
+                 12: 9}
+
+cluster_cols = ["serial",
+                "year",
+                "Age9",
+                "Gend3",
+                "Eth7",
+                "Disab2_POP",
+                "Educ6",
+                "NSSEC5",
+                "IMD10",
+                "WorkStat8",
+                "Child4",
+                "HHLiv9",
+                "Motivation_PC_Q",
+                "motivd_POP"]
