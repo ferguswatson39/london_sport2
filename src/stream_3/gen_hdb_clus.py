@@ -154,10 +154,11 @@ class GenerateHDBSCAN2:
         self.metric = ['euclidean', 'manhattan']
         self.name = GenerateHDBSCAN2.__name__
         self.save_path = ROOT / 'src' / 'stream_3' / 'saved_models'
+        self.output_df = None
 
     def fit(self, emb : np.array):
         self.tune_hyperparams(emb)
-        self.model = hdbscan.HDBSCAN(**self.hyperparams)
+        self.model = hdbscan.HDBSCAN(**self.hyperparams).fit(emb)
         print('HBDCSAN fit successfully.')
         self.save_class()
 
@@ -173,7 +174,7 @@ class GenerateHDBSCAN2:
             'unclustered_prop' : 0,
             'dbcv' : float('-inf')
         }
-        for min_sample in self.min_samples:
+        for min_sample in tqdm(self.min_samples):
             for min_cluster_size in self.min_cluster_size:
                 for cluster_selection_method in self.cluster_selection_method:
                     for metric in self.metric:
@@ -197,11 +198,13 @@ class GenerateHDBSCAN2:
                             best['dbcv'] = dbcv
                         frames.append([min_sample, min_cluster_size, cluster_selection_method, metric, num_clusters, unclustered_prop, dbcv])
         df_output = pd.DataFrame(frames, columns = ['min_sample', 'min_cluster', 'cluster_selection','metric', 'num_clusters', 'unclustered_prop', 'dbcv'])
-        print(df_output.sort_values('dbcv', ascending=False).head())
+        print(df_output.sort_values('dbcv', ascending=False).head(10))
         self.hyperparams['min_samples'] = best['min_samples']
         self.hyperparams['min_cluster_size'] = best['min_cluster_size']
         self.hyperparams['cluster_selection_method'] = best['cluster_selection_method']
         self.hyperparams['metric'] = best['metric']
+        self.hyperparams['gen_min_span_tree'] = True
+        self.output_df = df_output
     def get_model(self):
         return self.model
     def get_condensed_tree(self):
@@ -215,3 +218,5 @@ class GenerateHDBSCAN2:
         with open(path, 'wb') as file:
             pickle.dump(self, file)
         print(f'{self.__class__.__name__} saved to: {path}')
+    def get_df_output(self):
+        return self.output_df
