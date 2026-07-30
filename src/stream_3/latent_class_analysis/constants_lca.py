@@ -314,3 +314,7 @@ class_names = {
     23: "Retired older adults",
     24: "Affluent retired older adults",
 }
+
+included_years = [2016, 2017, 2018, 2019, 2020, 2021, 2022]
+
+forecast_years = [2023, 2024, 2025, 2026, 2027]
