@@ -186,7 +186,14 @@ class GenerateUmapEmb2:
 
         return self.get_intersection_umap()
 
+    def fit_umap_sports(self, df : pd.DataFrame, metric : str = 'jaccard', num_neighbours : int = 25, num_dimensions : int = 2):
+        self.sports_umap = umap.UMAP(min_dist = 0.1, n_components = num_dimensions, n_neighbors = num_neighbours, random_state = 42, metric = metric, init = 'random').fit(df.values)
+        return self.get_sports_umap()
+
     def get_intersection_umap(self):
         return self.intersection_umap
+
+    def get_sports_umap(self):
+        return self.sports_umap
     
     
