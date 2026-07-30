@@ -19,6 +19,6 @@ forecasting_summary["year"] = (forecasting_summary["year"].astype(str).str.split
 
 forecast_df = bayesian_ridge_forecast_classes(forecasting_summary, target_col)
 
-forecast_df.to_csv(forecast_path, index=False)
+# forecast_df.to_csv(forecast_path, index=False)
 
-plot_forecasts(forecast_df, target_col, save_path = plot_path)
+plot_forecasts(forecast_df, target_col, save_path = None)

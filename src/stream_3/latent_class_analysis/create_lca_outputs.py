@@ -51,4 +51,4 @@ dominance = calculate_dominance(class_probabilities, class_sizes, cluster_df)
 
 plot_heatmap(class_probabilities, cluster_df)
 
-plot_mems_trends(forecasting_summary, metric = "Mean_MEMS7_ALL")
+plot_mems_trends(forecasting_summary, metric = "Median_MEMS7_ALL")
