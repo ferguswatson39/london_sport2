@@ -25,6 +25,7 @@ class GenerateUmapEmb:
         self.categorical_umap = None
         self.continuous_umap = None
         self.intersection_umap = None
+        self.euclidean_umap = None
         self.encoder = None
         self.gower_umap = None
         self.sports_umap = None
@@ -48,7 +49,7 @@ class GenerateUmapEmb:
         categoricals = self.df[avail_cats]
         X_categoricals = encoder.fit_transform(categoricals)
         self.encoder = encoder
-        return X_categoricals.values
+        return X_categoricals
 
     def fit_fuzzy_umap(self, num_dimensions : int = 2):
         avail_cats, avail_contins = self.gen_splits()
@@ -57,11 +58,11 @@ class GenerateUmapEmb:
         X_categoricals = self.dummy_encode(avail_cats)
         print(f'Categorical Shape: {X_categoricals.shape}')
         assert X_scaled_continuous.shape[0] == X_categoricals.shape[0] == len(self.df)
-        continuous = umap.UMAP(min_dist = 0.0, n_components = num_dimensions, n_neighbors = 50, metric = 'euclidean').fit(X_scaled_continuous)
+        continuous = umap.UMAP(min_dist = 0.0, n_components = num_dimensions, n_neighbors = 500, metric = 'euclidean').fit(X_scaled_continuous)
         print('Finished fitting continuous....')
-        categorical = umap.UMAP(min_dist = 0.0, n_components = num_dimensions, n_neighbors = 100, metric = 'dice').fit(X_categoricals)
+        categorical = umap.UMAP(min_dist = 0.0, n_components = num_dimensions, n_neighbors = 500, metric = 'dice').fit(X_categoricals.values)
         print('Finished fitting categorical....')
-        intersection = continuous * categorical
+        intersection = continuous + categorical
         print('Finished computing intersection...')
         self.continuous_umap = continuous
         self.categorical_umap = categorical
@@ -76,6 +77,18 @@ class GenerateUmapEmb:
         emb = umap.UMAP(min_dist = 0.1, n_components = num_dimensions, n_neighbors = 25, random_state = 42).fit(distances)
         self.gower_umap = emb
         return self.get_gower_umap()
+
+    def fit_umap_using_euclidean(self, num_dimensions : int = 2):
+        categoricals = ['Gend3', 'Eth7', 'Disab2_POP', 'WorkStat8', 'HHLiv9']
+        contins = ['Age9', 'Educ6', 'NSSEC5', 'IMD10', 'Child4', 'motivd_POP', 'Motiva_POP']
+        scaler = StandardScaler()
+        X_categoricals = self.dummy_encode(categoricals)
+        X_contins = self.df[contins]
+        combined = pd.concat([X_categoricals, X_contins], axis=1)
+        X_scaled = scaler.fit_transform(combined)
+        self.euclidean_umap = umap.UMAP(min_dist=0.1, n_components = num_dimensions,n_neighbors = 20, metric='euclidean').fit(X_scaled)
+        return self.get_euclidean_umap()
+
     
     def fit_umap_sports(self, metric : str = 'jaccard', num_neighbours : int = 25, num_dimensions : int = 2):
         self.sports_umap = umap.UMAP(min_dist = 0.1, n_components = num_dimensions, n_neighbors = num_neighbours, random_state = 42, metric = metric, init = 'random').fit(self.df.values)
@@ -87,6 +100,8 @@ class GenerateUmapEmb:
         return self.continuous_umap
     def get_intersection_umap(self):
         return self.intersection_umap
+    def get_euclidean_umap(self):
+        return self.euclidean_umap
     def get_scaler(self):
         return self.scaler
     def get_encoder(self):
@@ -97,3 +112,100 @@ class GenerateUmapEmb:
         return self.sports_umap
     
 
+class GenerateUmapEmb2:
+    """
+    Generates n dimensional umap embedding
+    Splits data into continuous and categorical and applied separate umap models using euclidean and dice distance respectively
+    Then performs a fuzzy set intersection which combined the two fuzzy graphs then re-embeds using the combined graph
+    
+    """
+
+    def __init__(self):
+
+        self.dc = DataCatalogue()
+        self.scaler = None
+        self.categorical_umap = None
+        self.continuous_umap = None
+        self.intersection_umap = None
+        self.encoder = None
+        self.sports_umap = None
+        self.emb = None
+        self.save_path = ROOT / 'src' / 'stream_3' / 'embeddings'
+        if self.save_path.exists():
+            print('Save path found.')
+        else:
+            raise FileNotFoundError(f'{self.save_path} not found.')
+
+
+    def scale_continuous(self, df : pd.DataFrame, avail_contins : list[str]):
+        scaler = StandardScaler()
+        X = df[avail_contins]
+        X_scaled = scaler.fit_transform(X)
+        self.scaler = scaler
+        return X_scaled
+
+    def dummy_encode(self, df : pd.DataFrame, avail_cats : list[str]):
+        encoder = OneHotEncoder(sparse_output = True)
+        categoricals = df[avail_cats]
+        X_categoricals = encoder.fit_transform(categoricals)
+        self.encoder = encoder
+        return X_categoricals
+
+    def fit_fuzzy_umap(self,
+                        df : pd.DataFrame,
+                        avail_contins : list[str],
+                        avail_cats : list[str],
+                        continuous_neighbors : int,
+                        categorical_neighbors : int,
+                        continuous_metric : str,
+                        categorical_metric : str,
+                        operator : str,
+                        num_dimensions : int = 2):
+
+        if operator not in ['+', '*']:
+            raise ValueError(f'{operator} | not a valid operator')
+        
+        X_scaled_continuous = self.scale_continuous(df, avail_contins)
+        print(f'Continuous Shape: {X_scaled_continuous.shape}')
+
+        X_categoricals = self.dummy_encode(df, avail_cats)
+        print(f'Categorical Shape: {X_categoricals.shape}')
+
+        assert X_scaled_continuous.shape[0] == X_categoricals.shape[0] == len(df)
+
+        continuous = umap.UMAP(min_dist = 0.0, n_components = num_dimensions, n_neighbors = continuous_neighbors, metric = continuous_metric).fit(X_scaled_continuous)
+        print('Finished fitting continuous....')
+
+        categorical = umap.UMAP(min_dist = 0.0, n_components = num_dimensions, n_neighbors = categorical_neighbors, metric = categorical_metric).fit(X_categoricals)
+        print('Finished fitting categorical...')
+
+        print('Computing fuzzy set intersection...')
+        if operator == '*':
+            intersection = continuous * categorical
+            x = 'multip'
+        elif operator == '+':
+            intersection = continuous + categorical
+            x = 'plus'
+        print('Finished computing intersection...')
+
+        self.continuous_umap = continuous
+        self.categorical_umap = categorical
+        self.intersection_umap = intersection
+        print('UMAP fit complete!')
+        self.emb = self.get_intersection_umap().embedding_
+        np.save(self.save_path / f'umap_emb_conn_{continuous_neighbors}_catn_{categorical_neighbors}_conm_{continuous_metric}_catm_{categorical_metric}_{x}.npy', self.emb)
+        print(f'Embedding saved to\n {self.save_path}')
+
+        return self.get_intersection_umap()
+
+    def fit_umap_sports(self, df : pd.DataFrame, metric : str = 'jaccard', num_neighbours : int = 25, num_dimensions : int = 2):
+        self.sports_umap = umap.UMAP(min_dist = 0.1, n_components = num_dimensions, n_neighbors = num_neighbours, random_state = 42, metric = metric, init = 'random').fit(df.values)
+        return self.get_sports_umap()
+
+    def get_intersection_umap(self):
+        return self.intersection_umap
+
+    def get_sports_umap(self):
+        return self.sports_umap
+    
+    
