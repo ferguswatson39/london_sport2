@@ -1,10 +1,8 @@
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error
 import numpy as np
-import sys
 from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent.parent.parent.parent
-sys.append(str(ROOT))
 import pickle
 
 class OLSRegressor:

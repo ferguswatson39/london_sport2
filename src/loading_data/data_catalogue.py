@@ -137,3 +137,7 @@ class DataCatalogue:
             if self.data_dict[key]['perturbation']['core'] == True:
                 vars.append(key)
         return vars
+
+d = DataCatalogue()
+print(d.get_perturbation_contins())
+print(d.get_perturbation_catogs())

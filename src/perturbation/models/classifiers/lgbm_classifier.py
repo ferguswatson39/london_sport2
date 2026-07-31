@@ -29,7 +29,7 @@ class LightGBMClassifier:
             'bagging_fraction' : trial.suggest_float('bagging_fraction', 0.5, 1.0),
             'min_data_in_leaf' : trial.suggest_int('min_data_in_leaf', 10, 50)     
         }
-        model = LGBMClassifier(**hyperparameters, random_state = 42)
+        model = LGBMClassifier(**hyperparameters, random_state = 42, verbose=-1)
         # Scoring here is roc_auc but maybe i should try_ f1
         cv_score = cross_val_score(model, self.X_train, self.Y_train, cv=5, scoring = 'roc_auc')
         return cv_score.mean()
@@ -39,7 +39,7 @@ class LightGBMClassifier:
         study = optuna.create_study(direction = 'maximize')
         study.optimize(self.objective, n_trials = 100)
         self.hyperparams = study.best_params
-        self.model = LGBMClassifier(**self.hyperparams, random_state = 42)
+        self.model = LGBMClassifier(**self.hyperparams, random_state = 42, verbose = -1)
         return study
     
     def fit(self, X_train, Y_train):

@@ -135,7 +135,7 @@ data_dict = {
         'perturbation' : {
             'core' : True,
             'to_perturb' : False,
-            'encode' : True
+            'encode' : False
         }
     },
 

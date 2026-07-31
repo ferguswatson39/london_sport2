@@ -3,10 +3,8 @@ from sklearn.model_selection import cross_val_score
 from sklearn.metrics import mean_squared_error
 import optuna
 import numpy as np
-import sys
 from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent.parent.parent.parent
-sys.append(str(ROOT))
 import pickle
 
 
@@ -19,6 +17,9 @@ class LightGBMRegressor:
         self.mse = None
         self.rmse = None
         self.study = None
+        self.name = LightGBMRegressor.__name__
+        self.save_path = ROOT / 'src' / 'perturbation' / 'models' / 'saved_models' 
+
 
     def objective(self, trial):
         hyperparameters = {
@@ -31,7 +32,7 @@ class LightGBMRegressor:
             'bagging_fraction' : trial.suggest_float('bagging_fraction', 0.5, 1.0),
             'min_data_in_leaf' : trial.suggest_int('min_data_in_leaf', 10, 50)     
         }
-        model = LGBMRegressor(**hyperparameters, random_state = 42)
+        model = LGBMRegressor(**hyperparameters, random_state = 42, verbose=-1)
         cv_score = cross_val_score(model, self.X_train, self.Y_train, cv=5, scoring = 'neg_mean_squared_error')
         return cv_score.mean()
     
@@ -40,7 +41,7 @@ class LightGBMRegressor:
         study = optuna.create_study(direction = 'maximize')
         study.optimize(self.objective, n_trials = 100)
         self.hyperparams = study.best_params
-        self.model = LGBMRegressor(**self.hyperparams, random_state = 42)
+        self.model = LGBMRegressor(**self.hyperparams, random_state = 42, verbose=-1)
         return study
     
     def fit(self, X_train, Y_train):
