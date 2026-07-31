@@ -21,6 +21,7 @@ class RFClassifier:
         self.Y_train = None
         self.f1 = None
         self.roc_auc_score = None
+        self.study = None
         self.name = RFClassifier.__name__
         self.save_path = ROOT / 'src' / 'perturbation' / 'models' / 'saved_models' 
 
@@ -45,7 +46,7 @@ class RFClassifier:
     def fit(self, X_train, Y_train):
         self.X_train, self.Y_train = X_train, Y_train
         print(f'Starting to run study....')
-        self.run_study()
+        self.study = self.run_study()
         print(f'Finished running study. Optimal hyperparameters found.')
         print(f'Fitting {RFClassifier.__name__}...')
         self.model.fit(X_train, Y_train)
