@@ -25,6 +25,11 @@ run_cases = {
     4 : {'model' : RFRegressor(), 'target' : 'MEMS7_ALL'},
     5 : {'model' : LightGBMRegressor(),'target' : 'MEMS7_ALL'}
 } 
+test_run_cases = {
+    3 : {'model' : OLSRegressor(), 'target' : 'MEMS7_ALL',},
+    4 : {'model' : RFRegressor(), 'target' : 'MEMS7_ALL'},
+    5 : {'model' : LightGBMRegressor(),'target' : 'MEMS7_ALL'}
+}
 
 def create_perturbations(df : pd.DataFrame, model : object, scaler : object, Y_test : pd.DataFrame):
     """
@@ -39,6 +44,8 @@ def create_perturbations(df : pd.DataFrame, model : object, scaler : object, Y_t
     dc = DataCatalogue()
     to_perturb = dc.get_perturbation_vars()
     print(to_perturb)
+    print(df)
+    print(df.columns)
     for var in to_perturb:
         
         new = df.copy()
@@ -84,7 +91,7 @@ def create_and_join_diff_series(df : pd.DataFrame, group_by : str):
        series.append(x)
     return pd.concat(series, axis=1).reset_index()
 
-def build_perturbation_df(df : pd.DataFrame, model : object, target : str, group_by : str, cluster_col : str):
+def build_perturbation_df(df : pd.DataFrame, model : object, target : str, group_by : str, cluster_col : str, continuous_vars : list[str]):
     """
     Purturbation Pipeline Function
 
@@ -101,7 +108,12 @@ def build_perturbation_df(df : pd.DataFrame, model : object, target : str, group
     """
 
     print(f'These are the vars:\n{df.columns}')
-    df_encoded = one_hot_encode_frame(df)
+    if model.__class__.__name__ in ['OLSRegressor','Logistic']:
+        drop = 'first'
+    else:
+        drop = None
+    
+    df_encoded = one_hot_encode_frame(df, drop)
 
     drop_cols = ['serial', 'year', cluster_col, 'MEMS7_ALL', 'active']
     keep_vars = [var for var in df_encoded.columns if var not in drop_cols]
@@ -114,13 +126,16 @@ def build_perturbation_df(df : pd.DataFrame, model : object, target : str, group
     test_set_clusters = df_encoded.loc[X_test.index, cluster_col]
 
     scaler = StandardScaler()
-    X_train_scaled = scaler.fit_transform(X_train)
+
+    X_train[continuous_vars] = scaler.fit_transform(X_train[continuous_vars])
+
+    #X_train_scaled = scaler.fit_transform(X_train)
     
-    model.fit(X_train_scaled, Y_train)
+    model.fit(X_train, Y_train)
     
     perturbed_df = create_perturbations(X_test, model, scaler, Y_test)
 
-    # Saves model to pkl file to be investigated later
+    # Saves model to pkl file 
     model.save_class()
 
     perturbed_df['labels'] = test_set_clusters
@@ -140,7 +155,7 @@ def create_save_heatplot(breakdowns : pd.Series, target : str, heatplot_name : s
         heat,
         annot=True,
         cmap="YlOrBr",
-        fmt='g'
+        fmt='.2f'
     )
     plt.title(title)
     plt.ylabel('Clusters')
@@ -157,6 +172,9 @@ def execute_perturbation_pipeline(df : pd.DataFrame, run_cases : dict):
     Saves perturbed dfs and perturbed heatplots
     """
     save_path = ROOT / 'results' / 'perturbation'
+    dc = DataCatalogue()
+    continuous_vars = dc.get_perturbation_contins()
+    print(f'Perturbation continuous vars:\n>>> {continuous_vars}')
 
     for key, value in run_cases.items():
   
@@ -166,11 +184,11 @@ def execute_perturbation_pipeline(df : pd.DataFrame, run_cases : dict):
         group_by = 'labels'
         cluster_col = 'LCA_Class'
 
-        df_name = f'{key}_{model.__class__.__name__}_perturbation_results.csv'
-        heatplot_name = f'{model.__class__.__name__}_perturbation_heatplot.png'
+        df_name = f'{key}_{model.__class__.__name__}_perturbation_results2.csv'
+        heatplot_name = f'{model.__class__.__name__}_perturbation_heatplot2.png'
 
         print(f'Starting Perturbation for {model.__class__.__name__}')
-        perturbed_df, breakdowns = build_perturbation_df(df, model, target, group_by, cluster_col)
+        perturbed_df, breakdowns = build_perturbation_df(df, model, target, group_by, cluster_col, continuous_vars)
 
         perturbed_df.to_csv(save_path / df_name, index = False)
         print(f'Saved pertubation results to: {save_path / df_name}')
@@ -178,6 +196,9 @@ def execute_perturbation_pipeline(df : pd.DataFrame, run_cases : dict):
         create_save_heatplot(breakdowns, target, heatplot_name)
         print(f'Finished perturbaiton for {model.__class__.__name__}')
 
+
 if __name__ == '__main__':
     df = get_clean_2022()
-    execute_perturbation_pipeline(df, run_cases)
+    df['MEMS7_ALL'] = df['MEMS7_ALL'].clip(upper=6720)
+    df['MEMS7_ALL'] = np.log1p(df['MEMS7_ALL'])
+    execute_perturbation_pipeline(df, test_run_cases)

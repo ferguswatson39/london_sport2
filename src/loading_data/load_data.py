@@ -140,7 +140,7 @@ def get_2022_data() -> pd.DataFrame:
     missing = [var for var in final_vars if var not in df.columns]
     if len(missing):
         raise KeyError(f'Missing Variables:\n {missing}')
-    df['active'] = df['MEMS7_ALL'] >= 150
+    # df['active'] = df['MEMS7_ALL'] >= 150
     # Removed LondInOut and MEMS7_ALL col after it has been used to filter df and create active
     df = df.drop(columns=(['LondInOut', 'MEMS7_ALL']))
     df = df.dropna()
@@ -154,6 +154,9 @@ def get_master_2022_data():
     dc = DataCatalogue()
     core_vars = dc.get_perturbation_core()
     all = core_vars + ['serial', 'year', 'LCA_Class', 'MEMS7_ALL']
+    #################################################
+    #### Temporary workaround - drop 'active' #######
+    all = [var for var in all if var != 'active']
     print(all)
     path = ROOT / 'data' / 'master_data' / '2016_to_2023_master_clustering_data_set.csv'
     df = pd.read_csv(path, usecols = all)
@@ -197,10 +200,12 @@ def get_clean_2022():
     print('Dropped NAN values')
     return combined
 
-def one_hot_encode_frame(df : pd.DataFrame):
+def one_hot_encode_frame(df : pd.DataFrame, drop : str):
+    if drop not in ['first', None]:
+        raise ValueError(f"{drop} not an option. Select either ['first', None].")
     dc = DataCatalogue()
     discrete_vars = dc.get_perturbation_catogs()
-    encoder = OneHotEncoder(drop='first', handle_unknown = 'ignore', sparse_output = False).set_output(transform = 'pandas')
+    encoder = OneHotEncoder(drop=drop, handle_unknown = 'ignore', sparse_output = False).set_output(transform = 'pandas')
     encoded = encoder.fit_transform(df[discrete_vars])
     df_encoded = pd.concat([df, encoded], axis = 1).drop(columns = discrete_vars)
     return df_encoded
