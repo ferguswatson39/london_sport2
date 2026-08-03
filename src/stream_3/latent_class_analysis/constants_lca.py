@@ -8,7 +8,7 @@ cluster_cols = ["Age9",
                 "WorkStat8",
                 "Child4",
                 "HHLiv9",
-                "Motivation_PC_Q",
+                "Motiva_POP",
                 "motivd_POP"]
 
 value_labels = {
@@ -105,12 +105,12 @@ value_labels = {
         8: "Other/complex household"
     },
 
-    "Motivation_PC_Q": {
-        0: "Lowest",
-        1: "Low",
-        2: "Moderate",
-        3: "High",
-        4: "Highest"
+    "Motiva_POP": {
+        0: "Strongly agree",
+        1: "Agree",
+        2: "Neither agree nor disagree",
+        3: "Disagree",
+        4: "Strongly disagree"
     },
 
     "motivd_POP": {
@@ -145,15 +145,16 @@ display_names = {
 
     "VolAny": "Volunteering",
 
-    "Motivation_PC_Q": "Personal Motivation",
+    "Motiva_POP": "Intrinsic Motivation",
 
-    "motivd_POP": "Social Motivation"
+    "motivd_POP": "Extrinsic Motivation"
 }
 
 merge_columns = [
     "year",
     "serial",
     "Class",
+    "NSSEC5",
     "WorkStat8",
     "HHLiv9",
     "Motivation_PC_Q",
@@ -176,7 +177,7 @@ master_columns = [
     "WorkStat8",
     "Child4",
     "HHLiv9",
-    "Motivation_PC_Q",
+    "Motiva_POP",
     "motivd_POP",
     "nadult",
     "nchild",

@@ -1,7 +1,4 @@
-from constants_clustering import (motivation_cols, workstat_mapping, hhliv_mapping, cluster_cols)
-from sklearn.preprocessing import StandardScaler
-from sklearn.decomposition import PCA
-import pandas as pd
+from constants_clustering import (workstat_mapping, hhliv_mapping, cluster_cols)
 
 def recode_nssec(df):
     df = df.copy()
@@ -17,18 +14,6 @@ def recode_hhliv(df):
     df = df.copy()
     df["HHLiv9"] = df["HHLiv12"].map(hhliv_mapping)
     return df
-
-def create_motivation_pc(df):
-    motivation_df = df[motivation_cols].dropna().copy()
-    scaler = StandardScaler()
-    motivation_scaled = scaler.fit_transform(motivation_df)
-    pca = PCA(n_components=1)
-    pc1 = pca.fit_transform(motivation_scaled).flatten()
-    motivation_df["Motivation_PC"] = pc1
-    df = df.merge(motivation_df[["Motivation_PC"]], left_index=True, right_index=True, how="left")
-    df["Motivation_PC_Q"] = pd.qcut(df["Motivation_PC"], q=5, labels=False)
-    loadings = pd.DataFrame(pca.components_.T, index=motivation_cols, columns=["Loading"])
-    return df, loadings
 
 def prepare_clustering_dataset(df):
     df = recode_nssec(df)
