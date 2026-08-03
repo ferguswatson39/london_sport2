@@ -150,16 +150,6 @@ display_names = {
     "motivd_POP": "Extrinsic Motivation"
 }
 
-merge_columns = [
-    "year",
-    "serial",
-    "Class",
-    "NSSEC5",
-    "WorkStat8",
-    "HHLiv9",
-    "Motivation_PC_Q",
-]
-
 master_columns = [
     "serial",
     "year",
