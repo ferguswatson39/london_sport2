@@ -5,7 +5,7 @@ import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[3]
 
-data_path = (ROOT/"exploration"/"data"/"master_data"/"2016_to_2023_clustering_data_set.csv")
+data_path = (ROOT/"data"/"master_data"/"2016_to_2023_clustering_input_data.csv")
 
 output_path = (ROOT/"exploration"/"data"/"master_data"/"stepmix_latent_class_analysis_results.csv")
 

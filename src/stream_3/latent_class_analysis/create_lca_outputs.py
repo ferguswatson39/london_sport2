@@ -7,15 +7,15 @@ import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[3]
 
-overall_path = (ROOT/"exploration"/"data"/"master_data"/"2016_to_2023_full_preprocessed_data_set.csv.gz")
+overall_path = (ROOT/"data"/"master_data"/"2016_to_2023_full_preprocessed_data_set.csv.gz")
 
-cluster_path = (ROOT/"exploration"/"data"/"master_data"/"2016_to_2023_clustering_data_set.csv")
+cluster_path = (ROOT/"data"/"master_data"/"2016_to_2023_clustering_input_data.csv")
 
 class_summary_path = (ROOT/"exploration"/"clustering"/"stepmix_25_class_summary.csv")
 
-master_path = (ROOT/"exploration"/"data"/"master_data"/"2016_to_2023_master_clustering_data_set.csv")
+master_path = (ROOT/"data"/"master_data"/"2016_to_2023_clustering_output_data.csv")
 
-forecasting_path = (ROOT/"exploration"/"data"/"master_data"/"latent_class_forecasting_data_set.csv")
+forecasting_path = (ROOT/"data"/"master_data"/"latent_class_forecasting_data_set.csv")
 
 model_path = (ROOT/"models"/"stream_3"/"stepmix_new_25.pkl")
 
