@@ -200,14 +200,12 @@ def get_clean_2022():
     print('Dropped NAN values')
     return combined
 
-def one_hot_encode_frame(df : pd.DataFrame, drop : str):
-    if drop not in ['first', None]:
-        raise ValueError(f"{drop} not an option. Select either ['first', None].")
-    dc = DataCatalogue()
-    discrete_vars = dc.get_perturbation_catogs()
-    encoder = OneHotEncoder(drop=drop, handle_unknown = 'ignore', sparse_output = False).set_output(transform = 'pandas')
-    encoded = encoder.fit_transform(df[discrete_vars])
-    df_encoded = pd.concat([df, encoded], axis = 1).drop(columns = discrete_vars)
+def one_hot_encode_frame(df : pd.DataFrame, one_hot_encode_vars : list[str], drop_method : str):
+    if drop_method not in ['first', None]:
+        raise ValueError(f"{drop_method} not an option. Select either ['first', None].")
+    encoder = OneHotEncoder(drop=drop_method, handle_unknown = 'ignore', sparse_output = False).set_output(transform = 'pandas')
+    encoded = encoder.fit_transform(df[one_hot_encode_vars])
+    df_encoded = pd.concat([df, encoded], axis = 1).drop(columns = one_hot_encode_vars)
     return df_encoded
 
 def get_master_data():
