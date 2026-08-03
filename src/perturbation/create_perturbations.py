@@ -31,7 +31,19 @@ test_run_cases = {
     5 : {'model' : LightGBMRegressor(),'target' : 'MEMS7_ALL'}
 }
 
-def create_perturbations(df : pd.DataFrame, model : object, scaler : object, Y_test : pd.DataFrame, continuous_vars : list[str]):
+tree_cases = {
+    1 : {'model' : RFClassifier(),'target' : 'active'},
+    2 : {'model' : LightGBMClassifier(),'target' : 'active'},
+    4 : {'model' : RFRegressor(), 'target' : 'MEMS7_ALL'},
+    5 : {'model' : LightGBMRegressor(),'target' : 'MEMS7_ALL'}
+}
+
+simple_cases = {
+    0 : {'model' : Logistic(),'target' : 'active'},
+    3 : {'model' : OLSRegressor(), 'target' : 'MEMS7_ALL',}
+}
+
+def create_perturbations(X_test : pd.DataFrame, Y_test : pd.DataFrame, model : object, continuous_vars : list[str]):
     """
     Perturbation Function.
 
@@ -68,8 +80,6 @@ def create_perturbations(df : pd.DataFrame, model : object, scaler : object, Y_t
             mask = np.where(var_values < var_max, True, False)
 
         X_masked = new.loc[mask].copy()
-
-        X_masked[continuous_vars] = scaler.transform(X_masked[continuous_vars])
 
         # X_scaled = scaler.transform(new[mask])
         Y_test_masked = Y_test[mask]
@@ -167,23 +177,17 @@ def create_save_heatplot(breakdowns : pd.Series, target : str, heatplot_name : s
     plt.savefig(heatplot_path / heatplot_name)
     print(f'Saved hatplot figure to: {heatplot_path / heatplot_name}')
 
-def preprocess_perturbation(model : object, cluster_column : str, target : str):
+def preprocess_perturbation(df : pd.DataFrame, model : object, cluster_column : str, target : str, continuous_vars : list[str], to_encode_vars : list[str]):
 
     if model.__class__.__name__ in ['OLSRegressor','Logistic']:
         drop = 'first'
     else:
         drop = None
 
-    dc = DataCatalogue()
-    df = get_clean_2022()
-
-    continuous_vars = dc.get_perturbation_core_contins() + dc.get_perturbation_vars()
-
     df['MEMS7_ALL'] = df['MEMS7_ALL'].clip(upper=6720)
     df['MEMS7_ALL'] = np.log1p(df['MEMS7_ALL'])
     df['Disab2_POP'] = df['Disab2_POP'].replace({1.0 : 0.0, 2.0 : 1.0})
 
-    to_encode_vars = dc.get_perturbation_core_to_encode()
     assert to_encode_vars == ['Gend3', 'Eth7', 'WorkStat8', 'HHLiv9']
 
     df_encoded = one_hot_encode_frame(df, to_encode_vars, drop)
@@ -243,7 +247,39 @@ def execute_perturbation_pipeline(df : pd.DataFrame, run_cases : dict):
 
 
 if __name__ == '__main__':
+    dc = DataCatalogue()
     df = get_clean_2022()
-    X_train, X_test, Y_train, Y_test, test_set_clusters, scaler = preprocess_perturbation()
 
-    execute_perturbation_pipeline(df, test_run_cases)
+    df_copy = df.copy()
+
+    continuous_vars = dc.get_perturbation_core_contins() + dc.get_perturbation_vars()
+    to_encode_vars = dc.get_perturbation_core_to_encode()
+
+    group_by = 'labels'
+    cluster_col = 'LCA_Class'
+
+    save_path = ROOT / 'results' / 'perturbation'
+
+    for key, value in run_cases.items():
+        model = run_cases[key]['model']
+        target = run_cases[key]['target']
+
+        X_train, X_test, Y_train, Y_test, test_set_clusters, scaler = preprocess_perturbation(df_copy, model, cluster_col, target)
+
+        model.fit(X_train, Y_train)
+
+        perturbations = create_perturbations(X_test, Y_test, model,continuous_vars, to_encode_vars)
+
+        model.save_class()
+
+        perturbations['labels'] = test_set_clusters
+        breakdowns = create_and_join_diff_series(perturbations, group_by)
+
+        df_name = f'{key}_{model.__class__.__name__}_perturbation_results2.csv'
+        heatplot_name = f'{model.__class__.__name__}_perturbation_heatplot2.png'
+
+        perturbations.to_csv(save_path / df_name, index = False)
+        print(f'Saved pertubation results to: {save_path / df_name}')
+
+        create_save_heatplot(breakdowns, target, heatplot_name)
+        print(f'Finished perturbaiton for {model.__class__.__name__}')
