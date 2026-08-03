@@ -117,14 +117,14 @@ class DataCatalogue:
     def get_perturbation_min(self, var_name):
         return self.data_dict[var_name]['perturbation']['min']
     
-    def get_perturbation_catogs(self):
+    def get_perturbation_core_to_encode(self):
         vars = []
         for key, value in self.data_dict.items():
             if self.data_dict[key]['perturbation']['encode'] == True:
                 vars.append(key)
         return vars
     
-    def get_perturbation_contins(self):
+    def get_perturbation_core_contins(self):
         """ Need to find a way to get the core continuous vars for pertubation"""
         vars = []
         for key, value in self.data_dict.items():
@@ -137,7 +137,14 @@ class DataCatalogue:
             if self.data_dict[key]['perturbation']['core'] == True:
                 vars.append(key)
         return vars
+    def get_perturbation_core_categoricals(self):
+        vars = []
+        for key, value in self.data_dict.items():
+            if self.data_dict[key]['perturbation']['core'] == True and self.data_dict[key]['type'] == 'categorical':
+                vars.append(key)
+        return vars
 
-d = DataCatalogue()
-print(d.get_perturbation_contins())
-print(d.get_perturbation_catogs())
+if __name__ == '__main__':
+    d = DataCatalogue()
+    continuous_vars = d.get_perturbation_core_contins() + d.get_perturbation_vars()
+    print(continuous_vars)
