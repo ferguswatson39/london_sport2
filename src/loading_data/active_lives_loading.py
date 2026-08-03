@@ -17,7 +17,7 @@ def clean_dataset(df):
     df.drop(columns=cols_to_drop, inplace=True)
     drop_cols = []
     for col in df.columns:
-            if re.search(r'_([D-EG-U])\d+$', col):
+            if re.search(r'_([Q-U])\d+$', col):
                 drop_cols.append(col)
     df.drop(columns=drop_cols, inplace=True)
     return df
@@ -45,7 +45,7 @@ def align_surveys(datasets):
 
     keep_cols = []
     for col in latest_cols:
-        if var_counts[col] >= 4:
+        if var_counts[col] >= 1:
             keep_cols.append(col)
 
     aligned = []
