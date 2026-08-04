@@ -7,7 +7,7 @@ ROOT = Path(__file__).resolve().parents[3]
 
 data_path = (ROOT/"data"/"master_data"/"2016_to_2023_clustering_input_data.csv")
 
-output_path = (ROOT/"exploration"/"data"/"master_data"/"stepmix_latent_class_analysis_results.csv")
+output_path = (ROOT/"exploration"/"clustering"/"latent_class_analysis_results.csv")
 
 cluster_df = pd.read_csv(data_path)
 
@@ -15,7 +15,7 @@ X = cluster_df[cluster_cols]
 
 results = []
 
-for k in range(12, 31):
+for k in range(20, 31):
 
     print(f"Fitting {k} classes...")
 
