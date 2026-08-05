@@ -1,4 +1,4 @@
-from lightgbm import LGBMClassifier, early_stopping, log_evaluation
+from xgboost import XGBClassifier
 from sklearn.model_selection import cross_val_score
 from sklearn.metrics import f1_score, roc_auc_score, accuracy_score
 import optuna
@@ -6,7 +6,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent.parent.parent.parent
 import pickle
 
-class LightGBMClassifier:
+class XGBoostClassifier:
     def __init__(self):
         self.hyperparams = None
         self.model = None
@@ -19,31 +19,31 @@ class LightGBMClassifier:
         self.name = self.__class__.__name__
         self.save_path = ROOT / 'src' / 'perturbation' / 'models' / 'saved_models' 
 
+
     def objective(self, trial):
-        model = LGBMClassifier(
-            max_depth = trial.suggest_int('max_depth', 3, 30),
+        model = XGBClassifier(
+            max_depth = trial.suggest_int('max_depth', 2, 10),
             n_estimators = trial.suggest_int('n_estimators', 100, 1000),
             learning_rate = trial.suggest_float('learning_rate', 0.0001, 0.3, log=True),
-            num_leaves = trial.suggest_int('num_leaves', 5, 50),
-            feature_fraction = trial.suggest_float('feature_fraction', 0.5, 1.0),
-            bagging_freq = trial.suggest_int('bagging_freq', 1, 10),
-            bagging_fraction = trial.suggest_float('bagging_fraction', 0.5, 1.0),
-            min_data_in_leaf= trial.suggest_int('min_data_in_leaf', 10, 50),
+            subsample = trial.suggest_float('subsample', 0.5, 1.0),
+            min_child_weight = trial.suggest_float('min_child_weight', 1, 20),
+            colsample_bytree = trial.suggest_float('colsample_bytree', 0.5, 1.0),
+            gamma = trial.suggest_float('gamma', 0.0, 10.0),
             random_state = 42,
-            verbose = -1
-        )
+            verbosity = 0
+            )
         # Scoring here is roc_auc but maybe i should try_ f1
         cv_score = cross_val_score(model, self.X_train, self.Y_train, cv=5, scoring = 'f1_macro')
         return cv_score.mean()
-    
+
     def run_study(self):
         # direction = maximise as neg_mean_squared_error is score
         study = optuna.create_study(direction = 'maximize')
         study.optimize(self.objective, n_trials = 100)
         self.hyperparams = study.best_params
-        self.model = LGBMClassifier(**self.hyperparams, random_state = 42, verbose = -1)
+        self.model = XGBClassifier(**self.hyperparams, random_state = 42, verbosity = 0)
         return study
-    
+
     def fit(self, X_train, Y_train):
         self.X_train, self.Y_train = X_train, Y_train
         print(f'Starting to run study for {self.name}....')
@@ -58,7 +58,7 @@ class LightGBMClassifier:
         if save_metric:
             self.f1 = f1_score(Y_test, preds_class, average='macro')
             # Use 'ovo' to adjust for class imbalances
-            self.roc_auc = roc_auc_score(Y_test, preds_prob, multi_class='ovo', average='macro')
+            self.roc_auc_score = roc_auc_score(Y_test, preds_prob, multi_class='ovo', average='macro')
             self.accuracy = accuracy_score(Y_test, preds_class)
         return preds_prob
 
@@ -76,4 +76,3 @@ class LightGBMClassifier:
         with open(path, 'wb') as file:
             pickle.dump(self, file)
         print(f'{self.name} saved to: {path}')
-

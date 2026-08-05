@@ -59,7 +59,7 @@ class RFClassifier:
         if save_metric:
             self.f1 = f1_score(Y_test, preds_class, average='macro')
             # Use 'ovo' to adjust for class imbalances
-            self.roc_auc = roc_auc_score(Y_test, preds_prob, multi_class='ovo', average='macro')
+            self.roc_auc_score = roc_auc_score(Y_test, preds_prob, multi_class='ovo', average='macro')
             self.accuracy = accuracy_score(Y_test, preds_class)
         return preds_prob
     
@@ -67,7 +67,7 @@ class RFClassifier:
         return self.model
     
     def get_roc_auc(self):
-        return self.roc_auc
+        return self.roc_auc_score
     def get_f1(self):
         return self.f1
     
