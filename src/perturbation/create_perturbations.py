@@ -43,7 +43,7 @@ simple_cases = {
     3 : {'model' : OLSRegressor(), 'target' : 'MEMS7_ALL',}
 }
 
-def create_save_heatplot(breakdowns : pd.Series, target : str, heatplot_name : str):
+def create_save_heatplot(breakdowns : pd.DataFrame, target : str, heatplot_name : str):
     heatplot_path = ROOT / 'figures' / 'perturbation'
     if target == 'active':
         title = 'Average Change in the Probability of Participating in Over 150 Minutes of Moderate Activity Per Week'
@@ -72,7 +72,7 @@ def create_and_join_diff_series(df : pd.DataFrame, group_by : str):
        series.append(x)
     return pd.concat(series, axis=1).reset_index()
 
-def create_perturbations(X_test : pd.DataFrame, Y_test : pd.DataFrame, model : object, dc : object, to_perturb_vars : list[str]):
+def create_perturbations(X_test : pd.DataFrame, Y_test : pd.DataFrame, model : object, scaler : object, dc : object, to_perturb_vars : list[str]):
     """
     Perturbation Function.
 
@@ -85,8 +85,8 @@ def create_perturbations(X_test : pd.DataFrame, Y_test : pd.DataFrame, model : o
 
     for var in to_perturb_vars:
         
-        new = X_test.copy()
-        if var not in new.columns:
+        df = X_test.copy()
+        if var not in df.columns:
             print(f'{var} not in DataFrame pre perturbation')
             continue
 
@@ -98,7 +98,7 @@ def create_perturbations(X_test : pd.DataFrame, Y_test : pd.DataFrame, model : o
         var_max = dc.get_perturbation_max(var)
         var_min = dc.get_perturbation_min(var)
 
-        var_values = new[var].values
+        var_values = df[var].values
 
         
         if var_change < 0:
@@ -106,15 +106,20 @@ def create_perturbations(X_test : pd.DataFrame, Y_test : pd.DataFrame, model : o
         elif var_change > 0:
             mask = np.where(var_values < var_max, True, False)
 
-        X_masked = new.loc[mask].copy()
+        X_masked = df.loc[mask].copy()
 
         Y_test_masked = Y_test[mask]
 
+        X_masked_scaled = scaler.transform(X_masked)
+
         # We only want to save the accuracy or mse metrics for the non perturbed set
         # So use save_metric = True only for the first prediction generation
-        non_p_preds = model.get_preds(X_masked, Y_test_masked, save_metric=True)
-        X_masked[var] += var_change
-        p_preds = model.get_preds(X_masked, Y_test_masked, save_metric=False)
+        non_p_preds = model.get_preds(X_masked_scaled, Y_test_masked, save_metric=True)
+
+        var_idx = X_masked.columns.get_loc(var)
+        X_masked_scaled[:,var_idx] = X_masked_scaled[:,var_idx] + var_change
+
+        p_preds = model.get_preds(X_masked_scaled, Y_test_masked, save_metric=False)
 
         output_df.loc[mask, old_var_name] = non_p_preds
         output_df.loc[mask, new_var_name] = p_preds
@@ -122,12 +127,8 @@ def create_perturbations(X_test : pd.DataFrame, Y_test : pd.DataFrame, model : o
     return output_df
 
 
-def preprocess_perturbation(df : pd.DataFrame, model : object, cluster_column : str, target : str, to_encode_vars : list[str]):
+def preprocess_perturbation(df : pd.DataFrame, cluster_column : str, target : str, to_encode_vars : list[str]):
 
-    if model.__class__.__name__ in ['OLSRegressor','Logistic']:
-        drop = 'first'
-    else:
-        drop = None
 
     df['MEMS7_ALL'] = df['MEMS7_ALL'].clip(upper=6720)
     df['MEMS7_ALL'] = np.log1p(df['MEMS7_ALL'])
@@ -135,7 +136,7 @@ def preprocess_perturbation(df : pd.DataFrame, model : object, cluster_column : 
 
     assert to_encode_vars == ['Gend3', 'Eth7', 'WorkStat8', 'HHLiv9']
 
-    df_encoded = one_hot_encode_frame(df, to_encode_vars, drop)
+    df_encoded = one_hot_encode_frame(df, to_encode_vars, None)
 
     drop_cols = ['serial', 'year', 'LCA_Class', 'MEMS7_ALL', 'active']
     keep_cols = [col for col in df_encoded.columns if col not in drop_cols]
@@ -165,14 +166,18 @@ if __name__ == '__main__':
     save_path = ROOT / 'results' / 'perturbation'
 
     for key, value in run_cases.items():
+
         model = run_cases[key]['model']
         target = run_cases[key]['target']
 
-        X_train, X_test, Y_train, Y_test, test_set_clusters = preprocess_perturbation(df_copy, model, cluster_col, target, continuous_vars, to_encode_vars)
+        X_train, X_test, Y_train, Y_test, test_set_clusters = preprocess_perturbation(df_copy, cluster_col, target, to_encode_vars)
 
-        model.fit(X_train, Y_train)
+        scaler = StandardScaler()
+        X_train_scaled = scaler.fit_transform(X_train)
 
-        perturbations = create_perturbations(X_test, Y_test, model, dc, to_perturb)
+        model.fit(X_train_scaled, Y_train)
+
+        perturbations = create_perturbations(X_test, Y_test, model, scaler, dc, to_perturb)
 
         model.save_class()
 
@@ -187,6 +192,9 @@ if __name__ == '__main__':
 
         create_save_heatplot(breakdowns, target, heatplot_name)
         print(f'Finished perturbaiton for {model.__class__.__name__}')
+
+
+
 
 
 """
