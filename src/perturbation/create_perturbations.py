@@ -16,6 +16,7 @@ from perturbation.models.classifiers.rf_classifier import RFClassifier
 from perturbation.models.regressors.OLS_regressor import OLSRegressor
 from perturbation.models.regressors.lgbm_regressor import LightGBMRegressor
 from perturbation.models.regressors.rf_regressor import RFRegressor
+from perturbation.models.classifiers.xgboost_classifier import XGBoostClassifier
 
 run_cases = {
     0 : {'model' : Logistic(),'target' : 'active'},
@@ -41,6 +42,12 @@ tree_cases = {
 simple_cases = {
     0 : {'model' : Logistic(),'target' : 'active'},
     3 : {'model' : OLSRegressor(), 'target' : 'MEMS7_ALL',}
+}
+
+classification_cases = {
+    0 : {'model' : XGBoostClassifier(),'target' : 'active'},
+    1 : {'model' : RFClassifier(),'target' : 'active'},
+    2 : {'model' : LightGBMClassifier(),'target' : 'active'},
 }
 
 def create_save_heatplot(breakdowns : pd.DataFrame, target : str, heatplot_name : str):
@@ -72,6 +79,11 @@ def create_and_join_diff_series(df : pd.DataFrame, group_by : str):
        series.append(x)
     return pd.concat(series, axis=1).reset_index()
 
+def get_one_class_preds(preds : np.array, class_int : int) -> np.array:
+    if class_int not in [0, 1, 2]:
+        raise ValueError(f'{class_int} not in [0, 1, 2] ')
+    return preds[: , class_int]
+
 def create_perturbations(X_test : pd.DataFrame, Y_test : pd.DataFrame, model : object, scaler : object, dc : object, to_perturb_vars : list[str]):
     """
     Perturbation Function.
@@ -89,10 +101,6 @@ def create_perturbations(X_test : pd.DataFrame, Y_test : pd.DataFrame, model : o
         if var not in df.columns:
             print(f'{var} not in DataFrame pre perturbation')
             continue
-
-        old_var_name = f'PREDS_{var}'
-        new_var_name = f'PERTURBED_PREDS_{var}'
-        difference = f'DIFFERENCE_{var}'
 
         var_change = dc.get_perturbation_change(var)
         var_max = dc.get_perturbation_max(var)
@@ -121,9 +129,30 @@ def create_perturbations(X_test : pd.DataFrame, Y_test : pd.DataFrame, model : o
 
         p_preds = model.get_preds(X_masked_scaled, Y_test_masked, save_metric=False)
 
-        output_df.loc[mask, old_var_name] = non_p_preds
-        output_df.loc[mask, new_var_name] = p_preds
-        output_df.loc[mask, difference] = p_preds - non_p_preds
+        predictions_c0 = f'PREDS_C0_{var}'
+        predictions_c1 = f'PREDS_C1_{var}'
+        predictions_c2 = f'PREDS_C2_{var}'
+
+        perturbed_predictions_c0 = f'PERTURBED_PREDS_C0_{var}'
+        perturbed_predictions_c1 = f'PERTURBED_PREDS_C1_{var}'
+        perturbed_predictions_c2 = f'PERTURBED_PREDS_C2_{var}'
+
+        difference_c0 = f'DIFFERENCE_C0_{var}'
+        difference_c1 = f'DIFFERENCE_C1_{var}'
+        difference_c2 = f'DIFFERENCE_C2_{var}'
+
+        output_df.loc[mask, predictions_c0] = get_one_class_preds(non_p_preds, 0)
+        output_df.loc[mask, predictions_c1] = get_one_class_preds(non_p_preds, 1)
+        output_df.loc[mask, predictions_c2] = get_one_class_preds(non_p_preds, 2)
+
+        output_df.loc[mask, perturbed_predictions_c0] = get_one_class_preds(p_preds, 0)
+        output_df.loc[mask, perturbed_predictions_c1] = get_one_class_preds(p_preds, 1)
+        output_df.loc[mask, perturbed_predictions_c2] = get_one_class_preds(p_preds, 2)
+
+        output_df.loc[mask, difference_c0] = get_one_class_preds(p_preds, 0) - get_one_class_preds(non_p_preds, 0)
+        output_df.loc[mask, difference_c1] = get_one_class_preds(p_preds, 1) - get_one_class_preds(non_p_preds, 1)
+        output_df.loc[mask, difference_c2] = get_one_class_preds(p_preds, 2) - get_one_class_preds(non_p_preds, 2)
+
     return output_df
 
 
@@ -131,14 +160,19 @@ def preprocess_perturbation(df : pd.DataFrame, cluster_column : str, target : st
 
 
     df['MEMS7_ALL'] = df['MEMS7_ALL'].clip(upper=6720)
+    active_groupings = [df['MEMS7_ALL'] == 0, (df['MEMS7_ALL'] > 0) & (df['MEMS7_ALL'] < 150), df['MEMS7_ALL'] >= 150]
+    values = [0.0, 1.0, 2.0]
+    df['active_status'] = np.select(active_groupings, values)
+
     df['MEMS7_ALL'] = np.log1p(df['MEMS7_ALL'])
     df['Disab2_POP'] = df['Disab2_POP'].replace({1.0 : 0.0, 2.0 : 1.0})
+    
 
     assert to_encode_vars == ['Gend3', 'Eth7', 'WorkStat8', 'HHLiv9']
 
     df_encoded = one_hot_encode_frame(df, to_encode_vars, None)
 
-    drop_cols = ['serial', 'year', 'LCA_Class', 'MEMS7_ALL', 'active']
+    drop_cols = ['serial', 'year', 'LCA_Class', 'MEMS7_ALL', 'active', 'active_status']
     keep_cols = [col for col in df_encoded.columns if col not in drop_cols]
     print(f'Keep columns : {keep_cols}')
 
@@ -153,6 +187,10 @@ def preprocess_perturbation(df : pd.DataFrame, cluster_column : str, target : st
 
 
 if __name__ == '__main__':
+    # Can edit run cases here to change run cases
+    run_cases = classification_cases
+    target = 'active_status'
+
     dc = DataCatalogue()
     df = get_clean_2022()
     df_copy = df.copy()
@@ -165,15 +203,16 @@ if __name__ == '__main__':
     cluster_col = 'LCA_Class'
     save_path = ROOT / 'results' / 'perturbation'
 
+    X_train, X_test, Y_train, Y_test, test_set_clusters = preprocess_perturbation(df_copy, cluster_col, target, to_encode_vars)
+
+    scaler = StandardScaler()
+    # Scale only train set as perturbation relies on known int max values to prevent over-perturbation
+    X_train_scaled = scaler.fit_transform(X_train)
+
     for key, value in run_cases.items():
 
         model = run_cases[key]['model']
         target = run_cases[key]['target']
-
-        X_train, X_test, Y_train, Y_test, test_set_clusters = preprocess_perturbation(df_copy, cluster_col, target, to_encode_vars)
-
-        scaler = StandardScaler()
-        X_train_scaled = scaler.fit_transform(X_train)
 
         model.fit(X_train_scaled, Y_train)
 
@@ -182,15 +221,15 @@ if __name__ == '__main__':
         model.save_class()
 
         perturbations[group_by] = test_set_clusters
-        breakdowns = create_and_join_diff_series(perturbations, group_by)
+        #breakdowns = create_and_join_diff_series(perturbations, group_by)
 
-        df_name = f'{key}_{model.__class__.__name__}_perturbation_results2.csv'
-        heatplot_name = f'{model.__class__.__name__}_perturbation_heatplot2.png'
+        df_name = f'{key}_{model.__class__.__name__}_perturbation_results3.csv'
+        # heatplot_name = f'{model.__class__.__name__}_perturbation_heatplot2.png'
 
         perturbations.to_csv(save_path / df_name, index = False)
         print(f'Saved pertubation results to: {save_path / df_name}')
 
-        create_save_heatplot(breakdowns, target, heatplot_name)
+        # create_save_heatplot(breakdowns, target, heatplot_name)
         print(f'Finished perturbaiton for {model.__class__.__name__}')
 
 

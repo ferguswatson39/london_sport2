@@ -1,6 +1,6 @@
 from xgboost import XGBClassifier
 from sklearn.model_selection import cross_val_score
-from sklearn.metrics import f1_score, roc_auc_score, accuracy_score
+from sklearn.metrics import f1_score, roc_auc_score, accuracy_score, confusion_matrix
 import optuna
 from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent.parent.parent.parent
@@ -15,6 +15,7 @@ class XGBoostClassifier:
         self.f1 = None
         self.roc_auc_score = None
         self.accuracy = None
+        self.confusion = None
         self.study = None
         self.name = self.__class__.__name__
         self.save_path = ROOT / 'src' / 'perturbation' / 'models' / 'saved_models' 
@@ -60,6 +61,7 @@ class XGBoostClassifier:
             # Use 'ovo' to adjust for class imbalances
             self.roc_auc_score = roc_auc_score(Y_test, preds_prob, multi_class='ovo', average='macro')
             self.accuracy = accuracy_score(Y_test, preds_class)
+            self.confusion = confusion_matrix(Y_test, preds_class)
         return preds_prob
 
     def get_model(self):
@@ -69,6 +71,10 @@ class XGBoostClassifier:
         return self.roc_auc_score
     def get_f1(self):
         return self.f1
+    def get_accuracy(self):
+        return self.accuracy
+    def get_confusion(self):
+        return self.confusion
     
     def save_class(self):
         filename = f'{self.name}.sav'
