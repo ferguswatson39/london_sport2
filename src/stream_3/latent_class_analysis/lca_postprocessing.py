@@ -65,6 +65,6 @@ def create_master_dataset(overall_df, cluster_df):
 
 def create_forecasting_summary(master_df):
 
-    forecasting_summary = (master_df.dropna(subset=["LCA_Class"]).groupby(["LCA_Class", "year"]).agg(**forecast_aggregations).reset_index())
+    forecasting_summary = (master_df.groupby(["LCA_Class", "year"]).agg(**forecast_aggregations).reset_index())
     
     return forecasting_summary

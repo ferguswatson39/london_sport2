@@ -153,10 +153,13 @@ display_names = {
 master_columns = [
     "serial",
     "year",
-    "wt_final",
     "month",
+    "calendar_year",
+    "calendar_month",
+    "wt_final",
     "LCA_Class",
     "LA_2023",
+    "active",
     "Age9",
     "Gend3",
     "Eth7",
@@ -279,33 +282,35 @@ forecast_aggregations = {
 }
 
 class_names = {
-    0:  "Mid-life working fathers",
-    1:  "Young highly educated professional women",
-    2:  "Older unemployed disadvantaged adults",
-    3:  "Young adults living with parents",
-    4:  "Affluent older working women",
-    5:  "Oldest retired adults 1",
-    6:  "Mid-life professional women",
-    7:  "Highly educated professional fathers",
-    8:  "Young highly educated professionals",
-    9:  "Disabled mid-life adults",
-    10: "Affluent older professionals",
-    11: "Older middle socioeconomic workers",
-    12: "Lone mothers in lower socioeconomic households",
-    13: "Oldest retired adults 2",
-    14: "Established professional adults",
-    15: "Older transitioning retirees",
-    16: "Young students living with parents",
-    17: "University students in shared housing",
-    18: "Young Asian professionals",
-    19: "Lower socioeconomic family mothers",
-    20: "Highly educated young professionals",
-    21: "Professional mothers",
-    22: "Working family mothers",
-    23: "Retired older adults",
-    24: "Affluent retired older adults"
+    0:  "Middle-aged Asian Men with Families",
+    1:  "Highly Educated Lone Mothers",
+    2:  "Affluent Working Fathers",
+    3:  "Professional Mothers",
+    4:  "Later-Career Working Women",
+    5:  "Affluent Early Retirees",
+    6:  "Black Middle-aged Professional Women",
+    7:  "Established White Retirees",
+    8:  "Young Students in Shared Housing",
+    9:  "Young White Other Professionals",
+    10: "High-achieving Young Professionals",
+    11: "Young Graduate Professionals",
+    12: "Later-Career Part-time Professionals",
+    13: "Unemployed Lower Socio-economic Adults",
+    14: "Long-term Disabled Adults",
+    15: "Established Professional Workers",
+    16: "Women Caring for Families",
+    17: "Early-career Professionals",
+    18: "Older Parents Approaching Retirement",
+    19: "Independent Oldest Adults",
+    20: "Highly Educated White Other Professionals",
+    21: "Students Living with Parents",
+    22: "Retired Adults with No Qualifications",
+    23: "Older Professional Men",
+    24: "Disabled Oldest Adults",
+    25: "Young Lower Socio-economic Adults",
+    26: "Working Young Adults Living with Parents"
 }
 
-included_years = [2016, 2017, 2018, 2019, 2020, 2021, 2022]
+included_years = [2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023]
 
-forecast_years = [2023, 2024, 2025, 2026, 2027]
+forecast_years = [2024, 2025, 2026, 2027, 2028]

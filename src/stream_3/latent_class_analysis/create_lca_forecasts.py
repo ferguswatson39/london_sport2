@@ -15,7 +15,7 @@ plot_path = (ROOT/"exploration"/"forecasting_eda"/f"lca_{target_col.lower()}_bay
 
 forecasting_summary = pd.read_csv(forecasting_summary_path)
 
-forecasting_summary["year"] = (forecasting_summary["year"].astype(str).str.split("/").str[0].astype(int))
+forecasting_summary["calendar_year"] = forecasting_summary["calendar_year"].astype(int)
 
 forecast_df = bayesian_ridge_forecast_classes(forecasting_summary, target_col)
 
