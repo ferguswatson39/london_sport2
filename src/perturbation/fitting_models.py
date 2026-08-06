@@ -23,57 +23,59 @@ from perturbation.models.classifiers.xgboost_classifier import XGBoostClassifier
 classification_run_cases = {
     # XGBoost
     0 : {'model' : XGBoostClassifier(),'target' : 'active_status', 'smote' : False, 'k_neighbors' : 0, 'strategy' : (0, 0)},
-    1 : {'model' : XGBoostClassifier(),'target' : 'active_status', 'smote' : True,'k_neighbors' : 2, 'strategy' : (500, 500)},
-    2 : {'model' : XGBoostClassifier(),'target' : 'active_status', 'smote' : True,'k_neighbors' : 3, 'strategy' : (500, 500)},
+
+    1 : {'model' : XGBoostClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 2, 'strategy' : (500, 500)},
+    2 : {'model' : XGBoostClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 3, 'strategy' : (500, 500)},
     3 : {'model' : XGBoostClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 4, 'strategy' : (500, 500)},
-    4 : {'model' : XGBoostClassifier(),'target' : 'active_status', 'smote' : True,'k_neighbors' : 5, 'strategy' : (500, 500)},
-    5 : {'model' : XGBoostClassifier(),'target' : 'active_status', 'smote' : True,'k_neighbors' : 2, 'strategy' : (750, 750)},
+    4 : {'model' : XGBoostClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 5, 'strategy' : (500, 500)},
 
-    6 : {'model' : XGBoostClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 2, 'strategy' : (750, 750)},
-    7 : {'model' : XGBoostClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 3, 'strategy' : (750, 750)},
-    8 : {'model' : XGBoostClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 4, 'strategy' : (750, 750)},
-    9 : {'model' : XGBoostClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 5, 'strategy' : (750, 750)},
+    #5 : {'model' : XGBoostClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 2, 'strategy' : (600, 600)},
+    #6 : {'model' : XGBoostClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 3, 'strategy' : (600, 600)},
+    #7 : {'model' : XGBoostClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 4, 'strategy' : (600, 600)},
+    #8 : {'model' : XGBoostClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 5, 'strategy' : (600, 600)},
 
-    10 : {'model' : XGBoostClassifier(),'target' : 'active_status','smote' : True, 'k_neighbors' : 2, 'strategy' : (900, 900)},
-    11 : {'model' : XGBoostClassifier(),'target' : 'active_status','smote' : True, 'k_neighbors' : 3, 'strategy' : (900, 900)},
-    12 : {'model' : XGBoostClassifier(),'target' : 'active_status','smote' : True, 'k_neighbors' : 4, 'strategy' : (900, 900)},
-    13 : {'model' : XGBoostClassifier(),'target' : 'active_status', 'smote' : True,'k_neighbors' : 5, 'strategy' : (900, 900)},
+    #9 : {'model' : XGBoostClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 2, 'strategy' : (700, 700)},
+    #10 : {'model' : XGBoostClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 3, 'strategy' : (700, 700)},
+    #11 : {'model' : XGBoostClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 4, 'strategy' : (700, 700)},
+    #12 : {'model' : XGBoostClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 5, 'strategy' : (700, 700)},
 
     # Random Forest
-    14 : {'model' : RFClassifier(),'target' : 'active_status', 'smote' : False, 'k_neighbors' : 0, 'strategy' : (0, 0)},
-    15 : {'model' : RFClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 2, 'strategy' : (500, 500)},
-    16 : {'model' : RFClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 3, 'strategy' : (500, 500)},
-    17 : {'model' : RFClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 4, 'strategy' : (500, 500)},
-    18 : {'model' : RFClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 5, 'strategy' : (500, 500)},
-    19 : {'model' : RFClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 2, 'strategy' : (750, 750)},
+    13 : {'model' : RFClassifier(),'target' : 'active_status', 'smote' : False, 'k_neighbors' : 0, 'strategy' : (0, 0)},
 
-    20 : {'model' : RFClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 2, 'strategy' : (750, 750)},
-    21 : {'model' : RFClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 3, 'strategy' : (750, 750)},
-    22 : {'model' : RFClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 4, 'strategy' : (750, 750)},
-    23 : {'model' : RFClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 5, 'strategy' : (750, 750)},
+    14 : {'model' : RFClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 2, 'strategy' : (500, 500)},
+    15 : {'model' : RFClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 3, 'strategy' : (500, 500)},
+    16 : {'model' : RFClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 4, 'strategy' : (500, 500)},
+    17 : {'model' : RFClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 5, 'strategy' : (500, 500)},
 
-    24 : {'model' : RFClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 2, 'strategy' : (900, 900)},
-    25 : {'model' : RFClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 3, 'strategy' : (900, 900)},
-    26 : {'model' : RFClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 4, 'strategy' : (900, 900)},
-    27 : {'model' : RFClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 5, 'strategy' : (900, 900)},
+    #18 : {'model' : RFClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 2, 'strategy' : (600, 600)},
+    #19 : {'model' : RFClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 3, 'strategy' : (600, 600)},
+    #20 : {'model' : RFClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 4, 'strategy' : (600, 600)},
+    #21 : {'model' : RFClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 5, 'strategy' : (600, 600)},
+
+    #22 : {'model' : RFClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 2, 'strategy' : (700, 700)},
+    #23 : {'model' : RFClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 3, 'strategy' : (700, 700)},
+    #24 : {'model' : RFClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 4, 'strategy' : (700, 700)},
+    #25 : {'model' : RFClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 5, 'strategy' : (700, 700)},
+
 
     # LightGBM 
-    28 : {'model' : LightGBMClassifier(),'target' : 'active_status', 'smote' : False, 'k_neighbors' : 0, 'strategy' : (0, 0)},
-    29 : {'model' : LightGBMClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 2, 'strategy' : (500, 500)},
-    30 : {'model' : LightGBMClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 3, 'strategy' : (500, 500)},
-    31 : {'model' : LightGBMClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 4, 'strategy' : (500, 500)},
-    32 : {'model' : LightGBMClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 5, 'strategy' : (500, 500)},
-    33 : {'model' : LightGBMClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 2, 'strategy' : (750, 750)},
+    26 : {'model' : LightGBMClassifier(),'target' : 'active_status', 'smote' : False, 'k_neighbors' : 0, 'strategy' : (0, 0)},
 
-    34 : {'model' : LightGBMClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 2, 'strategy' : (750, 750)},
-    35 : {'model' : LightGBMClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 3, 'strategy' : (750, 750)},
-    36 : {'model' : LightGBMClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 4, 'strategy' : (750, 750)},
-    37 : {'model' : LightGBMClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 5, 'strategy' : (750, 750)},
+    27 : {'model' : LightGBMClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 2, 'strategy' : (500, 500)},
+    28 : {'model' : LightGBMClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 3, 'strategy' : (500, 500)},
+    29 : {'model' : LightGBMClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 4, 'strategy' : (500, 500)},
+    30 : {'model' : LightGBMClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 5, 'strategy' : (500, 500)},
 
-    38 : {'model' : LightGBMClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 2, 'strategy' : (900, 900)},
-    39 : {'model' : LightGBMClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 3, 'strategy' : (900, 900)},
-    40 : {'model' : LightGBMClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 4, 'strategy' : (900, 900)},
-    41 : {'model' : LightGBMClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 5, 'strategy' : (900, 900)},
+    #31 : {'model' : LightGBMClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 2, 'strategy' : (600, 600)},
+    #32 : {'model' : LightGBMClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 3, 'strategy' : (600, 600)},
+    #33 : {'model' : LightGBMClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 4, 'strategy' : (600, 600)},
+    #34 : {'model' : LightGBMClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 5, 'strategy' : (600, 600)},
+
+    #35 : {'model' : LightGBMClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 2, 'strategy' : (700, 700)},
+    #36 : {'model' : LightGBMClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 3, 'strategy' : (700, 700)},
+    #37 : {'model' : LightGBMClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 4, 'strategy' : (700, 700)},
+    #38 : {'model' : LightGBMClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 5, 'strategy' : (700, 700)},
+
 
 }
 
