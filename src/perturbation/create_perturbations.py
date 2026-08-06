@@ -9,6 +9,7 @@ import seaborn as sns
 from src.loading_data.data_catalogue import DataCatalogue
 from src.loading_data.load_data import get_clean_2022, one_hot_encode_frame
 from sklearn.preprocessing import StandardScaler
+from imblearn.over_sampling import SMOTEN
 from sklearn.model_selection import train_test_split
 from perturbation.models.classifiers.logistic import Logistic
 from perturbation.models.classifiers.lgbm_classifier import LightGBMClassifier
@@ -45,10 +46,83 @@ simple_cases = {
 }
 
 classification_cases = {
-    0 : {'model' : XGBoostClassifier(),'target' : 'active'},
-    1 : {'model' : RFClassifier(),'target' : 'active'},
-    2 : {'model' : LightGBMClassifier(),'target' : 'active'},
+    0 : {'model' : XGBoostClassifier(), 'target' : 'active_status'},
+    1 : {'model' : RFClassifier(),'target' : 'active_status'},
+    2 : {'model' : LightGBMClassifier(),'target' : 'active_status'},
 }
+
+classification_run_cases = {
+    # XGBoost
+    0 : {'model' : XGBoostClassifier(),'target' : 'active_status', 'smote' : False, 'k_neighbors' : 0, 'strategy' : (0, 0)},
+    1 : {'model' : XGBoostClassifier(),'target' : 'active_status', 'smote' : True,'k_neighbors' : 2, 'strategy' : (500, 500)},
+    2 : {'model' : XGBoostClassifier(),'target' : 'active_status', 'smote' : True,'k_neighbors' : 3, 'strategy' : (500, 500)},
+    3 : {'model' : XGBoostClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 4, 'strategy' : (500, 500)},
+    4 : {'model' : XGBoostClassifier(),'target' : 'active_status', 'smote' : True,'k_neighbors' : 5, 'strategy' : (500, 500)},
+    5 : {'model' : XGBoostClassifier(),'target' : 'active_status', 'smote' : True,'k_neighbors' : 2, 'strategy' : (750, 750)},
+
+    6 : {'model' : XGBoostClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 2, 'strategy' : (750, 750)},
+    7 : {'model' : XGBoostClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 3, 'strategy' : (750, 750)},
+    8 : {'model' : XGBoostClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 4, 'strategy' : (750, 750)},
+    7 : {'model' : XGBoostClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 5, 'strategy' : (750, 750)},
+
+    9 : {'model' : XGBoostClassifier(),'target' : 'active_status','smote' : True, 'k_neighbors' : 2, 'strategy' : (900, 900)},
+    10 : {'model' : XGBoostClassifier(),'target' : 'active_status','smote' : True, 'k_neighbors' : 3, 'strategy' : (900, 900)},
+    11 : {'model' : XGBoostClassifier(),'target' : 'active_status','smote' : True, 'k_neighbors' : 4, 'strategy' : (900, 900)},
+    12 : {'model' : XGBoostClassifier(),'target' : 'active_status', 'smote' : True,'k_neighbors' : 5, 'strategy' : (900, 900)},
+
+    # Random Forest
+    13 : {'model' : RFClassifier(),'target' : 'active_status', 'smote' : False, 'k_neighbors' : 0, 'strategy' : (0, 0)},
+    14 : {'model' : RFClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 2, 'strategy' : (500, 500)},
+    15 : {'model' : RFClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 3, 'strategy' : (500, 500)},
+    16 : {'model' : RFClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 4, 'strategy' : (500, 500)},
+    17 : {'model' : RFClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 5, 'strategy' : (500, 500)},
+    18 : {'model' : RFClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 2, 'strategy' : (750, 750)},
+
+    19 : {'model' : RFClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 2, 'strategy' : (750, 750)},
+    20 : {'model' : RFClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 3, 'strategy' : (750, 750)},
+    21 : {'model' : RFClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 4, 'strategy' : (750, 750)},
+    22 : {'model' : RFClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 5, 'strategy' : (750, 750)},
+
+    23 : {'model' : RFClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 2, 'strategy' : (900, 900)},
+    24 : {'model' : RFClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 3, 'strategy' : (900, 900)},
+    25 : {'model' : RFClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 4, 'strategy' : (900, 900)},
+    26 : {'model' : RFClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 5, 'strategy' : (900, 900)},
+
+    # LightGBM 
+    27 : {'model' : LightGBMClassifier(),'target' : 'active_status', 'smote' : False, 'k_neighbors' : 0, 'strategy' : (0, 0)},
+    28 : {'model' : LightGBMClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 2, 'strategy' : (500, 500)},
+    29 : {'model' : LightGBMClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 3, 'strategy' : (500, 500)},
+    30 : {'model' : LightGBMClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 4, 'strategy' : (500, 500)},
+    31 : {'model' : LightGBMClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 5, 'strategy' : (500, 500)},
+    32 : {'model' : LightGBMClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 2, 'strategy' : (750, 750)},
+
+    33 : {'model' : LightGBMClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 2, 'strategy' : (750, 750)},
+    34 : {'model' : LightGBMClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 3, 'strategy' : (750, 750)},
+    35 : {'model' : LightGBMClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 4, 'strategy' : (750, 750)},
+    36 : {'model' : LightGBMClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 5, 'strategy' : (750, 750)},
+
+    37 : {'model' : LightGBMClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 2, 'strategy' : (900, 900)},
+    38 : {'model' : LightGBMClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 3, 'strategy' : (900, 900)},
+    39 : {'model' : LightGBMClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 4, 'strategy' : (900, 900)},
+    40 : {'model' : LightGBMClassifier(),'target' : 'active_status', 'smote' : True, 'k_neighbors' : 5, 'strategy' : (900, 900)},
+
+}
+
+def smote_resample(X_train : pd.DataFrame, Y_train : pd.Series, k_neighbors : int, strategy : tuple):
+    smote = SMOTEN(
+        k_neighbors= k_neighbors, 
+        sampling_strategy= {0 : strategy[0], 1: strategy[1]}, 
+        random_state = 42
+    )
+    X_train_smote, Y_train_smote = smote.fit_resample(X_train, Y_train)
+
+    print(f'Pre smote: {X_train.shape}')
+    print(f'Post smote: {X_train_smote.shape}')
+
+    print(f'Pre smote: {Y_train.value_counts()}')
+    print(f'Post smote: {Y_train_smote.value_counts()}')
+
+    return X_train_smote, Y_train_smote
 
 def create_save_heatplot(breakdowns : pd.DataFrame, target : str, heatplot_name : str):
     heatplot_path = ROOT / 'figures' / 'perturbation'
@@ -182,6 +256,22 @@ def preprocess_perturbation(df : pd.DataFrame, cluster_column : str, target : st
 
     X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.4, random_state = 42, stratify = labels)
     test_set_clusters = df_encoded.loc[X_test.index, cluster_column]
+
+    print(f'X_train cols:\n{X_train.columns}')
+    print(f'X_train shape:\n{X_train.shape}')
+    print(f'X_train values:\n{X_train.head(10)}')
+
+    print(f'X_test cols:\n{X_test.columns}')
+    print(f'X_test shape:\n{X_test.shape}')
+    print(f'X_test values:\n{X_test.head(10)}')
+
+    print(f'Y_train value counts:\n {Y_train.value_counts()}')
+    print(f'Y_train shape:\n{Y_train.shape}')
+    print(f'Y_train values:\n{Y_train.head(10)}')
+
+    print(f'Y_test value counts:\n {Y_test.value_counts()}')
+    print(f'Y_test shape:\n{Y_test.shape}')
+    print(f'Y_test values:\n{Y_test.head(10)}')
     
     return X_train, X_test, Y_train, Y_test, test_set_clusters
 
@@ -205,16 +295,23 @@ if __name__ == '__main__':
 
     X_train, X_test, Y_train, Y_test, test_set_clusters = preprocess_perturbation(df_copy, cluster_col, target, to_encode_vars)
 
-    scaler = StandardScaler()
-    # Scale only train set as perturbation relies on known int max values to prevent over-perturbation
-    X_train_scaled = scaler.fit_transform(X_train)
-
     for key, value in run_cases.items():
 
+        run_num = key
         model = run_cases[key]['model']
-        target = run_cases[key]['target']
+        do_smote = run_cases[key]['smote']
+        k_neigh = run_cases[key]['k_neighbors']
+        strat = run_cases[key]['strategy']
+        # target = run_cases[key]['target']
 
+        if do_smote:
+            print(f'Resampling with smote for run number: {run_num}')
+            X_train, Y_train = smote_resample(X_train, Y_train, k_neigh, strat)
+    
+        scaler = StandardScaler()
+        X_train_scaled = scaler.fit_transform(X_train)
         model.fit(X_train_scaled, Y_train)
+
 
         perturbations = create_perturbations(X_test, Y_test, model, scaler, dc, to_perturb)
 

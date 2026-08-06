@@ -59,7 +59,7 @@ class LightGBMClassifier:
         if save_metric:
             self.f1 = f1_score(Y_test, preds_class, average='macro')
             # Use 'ovo' to adjust for class imbalances
-            self.roc_auc = roc_auc_score(Y_test, preds_prob, multi_class='ovo', average='macro')
+            self.roc_auc_score = roc_auc_score(Y_test, preds_prob, multi_class='ovo', average='macro')
             self.accuracy = accuracy_score(Y_test, preds_class)
             self.confusion = confusion_matrix(Y_test, preds_class)
         return preds_prob
