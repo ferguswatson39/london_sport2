@@ -26,6 +26,7 @@ class RFClassifier:
         self.study = None
         self.name = self.__class__.__name__
         self.save_path = ROOT / 'src' / 'perturbation' / 'models' / 'saved_models' 
+        self.scaler = None
 
     def objective(self, trial):
         model = RandomForestClassifier(
@@ -45,13 +46,14 @@ class RFClassifier:
         self.model = RandomForestClassifier(**self.hyperparams, random_state = 42)
         return study
     
-    def fit(self, X_train, Y_train):
+    def fit(self, X_train, Y_train, scaler):
         self.X_train, self.Y_train = X_train, Y_train
         print(f'Starting to run study for {self.name}....')
         self.study = self.run_study()
         print(f'Optimal hyperparameters found for {self.name}.')
         print(f'Fitting {self.name}...')
         self.model.fit(X_train, Y_train)
+        self.scaler = scaler
 
     
     def get_preds(self, X_test, Y_test, save_metric : bool):
@@ -77,10 +79,12 @@ class RFClassifier:
     def get_confusion(self):
         return self.confusion
     
-    def save_class(self):
-        filename = f'{self.name}.sav'
-        path = ROOT / 'src' / 'perturbation' / 'models' / 'saved_models' / filename
+    def save_class(self, run_num : int):
+        filename = f'{run_num}_{self.name}.sav'
+        path = ROOT / 'src' / 'perturbation' / 'models' / 'saved_models' / 'classifiers' / filename
         with open(path, 'wb') as file:
             pickle.dump(self, file)
         print(f'{self.name} saved to: {path}')
-    
+
+    def get_scaler(self):
+        return self.scaler
