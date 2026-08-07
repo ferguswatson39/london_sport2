@@ -144,7 +144,14 @@ class DataCatalogue:
                 vars.append(key)
         return vars
 
+    def get_perturbation_processing_categoricals(self):
+        vars = []
+        for key, value in self.data_dict.items():
+            if self.data_dict[key]['perturbation']['core'] == True and self.data_dict[key]['type'] == 'categorical' and key not in ['active']:
+                vars.append(key)
+        return vars
+
+
 if __name__ == '__main__':
-    d = DataCatalogue()
-    continuous_vars = d.get_perturbation_core_contins() + d.get_perturbation_vars()
-    print(continuous_vars)
+    dc = DataCatalogue()
+    print(dc.get_perturbation_core_contins() + dc.get_perturbation_vars())

@@ -155,8 +155,8 @@ def get_master_2022_data():
     core_vars = dc.get_perturbation_core()
     all = core_vars + ['serial', 'year', 'LCA_Class', 'MEMS7_ALL']
     #################################################
-    #### Temporary workaround - drop 'active' #######
-    all = [var for var in all if var != 'active']
+    #### Temporary workaround - drop 'active' / 'active_status' #######
+    all = [var for var in all if var not in ['active', 'active_status']]
     print(all)
     path = ROOT / 'data' / 'master_data' / '2016_to_2023_master_clustering_data_set.csv'
     df = pd.read_csv(path, usecols = all)

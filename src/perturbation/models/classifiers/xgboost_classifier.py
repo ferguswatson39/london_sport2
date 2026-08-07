@@ -32,7 +32,8 @@ class XGBoostClassifier:
             colsample_bytree = trial.suggest_float('colsample_bytree', 0.5, 1.0),
             gamma = trial.suggest_float('gamma', 0.0, 10.0),
             random_state = 42,
-            verbosity = 0
+            verbosity = 0,
+            enable_categorical = True
             )
         # Scoring here is roc_auc but maybe i should try_ f1
         cv_score = cross_val_score(model, self.X_train, self.Y_train, cv=5, scoring = 'f1_macro')

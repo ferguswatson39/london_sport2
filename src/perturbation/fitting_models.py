@@ -20,6 +20,12 @@ from perturbation.models.regressors.rf_regressor import RFRegressor
 from perturbation.models.classifiers.xgboost_classifier import XGBoostClassifier
 
 
+test_run_cases = {
+    101 : {'model' : XGBoostClassifier(),'target' : 'active_status', 'smote' : False, 'k_neighbors' : 0, 'strategy' : (0, 0)},
+    102 : {'model' : RFClassifier(),'target' : 'active_status', 'smote' : False, 'k_neighbors' : 0, 'strategy' : (0, 0)},
+    103 : {'model' : LightGBMClassifier(),'target' : 'active_status', 'smote' : False, 'k_neighbors' : 0, 'strategy' : (0, 0)},
+}
+
 classification_run_cases = {
     # XGBoost
     0 : {'model' : XGBoostClassifier(),'target' : 'active_status', 'smote' : False, 'k_neighbors' : 0, 'strategy' : (0, 0)},
@@ -132,6 +138,69 @@ def preprocess_perturbation(df : pd.DataFrame, cluster_column : str, target : st
     
     return X_train, X_test, Y_train, Y_test, test_set_clusters
 
+def preprocess_perturbation2(df : pd.DataFrame, cluster_column : str, target : str, categoricals : list[str]):
+        # Will remove this preprocessing when merge with master (06/08)
+    df['MEMS7_ALL'] = df['MEMS7_ALL'].clip(upper=6720)
+    active_groupings = [df['MEMS7_ALL'] == 0, (df['MEMS7_ALL'] > 0) & (df['MEMS7_ALL'] < 150), df['MEMS7_ALL'] >= 150]
+    values = [0.0, 1.0, 2.0]
+    df['active_status'] = np.select(active_groupings, values)
+
+    df['MEMS7_ALL'] = np.log1p(df['MEMS7_ALL'])
+    df['Disab2_POP'] = df['Disab2_POP'].replace({1.0 : 0.0, 2.0 : 1.0})
+    
+
+    assert categoricals == ['Gend3', 'Disab2_POP', 'Eth7', 'WorkStat8', 'HHLiv9', 'active_status']
+
+    for col in categoricals:
+        df[col] = df[col].astype(int).astype('category')
+
+
+    drop_cols = ['serial', 'year', 'LCA_Class', 'MEMS7_ALL', 'active', 'active_status']
+    keep_cols = [col for col in df.columns if col not in drop_cols]
+    print(f'Keep columns : {keep_cols}')
+
+    
+    assert keep_cols == ['Age9', 'Gend3', 'Eth7', 'Disab2_POP', 'Educ6', 'NSSEC5',
+                        'IMD10', 'WorkStat8', 'Child4', 'HHLiv9', 'Motiva_POP',
+                        'motivd_POP', 'inclus_a', 'inclus_b', 'inclus_c', 'anxious',
+                        'comm1', 'comm2', 'happy', 'indev', 'indevtry', 'lone', 'worthw']
+
+    labels = df[cluster_column]
+    Y = df[target]
+    X = df[keep_cols]
+
+    X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.4, random_state = 42, stratify = labels, shuffle = True)
+    test_set_clusters = df.loc[X_test.index, cluster_column]
+
+    print(f'X_train cols:\n{X_train.columns}')
+    print(f'X_train shape:\n{X_train.shape}')
+    print(f'X_train values:\n{X_train.head(10)}')
+
+    print(f'X_test cols:\n{X_test.columns}')
+    print(f'X_test shape:\n{X_test.shape}')
+    print(f'X_test values:\n{X_test.head(10)}')
+
+    print(f'Y_train value counts:\n {Y_train.value_counts()}')
+    print(f'Y_train shape:\n{Y_train.shape}')
+    print(f'Y_train values:\n{Y_train.head(10)}')
+
+    print(f'Y_test value counts:\n {Y_test.value_counts()}')
+    print(f'Y_test shape:\n{Y_test.shape}')
+    print(f'Y_test values:\n{Y_test.head(10)}')
+
+    save_path = ROOT / 'data' / 'perturbation'
+
+    X_test.to_csv(save_path / 'X_test.csv')
+    Y_test.to_csv(save_path / 'Y_test.csv')
+    test_set_clusters.to_csv(save_path / 'test_set_clusters.csv')
+
+    print(f'Saved X_test, Y_test, test_set_clusters to {save_path}')
+    
+    return X_train, X_test, Y_train, Y_test, test_set_clusters
+
+
+
+
 def smote_resample(X_train : pd.DataFrame, Y_train : pd.Series, k_neighbors : int, strategy : tuple):
     smote = SMOTEN(
         k_neighbors= k_neighbors, 
@@ -152,7 +221,7 @@ def smote_resample(X_train : pd.DataFrame, Y_train : pd.Series, k_neighbors : in
 
 if __name__ == '__main__':
     # Can edit run cases here to change run cases
-    run_cases = classification_run_cases
+    run_cases = test_run_cases
 
     target = 'active_status'
     cluster_col = 'LCA_Class'
@@ -163,14 +232,14 @@ if __name__ == '__main__':
 
     to_perturb = dc.get_perturbation_vars()
     continuous_vars = dc.get_perturbation_core_contins() + dc.get_perturbation_vars()
-    to_encode_vars = dc.get_perturbation_core_to_encode()
 
+    categoricals = dc.get_perturbation_processing_categoricals()
 
-    X_train_main, X_test, Y_train_main, Y_test, test_set_clusters = preprocess_perturbation(df_copy, cluster_col, target, to_encode_vars)
+    X_train_main, X_test, Y_train_main, Y_test, test_set_clusters = preprocess_perturbation2(df, cluster_col, target, categoricals)
 
     for key, value in run_cases.items():
 
-        X_train , Y_train = X_train_main, Y_train_main
+        X_train , Y_train = X_train_main.copy(), Y_train_main.copy()
 
         run_num = key
         model = run_cases[key]['model']
@@ -181,15 +250,19 @@ if __name__ == '__main__':
         if do_smote:
             print(f'Resampling with smote for run number: {run_num}')
             X_train, Y_train = smote_resample(X_train, Y_train, k_neigh, strat)
+            #########
+            #########
+            ## Need to check that dtypes preserved after smote
     
         scaler = StandardScaler()
-        X_train_scaled = scaler.fit_transform(X_train)
-        X_test_scaled = scaler.transform(X_test)
+        X_train[continuous_vars] = scaler.fit_transform(X_train[continuous_vars])
+        # X_test is saved as a csv during preprocess perturbations so the scaling here doesnt matter
+        X_test[continuous_vars] = scaler.transform(X_test[continuous_vars])
 
         # Added scaler object so that it can be used to transform future X_test inputs
-        model.fit(X_train_scaled, Y_train, scaler)
+        model.fit(X_train, Y_train, scaler)
 
-        model.get_preds(X_test_scaled, Y_test, save_metric = True)
+        model.get_preds(X_test, Y_test, save_metric = True)
 
         model.save_class(run_num)
 

@@ -134,8 +134,12 @@ def create_perturbations(X_test : pd.DataFrame, Y_test : pd.DataFrame, model : o
 
 if __name__ == '__main__':
     # Can edit run cases here to change run cases
+    save_path = ROOT / 'results' / 'perturbation'
+    X_test = pd.read_csv(ROOT / 'data' / 'perturbation' / 'X_test.csv', index_col=0)
+    Y_test = pd.read_csv(ROOT / 'data' / 'perturbation' / 'Y_test.csv', index_col=0)
+    test_set_clusters = pd.read_csv(ROOT / 'data' / 'perturbation' / 'test_set_clusters.csv', index_col=0)# verify that lca_class is correct here
+    model_path = ROOT / 'src' / 'perturbation' / 'models' / 'saved_models' / 'classifiers' / '1_XGBoostClassifier.sav'
 
-    model_path = r'' # BEST MODEL PATH
     with open(model_path, 'rb') as file:
         model = pickle.load(file)
 
@@ -145,26 +149,20 @@ if __name__ == '__main__':
     group_by = 'labels'
     dc = DataCatalogue()
     to_perturb = dc.get_perturbation_vars()
-    save_path = ROOT / 'results' / 'perturbation'
-
-    X_test = pd.read_csv(ROOT / 'data' / 'perturbation' / 'X_test.csv')
-    Y_test = pd.read_csv(ROOT / 'data' / 'perturbation' / 'Y_test.csv')
-    test_set_clusters = pd.read_csv(ROOT / 'data' / 'perturbation' / 'test_set_clusters.csv')# verify that lca_class is correct here
 
     perturbations = create_perturbations(X_test, Y_test, model, scaler, to_perturb)
-
 
     perturbations[group_by] = test_set_clusters['LCA_Class'].values
     #breakdowns = create_and_join_diff_series(perturbations, group_by)
 
-    df_name = f'{model.__class__.__name__}_perturbation_results_FINAL.csv'
+    df_name = f'{model_path.stem}_perturbation_results_FINAL.csv'
     # heatplot_name = f'{model.__class__.__name__}_perturbation_heatplot2.png'
 
     perturbations.to_csv(save_path / df_name, index = False)
     print(f'Saved pertubation results to: {save_path / df_name}')
 
     # create_save_heatplot(breakdowns, target, heatplot_name)
-    print(f'Finished perturbaiton for {model.__class__.__name__}')
+    # print(f'Finished perturbaiton for {model.__class__.__name__}')
 
 
 
