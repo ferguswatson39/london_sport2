@@ -5,6 +5,8 @@ from sklearn.model_selection import GridSearchCV
 from sklearn.model_selection import cross_val_score
 from sklearn.metrics import f1_score, roc_auc_score, accuracy_score, confusion_matrix
 import optuna
+from optuna.samplers import TPESampler
+from sklearn.model_selection import StratifiedKFold
 from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent.parent.parent.parent
 import pickle
@@ -31,19 +33,21 @@ class RFClassifier:
     def objective(self, trial):
         model = RandomForestClassifier(
             max_depth = trial.suggest_int('max_depth', 3, 30),
-            n_estimators = trial.suggest_int('n_estimators', 100, 1000),
+            n_estimators = trial.suggest_int('n_estimators', 50, 500),
             max_features = trial.suggest_categorical('max_features', ['sqrt', 'log2', 1.0]),
             min_samples_leaf = trial.suggest_int('min_samples_leaf', 1, 20),
-            random_state = 42  
+            random_state = 42,
+            class_weight='balanced'  
             )
-        cv_score = cross_val_score(model, self.X_train, self.Y_train, cv=5, scoring = 'f1_macro')
+        k_fold = StratifiedKFold(n_splits = 5, shuffle =True, random_state = 42)
+        cv_score = cross_val_score(model, self.X_train, self.Y_train, cv=k_fold, scoring = 'f1_macro')
         return cv_score.mean()
     
     def run_study(self):
-        study = optuna.create_study(direction = 'maximize')
-        study.optimize(self.objective, n_trials = 100)
+        study = optuna.create_study(direction = 'maximize', sampler=TPESampler(seed=42))
+        study.optimize(self.objective, n_trials = 50)
         self.hyperparams = study.best_params
-        self.model = RandomForestClassifier(**self.hyperparams, random_state = 42)
+        self.model = RandomForestClassifier(**self.hyperparams)
         return study
     
     def fit(self, X_train, Y_train, scaler):

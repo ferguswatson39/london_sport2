@@ -2,6 +2,8 @@ from lightgbm import LGBMClassifier, early_stopping, log_evaluation
 from sklearn.model_selection import cross_val_score
 from sklearn.metrics import f1_score, roc_auc_score, accuracy_score, confusion_matrix
 import optuna
+from optuna.samplers import TPESampler
+from sklearn.model_selection import StratifiedKFold
 from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent.parent.parent.parent
 import pickle
@@ -24,26 +26,28 @@ class LightGBMClassifier:
     def objective(self, trial):
         model = LGBMClassifier(
             max_depth = trial.suggest_int('max_depth', 3, 30),
-            n_estimators = trial.suggest_int('n_estimators', 100, 1000),
-            learning_rate = trial.suggest_float('learning_rate', 0.0001, 0.3, log=True),
+            n_estimators = trial.suggest_int('n_estimators', 50, 500), # drop n_estimators to 20
+            learning_rate = trial.suggest_float('learning_rate', 0.001, 0.3, log=True),
             num_leaves = trial.suggest_int('num_leaves', 5, 50),
             feature_fraction = trial.suggest_float('feature_fraction', 0.5, 1.0),
             bagging_freq = trial.suggest_int('bagging_freq', 1, 10),
             bagging_fraction = trial.suggest_float('bagging_fraction', 0.5, 1.0),
             min_data_in_leaf= trial.suggest_int('min_data_in_leaf', 10, 50),
             random_state = 42,
-            verbose = -1
+            verbose = -1,
+            class_weight='balanced'
         )
-        # Scoring here is roc_auc but maybe i should try_ f1
-        cv_score = cross_val_score(model, self.X_train, self.Y_train, cv=5, scoring = 'f1_macro')
+
+        k_fold = StratifiedKFold(n_splits = 5, shuffle =True, random_state = 42)
+        cv_score = cross_val_score(model, self.X_train, self.Y_train, cv=k_fold, scoring = 'f1_macro')
         return cv_score.mean()
     
     def run_study(self):
         # direction = maximise as neg_mean_squared_error is score
-        study = optuna.create_study(direction = 'maximize')
-        study.optimize(self.objective, n_trials = 100)
+        study = optuna.create_study(direction = 'maximize', sampler = TPESampler(seed=42))
+        study.optimize(self.objective, n_trials = 50)
         self.hyperparams = study.best_params
-        self.model = LGBMClassifier(**self.hyperparams, random_state = 42, verbose = -1)
+        self.model = LGBMClassifier(**self.hyperparams)
         return study
     
     def fit(self, X_train, Y_train, scaler):
