@@ -139,23 +139,21 @@ def preprocess_perturbation(df : pd.DataFrame, cluster_column : str, target : st
     return X_train, X_test, Y_train, Y_test, test_set_clusters
 
 def preprocess_perturbation2(df : pd.DataFrame, cluster_column : str, target : str, categoricals : list[str]):
-        # Will remove this preprocessing when merge with master (06/08)
-    df['MEMS7_ALL'] = df['MEMS7_ALL'].clip(upper=6720)
-    active_groupings = [df['MEMS7_ALL'] == 0, (df['MEMS7_ALL'] > 0) & (df['MEMS7_ALL'] < 150), df['MEMS7_ALL'] >= 150]
-    values = [0.0, 1.0, 2.0]
-    df['active_status'] = np.select(active_groupings, values)
 
-    df['MEMS7_ALL'] = np.log1p(df['MEMS7_ALL'])
-    df['Disab2_POP'] = df['Disab2_POP'].replace({1.0 : 0.0, 2.0 : 1.0})
-    
+    assert df.columns.to_list() == [
+        'LCA_Class', 'Age9', 'Gend3', 'Eth7', 'Disab2_POP', 'Educ6', 'NSSEC5',
+        'IMD10', 'WorkStat8', 'Child4', 'HHLiv9', 'active_status', 'Motiva_POP',
+        'motivd_POP', 'inclus_a', 'inclus_b', 'inclus_c', 'anxious', 'comm1',
+        'comm2', 'happy', 'indev', 'indevtry', 'lone', 'worthw'
+       ]
 
-    assert categoricals == ['Gend3', 'Disab2_POP', 'Eth7', 'WorkStat8', 'HHLiv9', 'active_status']
+    assert categoricals == ['active_status', 'Gend3', 'Disab2_POP', 'Eth7', 'WorkStat8', 'HHLiv9']
 
     for col in categoricals:
         df[col] = df[col].astype(int).astype('category')
 
 
-    drop_cols = ['serial', 'year', 'LCA_Class', 'MEMS7_ALL', 'active', 'active_status']
+    drop_cols = ['LCA_Class', 'active_status']
     keep_cols = [col for col in df.columns if col not in drop_cols]
     print(f'Keep columns : {keep_cols}')
 
@@ -188,13 +186,17 @@ def preprocess_perturbation2(df : pd.DataFrame, cluster_column : str, target : s
     print(f'Y_test shape:\n{Y_test.shape}')
     print(f'Y_test values:\n{Y_test.head(10)}')
 
-    save_path = ROOT / 'data' / 'perturbation'
+    #save_path = ROOT / 'data' / 'perturbation'
 
-    X_test.to_csv(save_path / 'X_test.csv')
-    Y_test.to_csv(save_path / 'Y_test.csv')
-    test_set_clusters.to_csv(save_path / 'test_set_clusters.csv')
+    ##########################################
+    ########## Need to add back ##############
+    ##########################################
 
-    print(f'Saved X_test, Y_test, test_set_clusters to {save_path}')
+    # X_test.to_csv(save_path / 'X_test.csv')
+    # Y_test.to_csv(save_path / 'Y_test.csv')
+    # test_set_clusters.to_csv(save_path / 'test_set_clusters.csv')
+
+    #print(f'Saved X_test, Y_test, test_set_clusters to {save_path}')
     
     return X_train, X_test, Y_train, Y_test, test_set_clusters
 

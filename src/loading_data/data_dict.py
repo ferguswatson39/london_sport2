@@ -465,7 +465,7 @@ data_dict = {
         'graph_label' : 'Active Status',
         'value_labels' : {0 : 'Not Active', 1 : 'Active' },
         'perturbation' : {
-            'core' : True,
+            'core' : False,
             'to_perturb' : False,
             'encode' : False
             }
@@ -482,7 +482,7 @@ data_dict = {
         'graph_label' : 'Grouped Minutes of Moderate activity',
         'value_labels' : {0.0 : '0 Minutes', 1.0 : '1 - 149 Minutes', 2.0 : '150+ Minutes' },
         'perturbation' : {
-            'core' : True,
+            'core' : False,
             'to_perturb' : False,
             'encode' : False
             }
