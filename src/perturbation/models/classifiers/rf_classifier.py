@@ -32,22 +32,21 @@ class RFClassifier:
 
     def objective(self, trial):
         model = RandomForestClassifier(
-            max_depth = trial.suggest_int('max_depth', 3, 30),
-            n_estimators = trial.suggest_int('n_estimators', 50, 500),
+            n_estimators = trial.suggest_int('n_estimators', 50, 150),
             max_features = trial.suggest_categorical('max_features', ['sqrt', 'log2', 1.0]),
-            min_samples_leaf = trial.suggest_int('min_samples_leaf', 1, 20),
+            min_samples_leaf = trial.suggest_int('min_samples_leaf', 1, 10),
             random_state = 42,
             class_weight='balanced'  
-            )
-        k_fold = StratifiedKFold(n_splits = 5, shuffle =True, random_state = 42)
+        )
+        k_fold = StratifiedKFold(n_splits = 5, shuffle =True, random_state = trial.number)
         cv_score = cross_val_score(model, self.X_train, self.Y_train, cv=k_fold, scoring = 'f1_macro')
         return cv_score.mean()
     
     def run_study(self):
         study = optuna.create_study(direction = 'maximize', sampler=TPESampler(seed=42))
-        study.optimize(self.objective, n_trials = 50)
+        study.optimize(self.objective, n_trials = 25)
         self.hyperparams = study.best_params
-        self.model = RandomForestClassifier(**self.hyperparams)
+        self.model = RandomForestClassifier(**self.hyperparams, random_state = 42, class_weight='balanced')
         return study
     
     def fit(self, X_train, Y_train, scaler):
@@ -66,7 +65,7 @@ class RFClassifier:
         if save_metric:
             self.f1 = f1_score(Y_test, preds_class, average='macro')
             # Use 'ovo' to adjust for class imbalances
-            self.roc_auc_score = roc_auc_score(Y_test, preds_prob, multi_class='ovo', average='macro')
+            self.roc_auc_score = roc_auc_score(Y_test, preds_prob[:, 1])
             self.accuracy = accuracy_score(Y_test, preds_class)
             self.confusion = confusion_matrix(Y_test, preds_class)
         return preds_prob
