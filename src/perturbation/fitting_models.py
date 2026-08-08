@@ -108,6 +108,7 @@ if __name__ == '__main__':
         test_categoricals = [col for col in categoricals if col != 'active']
         if (X_test.dtypes[test_categoricals ] != 'category').any():
             raise ValueError('Catgegorical columns do not have categorical dtype.')
+        
         # Added scaler object so that it can be used to transform future X_test inputs
         model.fit(X_train, Y_train, scaler)
 

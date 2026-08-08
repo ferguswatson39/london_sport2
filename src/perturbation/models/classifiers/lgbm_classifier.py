@@ -1,4 +1,4 @@
-from lightgbm import LGBMClassifier, early_stopping, log_evaluation
+from lightgbm import LGBMClassifier
 from sklearn.model_selection import cross_val_score
 from sklearn.metrics import f1_score, roc_auc_score, accuracy_score, confusion_matrix
 import optuna
