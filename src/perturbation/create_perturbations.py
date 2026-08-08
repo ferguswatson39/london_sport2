@@ -82,15 +82,14 @@ def create_perturbations(X_test : pd.DataFrame, Y_test : pd.DataFrame, model : o
 
         # We only want to save the accuracy or mse metrics for the non perturbed set
         # So use save_metric = True only for the first prediction generation -- The models metrics are generated when training so no need to save 
-        non_p_preds = model.get_preds(X_masked_scaled, Y_test_masked, save_metric=False)
+        non_p_preds = model.get_preds(X_masked_scaled, Y_test_masked, save_metric=False)[: , 1]
 
         X_masked_scaled[var] = X_masked_scaled[var] + var_change
-
-        p_preds = model.get_preds(X_masked_scaled, Y_test_masked, save_metric=False)
+        p_preds = model.get_preds(X_masked_scaled, Y_test_masked, save_metric=False)[: , 1]
 
         predictions = f'PREDS_{var}'
         perturbed_predictions = f'PERTURBED_PREDS_{var}'
-        difference = f'DIFFERENCE_C0_{var}'
+        difference = f'DIFFERENCE_{var}'
 
         output_df.loc[mask, predictions] = non_p_preds
         output_df.loc[mask, perturbed_predictions] = p_preds
@@ -104,8 +103,7 @@ if __name__ == '__main__':
     X_test = pd.read_csv(ROOT / 'data' / 'perturbation' / 'X_test.csv', index_col=0)
     Y_test = pd.read_csv(ROOT / 'data' / 'perturbation' / 'Y_test.csv', index_col=0)
     test_set_clusters = pd.read_csv(ROOT / 'data' / 'perturbation' / 'test_set_clusters.csv', index_col=0)
-    model_path = ROOT / 'src' / 'perturbation' / 'models' / 'saved_models' / 'classifiers' / '1_XGBoostClassifier.sav'
-
+    model_path = ROOT / 'src' / 'perturbation' / 'models' / 'saved_models' / 'classifiers' / '103_LightGBMClassifier.sav'
 
     for col in ['Gend3', 'Disab2_POP', 'Eth7', 'WorkStat8', 'HHLiv9']:
         X_test[col] = X_test[col].astype(int).astype('category')
