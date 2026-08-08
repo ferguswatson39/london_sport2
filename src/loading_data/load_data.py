@@ -164,12 +164,12 @@ def get_master_2022_data():
 
     df = df[df['year'] == '2022/23']
     df = df[df['LCA_Class'].notna()]
-    # df['active'] = df['MEMS7_ALL'] >= 150
+    df['active'] = df['MEMS7_ALL'] >= 150
     df['NSSEC5'] = df['NSSEC5'].fillna(5)
     # df['MEMS7_ALL'] = df['MEMS7_ALL'].clip(upper=6720)
-    active_groupings = [df['MEMS7_ALL'] == 0, (df['MEMS7_ALL'] > 0) & (df['MEMS7_ALL'] < 150), df['MEMS7_ALL'] >= 150]
-    values = [0.0, 1.0, 2.0]
-    df['active_status'] = np.select(active_groupings, values)
+    #active_groupings = [df['MEMS7_ALL'] == 0, (df['MEMS7_ALL'] > 0) & (df['MEMS7_ALL'] < 150), df['MEMS7_ALL'] >= 150]
+    #values = [0.0, 1.0, 2.0]
+    #df['active_status'] = np.select(active_groupings, values)
     df['Disab2_POP'] = df['Disab2_POP'].replace({1.0 : 0.0, 2.0 : 1.0})
 
     missing = df.isna().sum()
