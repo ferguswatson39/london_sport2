@@ -8,20 +8,8 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import pickle
 from src.loading_data.data_catalogue import DataCatalogue
-from src.loading_data.load_data import get_clean_2022, one_hot_encode_frame
 from sklearn.preprocessing import StandardScaler
-from imblearn.over_sampling import SMOTEN
-from sklearn.model_selection import train_test_split
-from perturbation.models.classifiers.logistic import Logistic
-from perturbation.models.classifiers.lgbm_classifier import LightGBMClassifier
-from perturbation.models.classifiers.rf_classifier import RFClassifier
-from perturbation.models.regressors.OLS_regressor import OLSRegressor
-from perturbation.models.regressors.lgbm_regressor import LightGBMRegressor
-from perturbation.models.regressors.rf_regressor import RFRegressor
-from perturbation.models.classifiers.xgboost_classifier import XGBoostClassifier
 
-
-best_case = {'model' : RFClassifier(),  }
 
 def create_save_heatplot(breakdowns : pd.DataFrame, target : str, heatplot_name : str):
     heatplot_path = ROOT / 'figures' / 'perturbation'
@@ -52,11 +40,6 @@ def create_and_join_diff_series(df : pd.DataFrame, group_by : str):
        series.append(x)
     return pd.concat(series, axis=1).reset_index()
 
-def get_one_class_preds(preds : np.array, class_int : int) -> np.array:
-    if class_int not in [0, 1, 2]:
-        raise ValueError(f'{class_int} not in [0, 1, 2] ')
-    return preds[: , class_int]
-
 def create_perturbations(X_test : pd.DataFrame, Y_test : pd.DataFrame, model : object, scaler : object, to_perturb_vars : list[str], dc : object = DataCatalogue()):
     """
     Perturbation Function.
@@ -67,6 +50,8 @@ def create_perturbations(X_test : pd.DataFrame, Y_test : pd.DataFrame, model : o
 
     """
     output_df = X_test.copy()
+
+    continuous_vars = dc.get_perturbation_core_contins() + dc.get_perturbation_vars()
 
     for var in to_perturb_vars:
         
@@ -88,64 +73,49 @@ def create_perturbations(X_test : pd.DataFrame, Y_test : pd.DataFrame, model : o
             mask = np.where(var_values < var_max, True, False)
 
         X_masked = df.loc[mask].copy()
+        X_masked_scaled = X_masked.copy()
 
         Y_test_masked = Y_test[mask]
 
-        X_masked_scaled = scaler.transform(X_masked)
+        X_masked_scaled[continuous_vars] = scaler.transform(X_masked_scaled[continuous_vars])
+
 
         # We only want to save the accuracy or mse metrics for the non perturbed set
         # So use save_metric = True only for the first prediction generation -- The models metrics are generated when training so no need to save 
         non_p_preds = model.get_preds(X_masked_scaled, Y_test_masked, save_metric=False)
 
-        var_idx = X_masked.columns.get_loc(var)
-        X_masked_scaled[:,var_idx] = X_masked_scaled[:,var_idx] + var_change
+        X_masked_scaled[var] = X_masked_scaled[var] + var_change
 
         p_preds = model.get_preds(X_masked_scaled, Y_test_masked, save_metric=False)
 
-        predictions_c0 = f'PREDS_C0_{var}'
-        predictions_c1 = f'PREDS_C1_{var}'
-        predictions_c2 = f'PREDS_C2_{var}'
+        predictions = f'PREDS_{var}'
+        perturbed_predictions = f'PERTURBED_PREDS_{var}'
+        difference = f'DIFFERENCE_C0_{var}'
 
-        perturbed_predictions_c0 = f'PERTURBED_PREDS_C0_{var}'
-        perturbed_predictions_c1 = f'PERTURBED_PREDS_C1_{var}'
-        perturbed_predictions_c2 = f'PERTURBED_PREDS_C2_{var}'
-
-        difference_c0 = f'DIFFERENCE_C0_{var}'
-        difference_c1 = f'DIFFERENCE_C1_{var}'
-        difference_c2 = f'DIFFERENCE_C2_{var}'
-
-        output_df.loc[mask, predictions_c0] = get_one_class_preds(non_p_preds, 0)
-        output_df.loc[mask, predictions_c1] = get_one_class_preds(non_p_preds, 1)
-        output_df.loc[mask, predictions_c2] = get_one_class_preds(non_p_preds, 2)
-
-        output_df.loc[mask, perturbed_predictions_c0] = get_one_class_preds(p_preds, 0)
-        output_df.loc[mask, perturbed_predictions_c1] = get_one_class_preds(p_preds, 1)
-        output_df.loc[mask, perturbed_predictions_c2] = get_one_class_preds(p_preds, 2)
-
-        output_df.loc[mask, difference_c0] = get_one_class_preds(p_preds, 0) - get_one_class_preds(non_p_preds, 0)
-        output_df.loc[mask, difference_c1] = get_one_class_preds(p_preds, 1) - get_one_class_preds(non_p_preds, 1)
-        output_df.loc[mask, difference_c2] = get_one_class_preds(p_preds, 2) - get_one_class_preds(non_p_preds, 2)
+        output_df.loc[mask, predictions] = non_p_preds
+        output_df.loc[mask, perturbed_predictions] = p_preds
+        output_df.loc[mask, difference] = p_preds - non_p_preds
 
     return output_df
-
-
-
-
 
 if __name__ == '__main__':
     # Can edit run cases here to change run cases
     save_path = ROOT / 'results' / 'perturbation'
     X_test = pd.read_csv(ROOT / 'data' / 'perturbation' / 'X_test.csv', index_col=0)
     Y_test = pd.read_csv(ROOT / 'data' / 'perturbation' / 'Y_test.csv', index_col=0)
-    test_set_clusters = pd.read_csv(ROOT / 'data' / 'perturbation' / 'test_set_clusters.csv', index_col=0)# verify that lca_class is correct here
+    test_set_clusters = pd.read_csv(ROOT / 'data' / 'perturbation' / 'test_set_clusters.csv', index_col=0)
     model_path = ROOT / 'src' / 'perturbation' / 'models' / 'saved_models' / 'classifiers' / '1_XGBoostClassifier.sav'
+
+
+    for col in ['Gend3', 'Disab2_POP', 'Eth7', 'WorkStat8', 'HHLiv9']:
+        X_test[col] = X_test[col].astype(int).astype('category')
 
     with open(model_path, 'rb') as file:
         model = pickle.load(file)
 
     scaler = model.get_scaler()
 
-    target = 'active_status'
+    target = 'active'
     group_by = 'labels'
     dc = DataCatalogue()
     to_perturb = dc.get_perturbation_vars()
@@ -153,16 +123,16 @@ if __name__ == '__main__':
     perturbations = create_perturbations(X_test, Y_test, model, scaler, to_perturb)
 
     perturbations[group_by] = test_set_clusters['LCA_Class'].values
-    #breakdowns = create_and_join_diff_series(perturbations, group_by)
+    breakdowns = create_and_join_diff_series(perturbations, group_by)
 
     df_name = f'{model_path.stem}_perturbation_results_FINAL.csv'
-    # heatplot_name = f'{model.__class__.__name__}_perturbation_heatplot2.png'
+    heatplot_name = f'{model_path.stem}_perturbation_heatplot_FINAL.png'
 
     perturbations.to_csv(save_path / df_name, index = False)
     print(f'Saved pertubation results to: {save_path / df_name}')
 
-    # create_save_heatplot(breakdowns, target, heatplot_name)
-    # print(f'Finished perturbaiton for {model.__class__.__name__}')
+    create_save_heatplot(breakdowns, target, heatplot_name)
+    print(f'Finished perturbaiton for {model.__class__.__name__}')
 
 
 
