@@ -1,4 +1,4 @@
-from constants_lca import (cluster_cols, value_labels, merge_columns, master_columns, forecast_aggregations)
+from constants_lca import (cluster_cols, value_labels, master_columns, forecast_aggregations)
 import pandas as pd
 import numpy as np
 
@@ -55,7 +55,8 @@ def create_master_dataset(overall_df, cluster_df):
 
     assert cluster_df.set_index(["year", "serial"]).index.is_unique
 
-    master_df = overall_df.merge(cluster_df[merge_columns], on=["year", "serial"], how="left", validate="one_to_one")
+    merge_cols = [col for col in overall_df.columns if col not in cluster_cols]
+    master_df = cluster_df.merge(overall_df[["year", "serial"] + merge_cols], on=["year", "serial"], how="left", validate="one_to_one")
     master_df = master_df.rename(columns={"Class": "LCA_Class"})
     master_df = master_df[master_columns]
     master_df["LCA_Class"] = master_df["LCA_Class"].astype("Int64")
@@ -64,6 +65,6 @@ def create_master_dataset(overall_df, cluster_df):
 
 def create_forecasting_summary(master_df):
 
-    forecasting_summary = (master_df.dropna(subset=["LCA_Class"]).groupby(["LCA_Class", "year"]).agg(**forecast_aggregations).reset_index())
+    forecasting_summary = (master_df.groupby(["LCA_Class", "year"]).agg(**forecast_aggregations).reset_index())
     
     return forecasting_summary

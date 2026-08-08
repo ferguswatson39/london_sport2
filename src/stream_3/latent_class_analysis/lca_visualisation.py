@@ -88,14 +88,14 @@ def plot_mems_trends(forecasting_summary, metric = "Median_MEMS7_ALL"):
     fig, axes = plt.subplots(nrows, ncols, figsize=(5 * ncols, 3.5 * nrows), sharex=True, sharey=True)
     axes = np.array(axes).flatten()
     
-    years = sorted(forecasting_summary["year"].unique())
+    years = sorted(forecasting_summary["calendar_year"].unique())
     ymax = forecasting_summary[metric].max()
 
     for cls in range(n_classes):
             ax = axes[cls]
             tmp = forecasting_summary[forecasting_summary["LCA_Class"] == cls]
-            tmp = tmp.sort_values("year")
-            ax.plot(tmp["year"], tmp[metric], marker="o", linewidth=2)
+            tmp = tmp.sort_values("calendar_year")
+            ax.plot(tmp["calendar_year"], tmp[metric], marker="o", linewidth=2)
             ax.set_xticks(years)
             ax.set_title(class_names.get(cls, f"Class {cls + 1}"), fontsize=9, fontweight="bold")
             ax.grid(alpha=0.3)

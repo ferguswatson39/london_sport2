@@ -5,12 +5,12 @@ import seaborn as sns
 def plot_forecasts(forecast_df, target_col, save_path = None):
     plot_df = forecast_df.copy()
     plot_df["ClassName"] = plot_df["LCA_Class"].map(class_names)
-    plot_df["Forecast"] = plot_df["year"].isin(forecast_years)
+    plot_df["Forecast"] = plot_df["calendar_year"].isin(forecast_years)
     colours = (["#808080"] * len(included_years) + ["#00BFFF"] * len(forecast_years))
 
     g = sns.relplot(kind="scatter",
                     data=plot_df,
-                    x="year",
+                    x="calendar_year",
                     y="value",
                     col="ClassName",
                     col_wrap=5,
@@ -26,10 +26,10 @@ def plot_forecasts(forecast_df, target_col, save_path = None):
 
     for cls_name, ax in g.axes_dict.items():
 
-        class_df = (plot_df[plot_df["ClassName"] == cls_name].sort_values("year"))
+        class_df = (plot_df[plot_df["ClassName"] == cls_name].sort_values("calendar_year"))
 
         sns.regplot(data=class_df,
-                    x="year",
+                    x="calendar_year",
                     y="value",
                     scatter=False,
                     ci=None,
@@ -37,9 +37,9 @@ def plot_forecasts(forecast_df, target_col, save_path = None):
                     line_kws={"alpha":0.4, "zorder":0},
                     ax=ax)
 
-        future = class_df[class_df["year"].isin(forecast_years)]
+        future = class_df[class_df["calendar_year"].isin(forecast_years)]
 
-        ax.errorbar(x=future["year"],
+        ax.errorbar(x=future["calendar_year"],
                     y=future["value"],
                     yerr=1.96*future["error"],
                     fmt="none",

@@ -8,7 +8,7 @@ cluster_cols = ["Age9",
                 "WorkStat8",
                 "Child4",
                 "HHLiv9",
-                "Motivation_PC_Q",
+                "Motiva_POP",
                 "motivd_POP"]
 
 value_labels = {
@@ -105,12 +105,12 @@ value_labels = {
         8: "Other/complex household"
     },
 
-    "Motivation_PC_Q": {
-        0: "Lowest",
-        1: "Low",
-        2: "Moderate",
-        3: "High",
-        4: "Highest"
+    "Motiva_POP": {
+        0: "Strongly agree",
+        1: "Agree",
+        2: "Neither agree nor disagree",
+        3: "Disagree",
+        4: "Strongly disagree"
     },
 
     "motivd_POP": {
@@ -145,27 +145,21 @@ display_names = {
 
     "VolAny": "Volunteering",
 
-    "Motivation_PC_Q": "Personal Motivation",
+    "Motiva_POP": "Intrinsic Motivation",
 
-    "motivd_POP": "Social Motivation"
+    "motivd_POP": "Extrinsic Motivation"
 }
-
-merge_columns = [
-    "year",
-    "serial",
-    "Class",
-    "WorkStat8",
-    "HHLiv9",
-    "Motivation_PC_Q",
-]
 
 master_columns = [
     "serial",
     "year",
-    "wt_final",
     "month",
+    "calendar_year",
+    "calendar_month",
+    "wt_final",
     "LCA_Class",
     "LA_2023",
+    "active",
     "Age9",
     "Gend3",
     "Eth7",
@@ -176,7 +170,7 @@ master_columns = [
     "WorkStat8",
     "Child4",
     "HHLiv9",
-    "Motivation_PC_Q",
+    "Motiva_POP",
     "motivd_POP",
     "nadult",
     "nchild",
@@ -288,33 +282,35 @@ forecast_aggregations = {
 }
 
 class_names = {
-    0:  "Mid-life working fathers",
-    1:  "Young highly educated professional women",
-    2:  "Older unemployed disadvantaged adults",
-    3:  "Young adults living with parents",
-    4:  "Affluent older working women",
-    5:  "Oldest retired adults 1",
-    6:  "Mid-life professional women",
-    7:  "Highly educated professional fathers",
-    8:  "Young highly educated professionals",
-    9:  "Disabled mid-life adults",
-    10: "Affluent older professionals",
-    11: "Older middle socioeconomic workers",
-    12: "Lone mothers in lower socioeconomic households",
-    13: "Oldest retired adults 2",
-    14: "Established professional adults",
-    15: "Older transitioning retirees",
-    16: "Young students living with parents",
-    17: "University students in shared housing",
-    18: "Young Asian professionals",
-    19: "Lower socioeconomic family mothers",
-    20: "Highly educated young professionals",
-    21: "Professional mothers",
-    22: "Working family mothers",
-    23: "Retired older adults",
-    24: "Affluent retired older adults"
+    0:  "Middle-aged Working Fathers",
+    1:  "Highly Educated Working Mothers",
+    2:  "Professional Fathers",
+    3:  "Professional Part-time Working Mothers",
+    4:  "Later-career Middle Socio-economic Workers",
+    5:  "Highly Educated Early Retirees",
+    6:  "Black Middle-aged Professional Women",
+    7:  "Established White British Retirees",
+    8:  "Young Students in Shared Housing",
+    9:  "Young and Mid-career Middle Socio-economic Workers",
+    10: "Highly Motivated Young Professional Men",
+    11: "Young Graduate Professionals in Shared Housing",
+    12: "Later-career Professional Women",
+    13: "Unemployed Lower Socio-economic Adults",
+    14: "Long-term Sick and Disabled Adults",
+    15: "Midlife Professional Workers Living Alone",
+    16: "Lower Socio-economic Mothers and Carers",
+    17: "Young Professional Women",
+    18: "Older Parents Approaching Retirement",
+    19: "Independent Older Retirees",
+    20: "Highly Educated White Other Professionals",
+    21: "Young Students Living with Parents",
+    22: "Older Retirees with Lower Qualifications",
+    23: "Later-career Professional Men",
+    24: "Disabled Older Retirees",
+    25: "Young Lower Socio-economic Adults Living with Parents",
+    26: "Young Professionals Living with Parents"
 }
 
-included_years = [2016, 2017, 2018, 2019, 2020, 2021, 2022]
+included_years = [2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023]
 
-forecast_years = [2023, 2024, 2025, 2026, 2027]
+forecast_years = [2024, 2025, 2026, 2027, 2028]

@@ -1,7 +1,3 @@
-motivation_cols = ["Motiva_POP",
-                   "motivb_POP",
-                   "motivc_POP"]
-
 workstat_mapping = {1: 1,
                     2: 2,
                     3: 3,
@@ -38,5 +34,5 @@ cluster_cols = ["serial",
                 "WorkStat8",
                 "Child4",
                 "HHLiv9",
-                "Motivation_PC_Q",
+                "Motiva_POP",
                 "motivd_POP"]
