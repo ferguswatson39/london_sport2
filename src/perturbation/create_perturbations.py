@@ -8,15 +8,12 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import pickle
 from src.loading_data.data_catalogue import DataCatalogue
-from sklearn.preprocessing import StandardScaler
 
 
-def create_save_heatplot(breakdowns : pd.DataFrame, target : str, heatplot_name : str):
+def create_save_heatplot(breakdowns : pd.DataFrame, heatplot_name : str):
     heatplot_path = ROOT / 'figures' / 'perturbation'
-    if target == 'active':
-        title = 'Average Change in the Probability of Participating in Over 150 Minutes of Moderate Activity Per Week'
-    else:
-        title = 'Average Change in the Minutes of Moderate Activity per week'
+
+    title = 'Average Change in the Probability of Participating in Over 150 Minutes of Moderate Activity Per Week'
 
     heat = breakdowns.drop(columns = 'labels')
     plt.figure(figsize=(15, 10))
@@ -53,7 +50,6 @@ def create_perturbations(X_test : pd.DataFrame, Y_test : pd.DataFrame, model : o
 
     continuous_vars = dc.get_perturbation_core_contins() + dc.get_perturbation_vars()
 
-    perturbable_samples = []
     for var in to_perturb_vars:
         
         df = X_test.copy()
@@ -67,13 +63,10 @@ def create_perturbations(X_test : pd.DataFrame, Y_test : pd.DataFrame, model : o
 
         var_values = df[var].values
 
-
         if var_change < 0:
             mask = np.where(var_values > var_min, True, False)
         elif var_change > 0:
             mask = np.where(var_values < var_max, True, False)
-
-        perturbable_samples.append((var, mask.sum()))
 
         X_masked = df.loc[mask].copy()
         X_masked_scaled = X_masked.copy()
@@ -82,13 +75,11 @@ def create_perturbations(X_test : pd.DataFrame, Y_test : pd.DataFrame, model : o
 
         X_masked_scaled[continuous_vars] = scaler.transform(X_masked_scaled[continuous_vars])
 
-
-        # We only want to save the accuracy or mse metrics for the non perturbed set
-        # So use save_metric = True only for the first prediction generation -- The models metrics are generated when training so no need to save 
-        non_p_preds = model.get_preds(X_masked_scaled, Y_test_masked, save_metric=False)[: , 1]
+       # Accuracy metrics have already been saved during model fitting
+        non_p_preds = model.get_preds(X_masked_scaled, Y_test_masked, save_metric = False)[: , 1]
 
         X_masked_scaled[var] = X_masked_scaled[var] + var_change
-        p_preds = model.get_preds(X_masked_scaled, Y_test_masked, save_metric=False)[: , 1]
+        p_preds = model.get_preds(X_masked_scaled, Y_test_masked, save_metric = False)[: , 1]
 
         predictions = f'PREDS_{var}'
         perturbed_predictions = f'PERTURBED_PREDS_{var}'
@@ -97,9 +88,6 @@ def create_perturbations(X_test : pd.DataFrame, Y_test : pd.DataFrame, model : o
         output_df.loc[mask, predictions] = non_p_preds
         output_df.loc[mask, perturbed_predictions] = p_preds
         output_df.loc[mask, difference] = p_preds - non_p_preds
-
-    for var, num in perturbable_samples:
-        print(f'{var} has {num} perturbable samples')
     
     return output_df
 
@@ -139,7 +127,7 @@ def check_perturbed_counts(dc = DataCatalogue()):
 
 
 if __name__ == '__main__':
-    # Can edit run cases here to change run cases
+
     save_path = ROOT / 'results' / 'perturbation'
     X_test = pd.read_csv(ROOT / 'data' / 'perturbation' / 'X_test.csv', index_col=0)
     Y_test = pd.read_csv(ROOT / 'data' / 'perturbation' / 'Y_test.csv', index_col=0)
@@ -170,7 +158,7 @@ if __name__ == '__main__':
     perturbations.to_csv(save_path / df_name, index = False)
     print(f'Saved pertubation results to: {save_path / df_name}')
 
-    create_save_heatplot(breakdowns, target, heatplot_name)
+    create_save_heatplot(breakdowns, heatplot_name)
 
     print('Checking perturbation counts...')
     check_perturbed_counts()
