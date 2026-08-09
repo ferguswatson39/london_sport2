@@ -1,4 +1,4 @@
-from lightgbm import LGBMClassifier
+from xgboost import XGBClassifier
 from sklearn.model_selection import cross_val_score
 from sklearn.metrics import f1_score, roc_auc_score, accuracy_score, confusion_matrix
 import optuna
@@ -8,8 +8,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent.parent.parent.parent
 import pickle
 
-class LightGBMClassifier:
-    # adapted from: https://medium.com/@sarahzouinina/a-deep-dive-into-lightgbm-how-to-choose-and-tune-parameters-7c584945842e
+class XGBoostClassifier:
     def __init__(self):
         self.hyperparams = None
         self.model = None
@@ -24,28 +23,28 @@ class LightGBMClassifier:
         self.save_path = ROOT / 'src' / 'perturbation' / 'models' / 'saved_models' 
         self.scaler = None
 
-    def objective(self, trial):
-        model = LGBMClassifier(
-            #n_estimators = trial.suggest_int('n_estimators', 50, 150),
-            # learning_rate = trial.suggest_float('learning_rate', 0.01, 0.2, log=True),
-            #num_leaves = trial.suggest_int('num_leaves', 20, 40),
-            random_state = 42,
-            verbose = -1,
-            class_weight='balanced'
-        )
 
+    def objective(self, trial):
+        model = XGBClassifier(
+            #n_estimators = trial.suggest_int('n_estimators', 50, 150),
+            #learning_rate = trial.suggest_float('learning_rate', 0.01, 0.3, log=True),
+            #gamma = trial.suggest_float('gamma', 0.0, 5.0),
+            random_state = 42,
+            verbosity = 0,
+            enable_categorical = True
+            )
         k_fold = StratifiedKFold(n_splits = 5, shuffle =True, random_state = trial.number)
         cv_score = cross_val_score(model, self.X_train, self.Y_train, cv=k_fold, scoring = 'f1_macro')
         return cv_score.mean()
-    
+
     def run_study(self):
         # direction = maximise as neg_mean_squared_error is score
-        study = optuna.create_study(direction = 'maximize', sampler = TPESampler(seed=42))
+        study = optuna.create_study(direction = 'maximize', sampler=TPESampler(seed=42))
         study.optimize(self.objective, n_trials = 25)
         self.hyperparams = study.best_params
-        self.model = LGBMClassifier(**self.hyperparams, random_state = 42,verbose = -1, class_weight='balanced')
+        self.model = XGBClassifier(**self.hyperparams, random_state = 42,verbosity = 0,enable_categorical = True)
         return study
-    
+
     def fit(self, X_train, Y_train, scaler):
         self.X_train, self.Y_train = X_train, Y_train
         print(f'Starting to run study for {self.name}....')
@@ -87,4 +86,3 @@ class LightGBMClassifier:
 
     def get_scaler(self):
         return self.scaler
-

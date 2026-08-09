@@ -135,7 +135,7 @@ data_dict = {
         'perturbation' : {
             'core' : True,
             'to_perturb' : False,
-            'encode' : True
+            'encode' : False
         }
     },
 
@@ -465,12 +465,28 @@ data_dict = {
         'graph_label' : 'Active Status',
         'value_labels' : {0 : 'Not Active', 1 : 'Active' },
         'perturbation' : {
-            'core' : True,
+            'core' : False,
             'to_perturb' : False,
             'encode' : False
             }
         },
 
+    'active_status' : {
+        'type' : 'categorical',
+        'demographic' : False,
+        'geographic' : False,
+        'dummy_encode' : False,
+        'target' : True,
+        'clustering' : False,
+        'clustering_categorical' : False,
+        'graph_label' : 'Grouped Minutes of Moderate activity',
+        'value_labels' : {0.0 : '0 Minutes', 1.0 : '1 - 149 Minutes', 2.0 : '150+ Minutes' },
+        'perturbation' : {
+            'core' : False,
+            'to_perturb' : False,
+            'encode' : False
+            }
+        },
 
 
     #################################

@@ -3,10 +3,8 @@ import optuna
 from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import cross_val_score
 import numpy as np
-import sys
 from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent.parent.parent.parent
-sys.append(str(ROOT))
 import pickle
 
 # optuna hp optimisation adapted from: 
@@ -20,6 +18,10 @@ class RFRegressor:
         self.Y_train = None
         self.mse = None
         self.rmse = None
+        self.study = None
+        self.name = RFRegressor.__name__
+        self.save_path = ROOT / 'src' / 'perturbation' / 'models' / 'saved_models' 
+
 
     def objective(self, trial):
         hyperparameters = {
@@ -42,7 +44,7 @@ class RFRegressor:
     def fit(self, X_train, Y_train):
         self.X_train, self.Y_train = X_train, Y_train
         print(f'Starting to run study....')
-        self.run_study()
+        self.study = self.run_study()
         print(f'Finished running study. Optimal hyperparameters found.')
         print(f'Fitting {self.__class__.__name__}...')
         self.model.fit(X_train, Y_train)

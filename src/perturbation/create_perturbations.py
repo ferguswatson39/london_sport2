@@ -6,74 +6,27 @@ ROOT = Path(__file__).resolve().parent.parent.parent
 sys.path.append(str(ROOT))
 import matplotlib.pyplot as plt
 import seaborn as sns
+import pickle
 from src.loading_data.data_catalogue import DataCatalogue
-from src.loading_data.load_data import get_clean_2022, one_hot_encode_frame
-from sklearn.preprocessing import StandardScaler
-from sklearn.model_selection import train_test_split
-from perturbation.models.classifiers.logistic import Logistic
-from perturbation.models.classifiers.lgbm_classifier import LightGBMClassifier
-from perturbation.models.classifiers.rf_classifier import RFClassifier
-from perturbation.models.regressors.OLS_regressor import OLSRegressor
-from perturbation.models.regressors.lgbm_regressor import LightGBMRegressor
-from perturbation.models.regressors.rf_regressor import RFRegressor
 
-run_cases = {
-    0 : {'model' : Logistic(),'target' : 'active'},
-    1 : {'model' : RFClassifier(),'target' : 'active'},
-    2 : {'model' : LightGBMClassifier(),'target' : 'active'},
-    3 : {'model' : OLSRegressor(), 'target' : 'MEMS7_ALL',},
-    4 : {'model' : RFRegressor(), 'target' : 'MEMS7_ALL'},
-    5 : {'model' : LightGBMRegressor(),'target' : 'MEMS7_ALL'}
-} 
 
-def create_perturbations(df : pd.DataFrame, model : object, scaler : object, Y_test : pd.DataFrame):
-    """
-    Perturbation Function.
+def create_save_heatplot(breakdowns : pd.DataFrame, heatplot_name : str):
+    heatplot_path = ROOT / 'figures' / 'perturbation'
 
-    Requires, df, model, scaler objects and specification of target var
+    title = 'Average Change in the Probability of Participating in Over 150 Minutes of Moderate Activity Per Week'
 
-    Returns full df with original data and predictions in terms of probability for each var in to_perturb 
-
-    """
-    output_df = df.copy()
-    dc = DataCatalogue()
-    to_perturb = dc.get_perturbation_vars()
-    print(to_perturb)
-    for var in to_perturb:
-        
-        new = df.copy()
-        if var not in new.columns:
-            print(f'{var} not in DataFrame pre perturbation')
-            continue
-        old_var_name = f'PREDS_{var}'
-        new_var_name = f'PERTURBED_PREDS_{var}'
-        difference = f'DIFFERENCE_{var}'
-
-        var_change = dc.get_perturbation_change(var)
-        var_max = dc.get_perturbation_max(var)
-        var_min = dc.get_perturbation_min(var)
-        var_values = new[var].values
-        var_idx = new.columns.get_loc(var)
-        
-        if var_change < 0:
-            mask = np.where(var_values > var_min, True, False)
-        elif var_change > 0:
-            mask = np.where(var_values < var_max, True, False)
-
-        X_scaled = scaler.transform(new[mask])
-        Y_test_masked = Y_test[mask]
-
-        # We only want to save the accuracy or mse metrics for the non perturbed set
-        # So use save_metric = True only for the first prediction generation
-        non_p_preds = model.get_preds(X_scaled, Y_test_masked, save_metric=True)
-        X_scaled[:, var_idx] = X_scaled[:, var_idx] + var_change
-        p_preds = model.get_preds(X_scaled, Y_test_masked, save_metric=False)
-
-        output_df.loc[mask, old_var_name] = non_p_preds
-        output_df.loc[mask, new_var_name] = p_preds
-        output_df.loc[mask, difference] = p_preds - non_p_preds
-    return output_df
-
+    heat = breakdowns.drop(columns = 'labels')
+    plt.figure(figsize=(15, 10))
+    sns.heatmap(
+        heat,
+        annot=True,
+        cmap="YlOrBr",
+        fmt='.2f'
+    )
+    plt.title(title)
+    plt.ylabel('Clusters')
+    plt.savefig(heatplot_path / heatplot_name)
+    print(f'Saved hatplot figure to: {heatplot_path / heatplot_name}')
 
 def create_and_join_diff_series(df : pd.DataFrame, group_by : str):
     series = []
@@ -84,100 +37,130 @@ def create_and_join_diff_series(df : pd.DataFrame, group_by : str):
        series.append(x)
     return pd.concat(series, axis=1).reset_index()
 
-def build_perturbation_df(df : pd.DataFrame, model : object, target : str, group_by : str, cluster_col : str):
+def create_perturbations(X_test : pd.DataFrame, Y_test : pd.DataFrame, model : object, scaler : object, to_perturb_vars : list[str], dc : object = DataCatalogue()):
     """
-    Purturbation Pipeline Function
+    Perturbation Function.
 
-    Collects data from get_clean_2022 and implements one at a time sensitivity analysis following a 1 std change.
+    Requires, X_test, Y_test, model, dataCatalogue objects and to_perturb var list
 
-    Returns the full perturbation dataset and also the grouped series of average changes by group_by.
+    Returns full df with original data and predictions in terms of probability for each var in to_perturb 
 
-    For heatplot, use breakdowns.drop(columns='labels') then sns.heatmap....
-
-    if y != 'MEMS7_ALL' or y != 'active':
-        raise ValueError(f'{y} is not MEMS7_ALL or active')
-    clusters: ['LCA_Class'..... names of other cols whcih are attatched to clusters]
-    target: ['MEMS7_ALL', 'active']
     """
+    output_df = X_test.copy()
 
-    print(f'These are the vars:\n{df.columns}')
-    df_encoded = one_hot_encode_frame(df)
+    continuous_vars = dc.get_perturbation_core_contins() + dc.get_perturbation_vars()
 
-    drop_cols = ['serial', 'year', cluster_col, 'MEMS7_ALL', 'active']
-    keep_vars = [var for var in df_encoded.columns if var not in drop_cols]
+    for var in to_perturb_vars:
+        
+        df = X_test.copy()
+        if var not in df.columns:
+            print(f'{var} not in DataFrame pre perturbation')
+            continue
+
+        var_change = dc.get_perturbation_change(var)
+        var_max = dc.get_perturbation_max(var)
+        var_min = dc.get_perturbation_min(var)
+
+        var_values = df[var].values
+
+        if var_change < 0:
+            mask = np.where(var_values > var_min, True, False)
+        elif var_change > 0:
+            mask = np.where(var_values < var_max, True, False)
+
+        X_masked = df.loc[mask].copy()
+        X_masked_scaled = X_masked.copy()
+
+        Y_test_masked = Y_test[mask]
+
+        X_masked_scaled[continuous_vars] = scaler.transform(X_masked_scaled[continuous_vars])
+
+       # Accuracy metrics have already been saved during model fitting
+        non_p_preds = model.get_preds(X_masked_scaled, Y_test_masked, save_metric = False)[: , 1]
+
+        X_masked_scaled[var] = X_masked_scaled[var] + var_change
+        p_preds = model.get_preds(X_masked_scaled, Y_test_masked, save_metric = False)[: , 1]
+
+        predictions = f'PREDS_{var}'
+        perturbed_predictions = f'PERTURBED_PREDS_{var}'
+        difference = f'DIFFERENCE_{var}'
+
+        output_df.loc[mask, predictions] = non_p_preds
+        output_df.loc[mask, perturbed_predictions] = p_preds
+        output_df.loc[mask, difference] = p_preds - non_p_preds
     
-    labels = df_encoded[cluster_col]
-    Y = df_encoded[target]
-    X = df_encoded[keep_vars]
+    return output_df
 
-    X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.4, random_state = 42, stratify = labels)
-    test_set_clusters = df_encoded.loc[X_test.index, cluster_col]
+def check_perturbed_counts(dc = DataCatalogue()):
 
-    scaler = StandardScaler()
-    X_train_scaled = scaler.fit_transform(X_train)
-    
-    model.fit(X_train_scaled, Y_train)
-    
-    perturbed_df = create_perturbations(X_test, model, scaler, Y_test)
+    df_path = ROOT / 'results' / 'perturbation' / '103_LightGBMClassifier_perturbation_results_FINAL.csv'
+    df = pd.read_csv(df_path)
 
-    # Saves model to pkl file to be investigated later
-    model.save_class()
-
-    perturbed_df['labels'] = test_set_clusters
-    breakdowns = create_and_join_diff_series(perturbed_df, group_by)
-    return perturbed_df, breakdowns
-
-def create_save_heatplot(breakdowns : pd.Series, target : str, heatplot_name : str):
-    heatplot_path = ROOT / 'figures' / 'perturbation'
-    if target == 'active':
-        title = 'Average Change in the Probability of Participating in Over 150 Minutes of Moderate Activity Per Week'
-    else:
-        title = 'Average Change in the Minutes of Moderate Activity per week'
-
-    heat = breakdowns.drop(columns = 'labels')
-    plt.figure(figsize=(15, 10))
-    sns.heatmap(
-        heat,
-        annot=True,
-        cmap="YlOrBr",
-        fmt='g'
-    )
-    plt.title(title)
-    plt.ylabel('Clusters')
-    plt.savefig(heatplot_path / heatplot_name)
-    print(f'Saved hatplot figure to: {heatplot_path / heatplot_name}')
-
-
-def execute_perturbation_pipeline(df : pd.DataFrame, run_cases : dict):
-    """
-    Main perturbation function.
-
-    Iterates through run cases, optimises and then trains models. 
-
-    Saves perturbed dfs and perturbed heatplots
-    """
     save_path = ROOT / 'results' / 'perturbation'
+    file_name = 'perturbation_counts.csv'
 
-    for key, value in run_cases.items():
-  
-        model = run_cases[key]['model']
-        target = run_cases[key]['target']
+    diff_cols = [var for var in df.columns if 'DIFFERENCE' in var]
+    results = []
+    
+    for var in diff_cols:
+        stem = var.replace('DIFFERENCE_', '')
 
-        group_by = 'labels'
-        cluster_col = 'LCA_Class'
+        var_change = dc.get_perturbation_change(stem)
+        var_max = dc.get_perturbation_max(stem)
+        var_min = dc.get_perturbation_min(stem)
+        var_values = df[stem].values
 
-        df_name = f'{key}_{model.__class__.__name__}_perturbation_results.csv'
-        heatplot_name = f'{model.__class__.__name__}_perturbation_heatplot.png'
+        if var_change < 0:
+            mask = np.where(var_values > var_min, True, False)
+        elif var_change > 0:
+            mask = np.where(var_values < var_max, True, False)
 
-        print(f'Starting Perturbation for {model.__class__.__name__}')
-        perturbed_df, breakdowns = build_perturbation_df(df, model, target, group_by, cluster_col)
+        counts = df[mask].groupby('labels')[var].count()
 
-        perturbed_df.to_csv(save_path / df_name, index = False)
-        print(f'Saved pertubation results to: {save_path / df_name}')
+        results.append(counts)
 
-        create_save_heatplot(breakdowns, target, heatplot_name)
-        print(f'Finished perturbaiton for {model.__class__.__name__}')
+    df = pd.concat(results, axis=1)
+
+    df.to_csv(save_path / file_name, index=False)
+
+    print(f'Saved {file_name} to {save_path}')
+
 
 if __name__ == '__main__':
-    df = get_clean_2022()
-    execute_perturbation_pipeline(df, run_cases)
+
+    save_path = ROOT / 'results' / 'perturbation'
+    X_test = pd.read_csv(ROOT / 'data' / 'perturbation' / 'X_test.csv', index_col=0)
+    Y_test = pd.read_csv(ROOT / 'data' / 'perturbation' / 'Y_test.csv', index_col=0)
+    test_set_clusters = pd.read_csv(ROOT / 'data' / 'perturbation' / 'test_set_clusters.csv', index_col=0)
+    model_path = ROOT / 'src' / 'perturbation' / 'models' / 'saved_models' / 'classifiers' / '103_LightGBMClassifier.sav'
+
+    for col in ['Gend3', 'Disab2_POP', 'Eth7', 'WorkStat8', 'HHLiv9']:
+        X_test[col] = X_test[col].astype(int).astype('category')
+
+    with open(model_path, 'rb') as file:
+        model = pickle.load(file)
+
+    scaler = model.get_scaler()
+
+    target = 'active'
+    group_by = 'labels'
+    dc = DataCatalogue()
+    to_perturb = dc.get_perturbation_vars()
+
+    perturbations = create_perturbations(X_test, Y_test, model, scaler, to_perturb)
+
+    perturbations[group_by] = test_set_clusters['LCA_Class'].values
+    breakdowns = create_and_join_diff_series(perturbations, group_by)
+
+    df_name = f'{model_path.stem}_perturbation_results_FINAL.csv'
+    heatplot_name = f'{model_path.stem}_perturbation_heatplot_FINAL.png'
+
+    perturbations.to_csv(save_path / df_name, index = False)
+    print(f'Saved pertubation results to: {save_path / df_name}')
+
+    create_save_heatplot(breakdowns, heatplot_name)
+
+    print('Checking perturbation counts...')
+    check_perturbed_counts()
+
+    print(f'Finished perturbaiton process for {model.__class__.__name__}')

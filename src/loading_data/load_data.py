@@ -140,7 +140,7 @@ def get_2022_data() -> pd.DataFrame:
     missing = [var for var in final_vars if var not in df.columns]
     if len(missing):
         raise KeyError(f'Missing Variables:\n {missing}')
-    df['active'] = df['MEMS7_ALL'] >= 150
+    # df['active'] = df['MEMS7_ALL'] >= 150
     # Removed LondInOut and MEMS7_ALL col after it has been used to filter df and create active
     df = df.drop(columns=(['LondInOut', 'MEMS7_ALL']))
     df = df.dropna()
@@ -154,16 +154,24 @@ def get_master_2022_data():
     dc = DataCatalogue()
     core_vars = dc.get_perturbation_core()
     all = core_vars + ['serial', 'year', 'LCA_Class', 'MEMS7_ALL']
+
     print(all)
     path = ROOT / 'data' / 'master_data' / '2016_to_2023_master_clustering_data_set.csv'
     df = pd.read_csv(path, usecols = all)
     missing = [var for var in all if var not in df.columns]
     if missing:
         raise ValueError(f'{missing} MISSING')
+
     df = df[df['year'] == '2022/23']
     df = df[df['LCA_Class'].notna()]
     df['active'] = df['MEMS7_ALL'] >= 150
     df['NSSEC5'] = df['NSSEC5'].fillna(5)
+    # df['MEMS7_ALL'] = df['MEMS7_ALL'].clip(upper=6720)
+    #active_groupings = [df['MEMS7_ALL'] == 0, (df['MEMS7_ALL'] > 0) & (df['MEMS7_ALL'] < 150), df['MEMS7_ALL'] >= 150]
+    #values = [0.0, 1.0, 2.0]
+    #df['active_status'] = np.select(active_groupings, values)
+    df['Disab2_POP'] = df['Disab2_POP'].replace({1.0 : 0.0, 2.0 : 1.0})
+
     missing = df.isna().sum()
     for idx, m in enumerate(missing):
         if m > 0:
@@ -195,14 +203,16 @@ def get_clean_2022():
     print('Merged Frames.')
     combined = combined.dropna()
     print('Dropped NAN values')
+    combined = combined.drop(columns=['serial', 'year', 'MEMS7_ALL'])
+    print("Dropped: ['serial', 'year', 'MEMS7_ALL]")
     return combined
 
-def one_hot_encode_frame(df : pd.DataFrame):
-    dc = DataCatalogue()
-    discrete_vars = dc.get_perturbation_catogs()
-    encoder = OneHotEncoder(drop='first', handle_unknown = 'ignore', sparse_output = False).set_output(transform = 'pandas')
-    encoded = encoder.fit_transform(df[discrete_vars])
-    df_encoded = pd.concat([df, encoded], axis = 1).drop(columns = discrete_vars)
+def one_hot_encode_frame(df : pd.DataFrame, one_hot_encode_vars : list[str], drop_method : str):
+    if drop_method not in ['first', None]:
+        raise ValueError(f"{drop_method} not an option. Select either ['first', None].")
+    encoder = OneHotEncoder(drop=drop_method, handle_unknown = 'ignore', sparse_output = False).set_output(transform = 'pandas')
+    encoded = encoder.fit_transform(df[one_hot_encode_vars])
+    df_encoded = pd.concat([df, encoded], axis = 1).drop(columns = one_hot_encode_vars)
     return df_encoded
 
 def get_master_data():
