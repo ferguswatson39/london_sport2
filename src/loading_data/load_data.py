@@ -215,28 +215,21 @@ def one_hot_encode_frame(df : pd.DataFrame, one_hot_encode_vars : list[str], dro
     df_encoded = pd.concat([df, encoded], axis = 1).drop(columns = one_hot_encode_vars)
     return df_encoded
 
-def get_master_data():
-    dc = DataCatalogue()
-    # get_perturbation_core loads in perturbation vers but also includes 'active'
-    # need to drop 'active' before goes into usecols
-    # core_vars = dc.get_perturbation_core()
-    vars = dc.get_clustering_continuous() + dc.get_clustering_categoricals()
-    all = vars + ['serial', 'year', 'MEMS7_ALL', 'LCA_Class']
-    ##########################################
-    ##### Temporary Fix - Drop motiva_pop ####
-    ##########################################
-    all = [var for var in all if var != 'Motiva_POP']
-    path = ROOT / 'data' / 'master_data' / '2016_to_2023_master_clustering_data_set.csv'
-    df = pd.read_csv(path, usecols = all)
-    missing = [var for var in all if var not in df.columns]
-    if missing:
-        raise ValueError(f'{missing} MISSING')
-    df = df[df['LCA_Class'].notna()]
-    df['active'] = df['MEMS7_ALL'] >= 150
-    df['NSSEC5'] = df['NSSEC5'].fillna(5)
-    missing = df.isna().sum()
+def get_master_clustering_input():
+    path = ROOT / 'data' / 'master_data' / '2016_to_2023_clustering_input_data.csv'
+    df = pd.read_csv(path)
+    drop = ['serial', 'year']
+    keep_cols = [col for col in df.columns if col not in drop]
+    output = df[keep_cols]
+    missing = output.isna().sum()
     for idx, m in enumerate(missing):
         if m > 0:
             raise ValueError(f'{missing.index[idx]} has missing Values')
-    print('Data loaded with zero missing values.')
-    return df
+
+    assert output.columns.to_list() == [
+        'Age9', 'Gend3', 'Eth7', 'Disab2_POP', 'Educ6', 'NSSEC5', 'IMD10',
+        'WorkStat8', 'Child4', 'HHLiv9', 'Motiva_POP', 'motivd_POP'
+        ]
+
+    print('Master data loaded with zero missing values.')
+    return output
