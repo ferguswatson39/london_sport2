@@ -36,6 +36,7 @@ class AnalysisPlots:
         plt.show()
     
     def plot_sport_distribution(self, dataframe):
+        plt.figure(figsize = (8, 2.5))
         sns.barplot(dataframe, x = 'MEMS Contribution %', y = 'Sport', hue = 'Category')
         plt.legend('', frameon = False)
         plt.tight_layout()
@@ -44,17 +45,18 @@ class AnalysisPlots:
         plt.show()
 
     def plot_monthly(self, dataframe, ADJUST_COVID):
-        _, ax = plt.subplots(figsize = (10, 3))
+        _, ax = plt.subplots(figsize = (10, 2.25))
         sns.lineplot(data = dataframe, x = 'date', y = 'mean', ax = ax, zorder = 1, color = 'grey')
         sns.scatterplot(data = dataframe, x = 'date', y = 'mean', hue = 'year', ax = ax, size = 'count', sizes = (20, 100), legend = False, zorder = 2, palette = 'RdYlGn')
         ax.set_ylim(450, None)
-        ax.set(xlabel = 'Year', ylabel = 'Average Participation')
+        ax.set(ylabel = 'Average Participation')
+        ax.xaxis.label.set_visible(False)
         ax.axvspan('2020-03-01', '2021-01-01', alpha = 0.2, color = 'skyblue')
-        ax.text(x = pd.to_datetime('2020-08-01'), y = 975, s = 'COVID Lockdowns', color = 'skyblue', ha = 'center', fontweight = 'bold')
+        ax.text(x = pd.to_datetime('2020-08-01'), y = 850, s = 'COVID Lockdowns', color = 'skyblue', ha = 'center', fontweight = 'bold')
         if ADJUST_COVID: 
             plt.savefig('src/stream_1/figures/Monthly Participation (COVID Adjusted)', bbox_inches = 'tight')
         else:
-            plt.savefig('src/stream_1/figures/Monthly Participation', bbox_inches = 'tight')
+            plt.savefig('src/stream_1/figures/Monthly Participation', bbox_inches = 'tight', dpi = 500)
         plt.show()
     
     def plot_quarterly(self, dataframe, ADJUST_COVID):
@@ -131,7 +133,7 @@ if __name__ == "__main__":
     national = national[national['year'] != 2016]
     analysis = AnalysisPlots()
     analysis.plot_modality_graph(modal_df)
-    analysis.plot_sport_distribution(distribution_df)
-    analysis.plot_monthly(monthly_df, ADJUST_COVID = ADJUST_COVID)
     analysis.plot_quarterly(quarterly_df, ADJUST_COVID = ADJUST_COVID)
     analysis.plot_national_comparison(borough_df, national)
+    analysis.plot_monthly(monthly_df, ADJUST_COVID = ADJUST_COVID)
+    analysis.plot_sport_distribution(distribution_df)

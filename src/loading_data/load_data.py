@@ -101,7 +101,9 @@ def get_sporting_distributions(significance_threshold : float = 0.5):
     distribution_df = distribution_df[distribution_df['MEMS Contribution %'] >= significance_threshold]
     exclude = ['MEMS7_ALL', 'A0', 'B0', 'WALKALLRUN', 'ACTTRAV', 'LEISURE', 'ROLLER', 'F']
     distribution_df = distribution_df[~ distribution_df['Sport'].str.contains('|'.join(exclude))]
-    distribution_df['Sport'] = distribution_df['Sport'].str.split('_').str[1].replace(SPORT_MAP)
+    distribution_df['Sport'] = distribution_df['Sport'].str.split('_').str[1]
+    distribution_df = distribution_df[distribution_df['Sport'].isin(SPORT_MAP.keys())].copy()
+    distribution_df['Sport'] = distribution_df['Sport'].replace(SPORT_MAP)
     distribution_df['Category'] = distribution_df['Sport'].replace(CATEGORY_MAP)
     distribution_df.loc[distribution_df['Sport'] == 'Dance/Gymnastics', 'MEMS Contribution %'] += distribution_df.loc[distribution_df['Sport'] == 'Gymnastics', 'MEMS Contribution %'].sum()
     distribution_df = distribution_df[distribution_df['Sport'] != 'Gymnastics']
