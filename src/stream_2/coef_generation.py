@@ -13,7 +13,7 @@ from src.loading_data.data_catalogue import DataCatalogue
 from models.stream_2.bayesian_ridge import Bayesian
 from models.stream_2.exponential_smoothing import ExponentialSmoothingModels
 
-LABEL_MAP = {'WorkStat8_2' : 'Work Status: Unemployed', 'WorkStat8_4' : 'Work Status: Domestic Responsibility',
+LABEL_MAP = {'WorkStat8_2' : 'Work Status: Unemployed', 'WorkStat8_4' : 'Work Status: Domestic',
              'IMD10_9' : 'Deprivation: 9 (High)', 'IMD10_8' : 'Deprivation: 8', 'IMD10_7' : 'Deprivation: 7',
              'IMD10_6' : 'Deprivation: 6', 'IMD10_5' : 'Deprivation: 5', 'IMD10_4' : 'Deprivation: 4',
              'IMD10_3' : 'Deprivation: 3', 'IMD10_2' : 'Deprivation: 2', 'IMD10_1' : 'Deprivation: 1 (Low)'}
@@ -147,13 +147,12 @@ class CoefGeneration:
             line = 0
         elif self.model == 'logistic':
             line = 1
-        fig, ax = plt.subplots(figsize=(10,5))
+        fig, ax = plt.subplots(figsize=(10, 4))
         num_years = len(pivoted.columns.levels[1])
         ax.set_prop_cycle(color = plt.cm.YlOrRd(np.linspace(0,1,num_years)))
         for _, year in enumerate(sorted(pivoted.columns.levels[1])):
             ax.errorbar(x=pivoted[self.model_catalogue[self.model]['main_var']][year].values, y =pivoted.index, marker='o', linestyle='None', label=year)
-            ax.legend()
-            ax.set_title(self.model_catalogue[self.model]['plot_title'], fontweight = 'bold', fontsize = 12)
+            ax.legend(loc = 'upper right', labelspacing = 0.25)
             ax.axvline(x=line, linestyle='--')
         fig.savefig(self.model_catalogue[self.model]['fig_save_path'], bbox_inches = 'tight')
         print(f"Coef forest plot generated successfully for {self.model}.\nFigure saved to {self.model_catalogue[self.model]['fig_save_path']}")
