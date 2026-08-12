@@ -44,7 +44,7 @@ class AnalysisPlots:
         plt.show()
 
     def plot_monthly(self, dataframe, ADJUST_COVID):
-        _, ax = plt.subplots(figsize = (10, 4))
+        _, ax = plt.subplots(figsize = (10, 3))
         sns.lineplot(data = dataframe, x = 'date', y = 'mean', ax = ax, zorder = 1, color = 'grey')
         sns.scatterplot(data = dataframe, x = 'date', y = 'mean', hue = 'year', ax = ax, size = 'count', sizes = (20, 100), legend = False, zorder = 2, palette = 'RdYlGn')
         ax.set_ylim(450, None)

@@ -62,7 +62,7 @@ def get_coefficient_data() -> pd.DataFrame:
 def get_geographic_data() -> pd.DataFrame:
     dc = DataCatalogue()
     geographic = dc.get_geographic_vars()
-    targets = dc.get_target_vars()
+    targets = [v for v in dc.get_target_vars() if v != 'active_status']
     df_path = Path(ROOT / 'data' / 'master_data' / '2016_to_2023_full_preprocessed_data_set.csv.gz')
     df = pd.read_csv(df_path)
     df['LOG_MEMS7_ALL'] = np.log1p(df['MEMS7_ALL'])
@@ -77,7 +77,7 @@ def get_geographic_data() -> pd.DataFrame:
 
 def get_modality_data() -> pd.DataFrame:
     dc = DataCatalogue()
-    df_path = Path(ROOT / 'exploration' / 'data' / 'master_data' / '2016_to_2023_master_clustering_data_set.csv')
+    df_path = Path(ROOT / 'data' / 'master_data' / '2016_to_2023_clustering_output_data.csv')
     df = pd.read_csv(df_path)
     df = df[['LCA_Class', 'LA_2023']]
     df = df.dropna()

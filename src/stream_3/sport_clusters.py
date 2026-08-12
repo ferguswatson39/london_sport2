@@ -30,31 +30,35 @@ SPORTS_DESCRIPTIONS = { -1: "Noise",
                         7: "Hyper Active - Racket Sports",
                         8: "Running + Walking (2)"}
 
-LCA_DESCRIPTIONS = { 0.0: "Mid-life working fathers",
-                     1.0: "Young highly educated professional women",
-                     2.0: "Older unemployed disadvantaged adults",
-                     3.0: "Young adults living with parents",
-                     4.0: "Affluent older working women",
-                     5.0: "Oldest retired adults",
-                     6.0: "Mid-life professional women",
-                     7.0: "Highly educated professional fathers",
-                     8.0: "Young highly educated professionals",
-                     9.0: "Disabled mid-life adults",
-                     10.0: "Affluent older professionals",
-                     11.0: "Older middle socioeconomic workers",
-                     12.0: "Single mothers, lower socioeconomic group",
-                     13.0: "Oldest retired adults (Group B)",
-                     14.0: "Established professional adults",
-                     15.0: "Older transitioning retirees",
-                     16.0: "Young students living with parents",
-                     17.0: "University students in shared housing",
-                     18.0: "Young Asian professionals",
-                     19.0: "Lower socioeconomic family mothers",
-                     20.0: "Highly educated young professionals",
-                     21.0: "Professional mothers",
-                     22.0: "Working family mothers",
-                     23.0: "Retired older adults",
-                     24.0: "Affluent retired older adults"}
+LCA_DESCRIPTIONS = {
+    0.0:  "Middle-aged Working Fathers",
+    1.0:  "Highly Educated Working Mothers",
+    2.0:  "Professional Fathers",
+    3.0:  "Professional Part-time Working Mothers",
+    4.0:  "Later-career Middle Socio-economic Workers",
+    5.0:  "Highly Educated Early Retirees",
+    6.0:  "Black Middle-aged Professional Women",
+    7.0:  "Established White British Retirees",
+    8.0:  "Young Students in Shared Housing",
+    9.0:  "Young and Mid-career Middle Socio-economic Workers",
+    10.0: "Highly Motivated Young Professional Men",
+    11.0: "Young Graduate Professionals in Shared Housing",
+    12.0: "Later-career Professional Women",
+    13.0: "Unemployed Lower Socio-economic Adults",
+    14.0: "Long-term Sick and Disabled Adults",
+    15.0: "Midlife Professional Workers Living Alone",
+    16.0: "Lower Socio-economic Mothers and Carers",
+    17.0: "Young Professional Women",
+    18.0: "Older Parents Approaching Retirement",
+    19.0: "Independent Older Retirees",
+    20.0: "Highly Educated White Other Professionals",
+    21.0: "Young Students Living with Parents",
+    22.0: "Older Retirees with Lower Qualifications",
+    23.0: "Later-career Professional Men",
+    24.0: "Disabled Older Retirees",
+    25.0: "Young Lower Socio-economic Adults Living with Parents",
+    26.0: "Young Professionals Living with Parents"
+}
 
 class SportsClustering:
     def __init__(self, metric : str = 'cosine', target_year : str = '2022/23'):
@@ -93,7 +97,7 @@ class SportsClustering:
         plt.show()
 
     def merge_clustering_data(self) -> pd.DataFrame:
-        df_path = Path(ROOT / 'data' / 'master_data' / '2016_to_2023_master_clustering_data_set.csv')
+        df_path = Path(ROOT / 'data' / 'master_data' / '2016_to_2023_clustering_output_data.csv')
         clustering_df = pd.read_csv(df_path)
         clustering_df = clustering_df[clustering_df['year'] == self.target_year].dropna(subset = ['LCA_Class'])
         self.sports_matrix_labeled['serial'] = self.serials
@@ -116,7 +120,7 @@ class SportsClustering:
         plt.show()
 
     def prepare_persona_proportions(self) -> pd.DataFrame:
-        df_path = Path(ROOT / 'data' / 'master_data' / '2016_to_2023_master_clustering_data_set.csv')
+        df_path = Path(ROOT / 'data' / 'master_data' / '2016_to_2023_clustering_output_data.csv')
         clustering_df = pd.read_csv(df_path)
         clustering_df = clustering_df[clustering_df['year'] == self.target_year].dropna(subset = ['LCA_Class'])
         self.sports_matrix_labeled['serial'] = self.serials
