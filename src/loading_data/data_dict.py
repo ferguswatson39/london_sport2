@@ -148,7 +148,7 @@ data_dict = {
         'clustering' : True,
         'clustering_categorical' : True,
         'graph_label' : 'Employment Status',
-        'value_labels' : {1.0: 'Working full time', 2.0: 'Working part time', 3.0: 'Unemployed < 12mths', 4.0: 'Unemployed >12 mths', 5.0: 'Not working-retired', 6.0: 'Not working-looking after house/children', 7.0: 'Not working-long term sick or disabled', 8.0: 'Student full time', 9.0: 'Student part time', 10.0: 'Other'},
+        'value_labels' : {1.0: 'Working full time', 2.0: 'Working part time', 3.0: 'Unemployed', 4.0: 'Not working-retired', 5.0: 'Not working-looking after house/children', 6.0: 'Not working-long term sick or disabled', 7.0: 'Student', 8.0: 'Other'},
         'perturbation' : {
             'core' : True,
             'to_perturb' : False,
@@ -169,19 +169,16 @@ data_dict = {
             1.0: 'Single person living alone', 
             2.0: 'Houseshare', 
             3.0: 'Lone parent family with children',
-            4.0: 'Lone parent family with adult children',
-            5.0: 'Couple, no children, no other household members', 
-            6.0: 'Couple with children', 7.0: 'Couple with adult children', 
-            8.0: 'Multi-generational, no children in household',
-            9.0: 'Multi-generational, children in household',
-            10.0: 'Living with parents', 
-            11.0: 'Other/complex, no children',
-            12.0: 'Other/complex, children' },
+            4.0: 'Couple, no children, no other household members', 
+            5.0: 'Couple with children', 6.0: 'Couple with adult children', 
+            7.0: 'Multi-generational',
+            8.0: 'Living with parents', 
+            9.0: 'Other/complex' },
         'perturbation' : {
             'core' : True,
             'to_perturb' : False,
             'encode' : True
-            }
+         }
     },
 
     #################################
@@ -446,6 +443,23 @@ data_dict = {
         'clustering' : False,
         'clustering_categorical' : False,
         'graph_label' : 'Minutes of Moderate Activity Per Week',
+        'value_labels' : None,
+        'perturbation' : {
+            'core' : False,
+            'to_perturb' : False,
+            'encode' : False
+            }
+        },
+
+    'LOG_MEMS7_ALL' : {
+        'type' : 'continuous',
+        'demographic' : False,
+        'geographic' : False,
+        'dummy_encode' : False,
+        'target' : True,
+        'clustering' : False,
+        'clustering_categorical' : False,
+        'graph_label' : 'Log Minutes of Moderate Activity Per Week',
         'value_labels' : None,
         'perturbation' : {
             'core' : False,

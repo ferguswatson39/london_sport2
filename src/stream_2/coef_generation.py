@@ -5,13 +5,18 @@ import sys
 ROOT = Path(__file__).resolve().parent.parent.parent
 sys.path.append(str(ROOT))
 import matplotlib.pyplot as plt
-from src.loading_data.load_data import get_data
+from src.loading_data.load_data import get_coefficient_data
 import statsmodels.api as sm
 from sklearn.preprocessing import StandardScaler
 from sklearn.preprocessing import OneHotEncoder
 from src.loading_data.data_catalogue import DataCatalogue
 from models.stream_2.bayesian_ridge import Bayesian
 from models.stream_2.exponential_smoothing import ExponentialSmoothingModels
+
+LABEL_MAP = {'WorkStat8_2' : 'Work Status: Unemployed', 'WorkStat8_4' : 'Work Status: Domestic Responsibility',
+             'IMD10_9' : 'Deprivation: 9 (High)', 'IMD10_8' : 'Deprivation: 8', 'IMD10_7' : 'Deprivation: 7',
+             'IMD10_6' : 'Deprivation: 6', 'IMD10_5' : 'Deprivation: 5', 'IMD10_4' : 'Deprivation: 4',
+             'IMD10_3' : 'Deprivation: 3', 'IMD10_2' : 'Deprivation: 2', 'IMD10_1' : 'Deprivation: 1 (Low)'}
 
 class CoefGeneration:
     def __init__(self, model: str, df : pd.DataFrame):
@@ -37,7 +42,7 @@ class CoefGeneration:
                 'save_path' : Path(ROOT / 'data' / 'ols_coefficients'),
                 'file_name' : 'ols_coef_results.csv',
                 'plot_values' : ['coef_as_percent', 'pvalues', 'confidence_lower', 'confidence_upper', 'std_error'],
-                'plot_title' : 'Percentage change in MEMS, for a one unit change in the predictor, 2016-2023',
+                'plot_title' : 'Percentage change in Activity (MEMS), per unit change in predictor (2016-2023)',
                 'main_var' : 'coef_as_percent',
                 'fig_save_path' : Path(ROOT / 'figures' / 'ols_coef_plot.png'),
                 'fig_save_path_trends' : Path(ROOT / 'figures' / 'ols_coef_trend_plot.png'),
@@ -108,11 +113,12 @@ class CoefGeneration:
             df_encoded_sy = df_encoded[df_encoded['year'] == year]
             df_encoded_sy = df_encoded_sy.drop(columns=['year'])
             Y = df_encoded_sy[self.model_catalogue[self.model]['target']]
-            X = df_encoded_sy.drop(columns=dc.get_target_vars())
+            X = df_encoded_sy.drop(columns = dc.get_target_vars() + ['serial'], errors = 'ignore')
             X = sm.add_constant(X)
-            scaler = StandardScaler()
             continuous_cols = dc.get_continuous_vars(with_targets = False)
-            X[continuous_cols] = scaler.fit_transform(X[continuous_cols])
+            if len(continuous_cols) > 0:
+                scaler = StandardScaler()
+                X[continuous_cols] = scaler.fit_transform(X[continuous_cols])
             no_obs = self.check_empty_dummies(X, year)
             if len(no_obs) > 0:
                 X = X.drop(columns = no_obs)
@@ -130,6 +136,8 @@ class CoefGeneration:
     def generate_forest_plot(self):
         df = pd.read_csv(self.model_catalogue[self.model]['save_path'] / self.model_catalogue[self.model]['file_name'])
         df = df[df['feature_names'] != 'const']
+        df = df[df['feature_names'].isin(LABEL_MAP.keys())].copy()
+        df['feature_names'] = df['feature_names'].map(LABEL_MAP)
         pivoted = df.pivot(
             index='feature_names',
             columns='year',
@@ -139,15 +147,15 @@ class CoefGeneration:
             line = 0
         elif self.model == 'logistic':
             line = 1
-        fig, ax = plt.subplots(figsize=(10,15))
+        fig, ax = plt.subplots(figsize=(10,5))
         num_years = len(pivoted.columns.levels[1])
         ax.set_prop_cycle(color = plt.cm.YlOrRd(np.linspace(0,1,num_years)))
-        for idx, year in enumerate(sorted(pivoted.columns.levels[1])):
+        for _, year in enumerate(sorted(pivoted.columns.levels[1])):
             ax.errorbar(x=pivoted[self.model_catalogue[self.model]['main_var']][year].values, y =pivoted.index, marker='o', linestyle='None', label=year)
             ax.legend()
-            ax.set_title(self.model_catalogue[self.model]['plot_title'])
+            ax.set_title(self.model_catalogue[self.model]['plot_title'], fontweight = 'bold', fontsize = 12)
             ax.axvline(x=line, linestyle='--')
-        fig.savefig(self.model_catalogue[self.model]['fig_save_path'])
+        fig.savefig(self.model_catalogue[self.model]['fig_save_path'], bbox_inches = 'tight')
         print(f"Coef forest plot generated successfully for {self.model}.\nFigure saved to {self.model_catalogue[self.model]['fig_save_path']}")
 
     def generate_coef_trend_plot(self):
@@ -196,7 +204,7 @@ class CoefGeneration:
         combined = pd.concat(dfs, ignore_index=True)
         combined.to_csv(self.model_catalogue[self.model]['save_path'] / self.model_catalogue[self.model]['forecast_file_name'], index=False)
         print(f'Forecasts completed successfully for {self.model} coefficients')
-        print(f'Data saved to {self.model_catalogue[self.model]['save_path'] / self.model_catalogue[self.model]['forecast_file_name']}')
+        print(f'Data saved to {self.model_catalogue[self.model]["save_path"] / self.model_catalogue[self.model]["forecast_file_name"]}')
     
     def generate_full_forecast_plots(self):
         df = pd.read_csv(self.model_catalogue[self.model]['save_path'] / self.model_catalogue[self.model]['forecast_file_name'])
@@ -223,9 +231,10 @@ class CoefGeneration:
             print(f"{self.model_catalogue[self.model]['forecast_plot_path'] / f'{self.model}_{model}_forecasts.png'}")
         print(f'Forecast plots for {models} finished.')
 
-
-df = get_data()
+df = get_coefficient_data()
 OLS = CoefGeneration('ols', df)
+OLS.save_results(OLS.generate_coefs())
 LOGISTIC = CoefGeneration('logistic', df)
-OLS.generate_full_forecast_plots()
-LOGISTIC.generate_full_forecast_plots()
+LOGISTIC.save_results(LOGISTIC.generate_coefs())
+OLS.generate_forest_plot()
+LOGISTIC.generate_forest_plot()

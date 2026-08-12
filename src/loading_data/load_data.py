@@ -44,6 +44,21 @@ def get_data() -> pd.DataFrame:
     print(f'>>> Shape {df.shape}')
     return df
 
+def get_coefficient_data() -> pd.DataFrame:
+    dc = DataCatalogue()
+    df_path = Path(ROOT / 'data' / 'master_data' / '2016_to_2023_clustering_input_data.csv')
+    df = pd.read_csv(df_path)
+    output_path = Path(ROOT / 'data' / 'master_data' / '2016_to_2023_clustering_output_data.csv')
+    output = pd.read_csv(output_path)
+    df = df.merge(output[['serial', 'year', 'MEMS7_ALL', 'active']], on = ['serial', 'year'], how = 'left')
+    df['LOG_MEMS7_ALL'] = np.log1p(df['MEMS7_ALL'])
+    print(df.columns.to_list())
+    print(f'DataFrame Cleaned Successfully...')
+    print('DataFrame Information:')
+    print(f'>>> Columns:\n{df.columns}')
+    print(f'>>> Shape {df.shape}')
+    return df
+
 def get_geographic_data() -> pd.DataFrame:
     dc = DataCatalogue()
     geographic = dc.get_geographic_vars()
