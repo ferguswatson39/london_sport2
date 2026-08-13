@@ -19,8 +19,8 @@ if __name__ == '__main__':
     clustering_categoricals = dc.get_clustering_categoricals()
     clustering_continuous = dc.get_clustering_continuous()
 
-    categorical_neighbors, continuous_neighbors = np.unique(np.round(np.logspace(np.log10(10), np.log10(500), 10)).astype(int)), np.unique(np.round(np.logspace(np.log10(10), np.log10(500), 10)).astype(int))
-
+    categorical_neighbors, continuous_neighbors = np.unique(np.round(np.logspace(np.log10(50), np.log10(500), 5)).astype(int)), np.unique(np.round(np.logspace(np.log10(50), np.log10(500), 5)).astype(int))
+    i = 0
     for cat_neighbor in tqdm(categorical_neighbors):
         for contin_neighbor in continuous_neighbors:
             umap_instance = emb_generator.fit_fuzzy_umap(
@@ -32,4 +32,6 @@ if __name__ == '__main__':
                 continuous_metric= 'euclidean',
                 categorical_metric= 'jaccard',
                 operator = '+'
-                )
+            )
+            i+=1
+            print(f'Finished {i}')
