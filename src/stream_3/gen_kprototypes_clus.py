@@ -8,9 +8,12 @@ import sys
 from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent.parent
 sys.path.append(str(ROOT))
+import matplotlib.pyplot as plt
 from kmodes.kprototypes import KPrototypes
+from src.loading_data.load_data import get_master_clustering_input
+from src.loading_data.data_catalogue import DataCatalogue
 
-class GenerateKprototypes:
+class GenerateKPrototypes:
     def __init__(self):
         self.model = None 
         self.hyperparams = {
@@ -65,3 +68,42 @@ class GenerateKprototypes:
 
     def get_model(self):
         return self.model
+
+
+class GenerateKPrototypes2:
+    def __init__(self):
+        self.model = None
+        self.cost = []
+        self.save_path = ROOT / 'src' / 'stream_3' / 'k_prototypes'
+        if self.save_path.exists():
+            print('K-prototypes save path found')
+        else:
+            raise FileNotFoundError('Save path not found for k_prototypes')
+
+    def fit(self, arr : np.array, categorical_idx : list[int]):
+        for n in tqdm(range(2,100)):
+            k_proto = KPrototypes(n_clusters=n, init = 'huang', random_state=42)
+            k_proto.fit_predict(arr, categorical = categorical_idx)
+            self.cost.append(k_proto.cost_)
+
+    def get_costs(self):
+        return self.cost
+    def get_silh_score(self):
+        return self.silh_score
+    def save_class(self):
+        filename = f'{self.__class__.__name__}.sav'
+        path = self.save_path / filename
+        with open(path, 'wb') as file:
+            pickle.dump(self, file)
+        print(f'{self.__class__.__name__} saved to: {path}')
+
+
+if __name__ == '__main__':
+    df = get_master_clustering_input()
+    dc = DataCatalogue()
+    categoricals = dc.get_clustering_categoricals()
+    categorical_idx = [df.columns.get_loc(col) for col in categoricals]
+
+    k_proto = GenerateKPrototypes2()
+    k_proto.fit(df.values, categorical_idx)
+    k_proto.save_class()
