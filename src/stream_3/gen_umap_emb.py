@@ -1,5 +1,5 @@
 import umap
-#import umap.plot
+import umap.plot
 import numpy as np
 import pandas as pd
 import sys
@@ -7,10 +7,12 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent.parent
 import pickle
 sys.path.append(str(ROOT))
+import matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler
 from sklearn.preprocessing import OneHotEncoder
 from src.loading_data.data_catalogue import DataCatalogue
 from src.stream_3.gower_distance import get_gower
+
 
 class GenerateUmapEmb:
     """
@@ -199,6 +201,11 @@ class GenerateUmapEmb2:
 
         self.save_class(continuous_neighbors, categorical_neighbors, continuous_metric, categorical_metric, method)
 
+        img = umap.plot.points(self.intersection_umap)
+        img_path = ROOT / 'figures' / 'umap' / f'IMAGE_UMAP_conn_{continuous_neighbors}_catn_{categorical_neighbors}_conm_{continuous_metric}_catm_{categorical_metric}_{method}.png'
+        plt.savefig(img_path)
+        plt.close()
+
         return self.get_intersection_umap()
 
     def fit_umap_sports(self, df : pd.DataFrame, metric : str = 'jaccard', num_neighbours : int = 25, num_dimensions : int = 2):
@@ -213,8 +220,8 @@ class GenerateUmapEmb2:
 
     def save_class(self, continuous_neighbors : str, categorical_neighbors : str, continuous_metric : str, categorical_metric : str, method : str):
         filename = f'CLASS_UMAP_conn_{continuous_neighbors}_catn_{categorical_neighbors}_conm_{continuous_metric}_catm_{categorical_metric}_{method}.npy'
-        path = self.save_path /  filename
+        path = self.save_path / 'classes' / filename
         with open(path, 'wb') as file:
-            pickle.dump(self, file)
-        print(f'{self.name} saved to: {path}')
+            pickle.dump(self.intersection_umap, file)
+        print(f'{filename} saved to: {path}')
     
