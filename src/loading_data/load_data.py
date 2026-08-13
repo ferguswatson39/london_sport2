@@ -44,10 +44,25 @@ def get_data() -> pd.DataFrame:
     print(f'>>> Shape {df.shape}')
     return df
 
+def get_coefficient_data() -> pd.DataFrame:
+    dc = DataCatalogue()
+    df_path = Path(ROOT / 'data' / 'master_data' / '2016_to_2023_clustering_input_data.csv')
+    df = pd.read_csv(df_path)
+    output_path = Path(ROOT / 'data' / 'master_data' / '2016_to_2023_clustering_output_data.csv')
+    output = pd.read_csv(output_path)
+    df = df.merge(output[['serial', 'year', 'MEMS7_ALL', 'active']], on = ['serial', 'year'], how = 'left')
+    df['LOG_MEMS7_ALL'] = np.log1p(df['MEMS7_ALL'])
+    print(df.columns.to_list())
+    print(f'DataFrame Cleaned Successfully...')
+    print('DataFrame Information:')
+    print(f'>>> Columns:\n{df.columns}')
+    print(f'>>> Shape {df.shape}')
+    return df
+
 def get_geographic_data() -> pd.DataFrame:
     dc = DataCatalogue()
     geographic = dc.get_geographic_vars()
-    targets = dc.get_target_vars()
+    targets = [v for v in dc.get_target_vars() if v != 'active_status']
     df_path = Path(ROOT / 'data' / 'master_data' / '2016_to_2023_full_preprocessed_data_set.csv.gz')
     df = pd.read_csv(df_path)
     df['LOG_MEMS7_ALL'] = np.log1p(df['MEMS7_ALL'])
@@ -62,7 +77,7 @@ def get_geographic_data() -> pd.DataFrame:
 
 def get_modality_data() -> pd.DataFrame:
     dc = DataCatalogue()
-    df_path = Path(ROOT / 'exploration' / 'data' / 'master_data' / '2016_to_2023_master_clustering_data_set.csv')
+    df_path = Path(ROOT / 'data' / 'master_data' / '2016_to_2023_clustering_output_data.csv')
     df = pd.read_csv(df_path)
     df = df[['LCA_Class', 'LA_2023']]
     df = df.dropna()
@@ -86,7 +101,9 @@ def get_sporting_distributions(significance_threshold : float = 0.5):
     distribution_df = distribution_df[distribution_df['MEMS Contribution %'] >= significance_threshold]
     exclude = ['MEMS7_ALL', 'A0', 'B0', 'WALKALLRUN', 'ACTTRAV', 'LEISURE', 'ROLLER', 'F']
     distribution_df = distribution_df[~ distribution_df['Sport'].str.contains('|'.join(exclude))]
-    distribution_df['Sport'] = distribution_df['Sport'].str.split('_').str[1].replace(SPORT_MAP)
+    distribution_df['Sport'] = distribution_df['Sport'].str.split('_').str[1]
+    distribution_df = distribution_df[distribution_df['Sport'].isin(SPORT_MAP.keys())].copy()
+    distribution_df['Sport'] = distribution_df['Sport'].replace(SPORT_MAP)
     distribution_df['Category'] = distribution_df['Sport'].replace(CATEGORY_MAP)
     distribution_df.loc[distribution_df['Sport'] == 'Dance/Gymnastics', 'MEMS Contribution %'] += distribution_df.loc[distribution_df['Sport'] == 'Gymnastics', 'MEMS Contribution %'].sum()
     distribution_df = distribution_df[distribution_df['Sport'] != 'Gymnastics']
