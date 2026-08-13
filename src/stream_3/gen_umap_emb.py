@@ -1,15 +1,18 @@
 import umap
-#import umap.plot
+import umap.plot
 import numpy as np
 import pandas as pd
 import sys
 from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent.parent
+import pickle
 sys.path.append(str(ROOT))
+import matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler
 from sklearn.preprocessing import OneHotEncoder
 from src.loading_data.data_catalogue import DataCatalogue
 from src.stream_3.gower_distance import get_gower
+
 
 class GenerateUmapEmb:
     """
@@ -173,19 +176,19 @@ class GenerateUmapEmb2:
 
         assert X_scaled_continuous.shape[0] == X_categoricals.shape[0] == len(df)
 
-        continuous = umap.UMAP(min_dist = 0.0, n_components = num_dimensions, n_neighbors = continuous_neighbors, metric = continuous_metric).fit(X_scaled_continuous)
+        continuous = umap.UMAP(min_dist = 0.0, n_components = num_dimensions, n_neighbors = continuous_neighbors, metric = continuous_metric, random_state=42).fit(X_scaled_continuous)
         print('Finished fitting continuous....')
 
-        categorical = umap.UMAP(min_dist = 0.0, n_components = num_dimensions, n_neighbors = categorical_neighbors, metric = categorical_metric).fit(X_categoricals)
+        categorical = umap.UMAP(min_dist = 0.0, n_components = num_dimensions, n_neighbors = categorical_neighbors, metric = categorical_metric, random_state=42).fit(X_categoricals)
         print('Finished fitting categorical...')
 
         print('Computing fuzzy set intersection...')
         if operator == '*':
             intersection = continuous * categorical
-            x = 'multip'
+            method = 'multip'
         elif operator == '+':
             intersection = continuous + categorical
-            x = 'plus'
+            method = 'plus'
         print('Finished computing intersection...')
 
         self.continuous_umap = continuous
@@ -193,8 +196,15 @@ class GenerateUmapEmb2:
         self.intersection_umap = intersection
         print('UMAP fit complete!')
         self.emb = self.get_intersection_umap().embedding_
-        np.save(self.save_path / f'umap_emb_conn_{continuous_neighbors}_catn_{categorical_neighbors}_conm_{continuous_metric}_catm_{categorical_metric}_{x}.npy', self.emb)
+        np.save(self.save_path / f'EMB_UMAP_conn_{continuous_neighbors}_catn_{categorical_neighbors}_conm_{continuous_metric}_catm_{categorical_metric}_{method}.npy', self.emb)
         print(f'Embedding saved to\n {self.save_path}')
+
+        self.save_class(continuous_neighbors, categorical_neighbors, continuous_metric, categorical_metric, method)
+
+        img = umap.plot.points(self.intersection_umap)
+        img_path = ROOT / 'figures' / 'umap' / f'IMAGE_UMAP_conn_{continuous_neighbors}_catn_{categorical_neighbors}_conm_{continuous_metric}_catm_{categorical_metric}_{method}.png'
+        plt.savefig(img_path)
+        plt.close()
 
         return self.get_intersection_umap()
 
@@ -207,5 +217,11 @@ class GenerateUmapEmb2:
 
     def get_sports_umap(self):
         return self.sports_umap
-    
+
+    def save_class(self, continuous_neighbors : str, categorical_neighbors : str, continuous_metric : str, categorical_metric : str, method : str):
+        filename = f'CLASS_UMAP_conn_{continuous_neighbors}_catn_{categorical_neighbors}_conm_{continuous_metric}_catm_{categorical_metric}_{method}.npy'
+        path = self.save_path / 'classes' / filename
+        with open(path, 'wb') as file:
+            pickle.dump(self.intersection_umap, file)
+        print(f'{filename} saved to: {path}')
     
