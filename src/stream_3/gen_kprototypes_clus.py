@@ -8,9 +8,12 @@ import sys
 from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent.parent
 sys.path.append(str(ROOT))
+import matplotlib.pyplot as plt
 from kmodes.kprototypes import KPrototypes
+from src.loading_data.load_data import get_master_clustering_input
+from src.loading_data.data_catalogue import DataCatalogue
 
-class GenerateKprototypes:
+class GenerateKPrototypes:
     def __init__(self):
         self.model = None 
         self.hyperparams = {
@@ -65,3 +68,66 @@ class GenerateKprototypes:
 
     def get_model(self):
         return self.model
+
+
+class GenerateKPrototypes2:
+    def __init__(self):
+        self.cost = []
+        self.save_path = ROOT / 'src' / 'stream_3' / 'k_prototypes'
+        if self.save_path.exists():
+            print('K-prototypes save path found')
+        else:
+            raise FileNotFoundError('Save path not found for k_prototypes')
+
+    def optimise_fit(self, arr : np.array, categorical_idx : list[int]):
+        for n in tqdm(range(2, 80)):
+            k_proto = KPrototypes(n_clusters=n, n_jobs=-1, random_state=42)
+            k_proto.fit(arr, categorical = categorical_idx)
+            self.cost.append(k_proto.cost_)
+        print('Finished k-prototypes n_clusters search')
+
+    def fit(self, arr : np.array, categorical_idx : list[int], n_clusters):
+        k_proto = KPrototypes(n_clusters = n_clusters, n_jobs=-1, random_state = 42)
+        k_proto.fit(arr, categorical = categorical_idx)
+        return k_proto
+
+    def get_costs(self):
+        return self.cost
+    def get_silh_score(self):
+        return self.silh_score
+    def save_class(self):
+        filename = f'{self.__class__.__name__}.sav'
+        path = self.save_path / filename
+        with open(path, 'wb') as file:
+            pickle.dump(self, file)
+        print(f'{self.__class__.__name__} saved to: {path}')
+
+
+if __name__ == '__main__':
+    df = get_master_clustering_input()
+    dc = DataCatalogue()
+
+    categoricals = dc.get_clustering_categoricals()
+    print(f'Categoricals: {categoricals}')
+
+    categorical_idx = [df.columns.get_loc(col) for col in categoricals]
+
+    k_proto_path = ROOT / 'src' / 'stream_3' / 'k_prototypes' / 'GenerateKPrototypes2.sav'
+    output_path = ROOT / 'data' / 'master_data' / '2016_to_2023_clustering_output_data.csv'
+    output_df = pd.read_csv(output_path)
+    if not k_proto_path.exists():
+        k_proto = GenerateKPrototypes2()
+        k_proto.optimise_fit(df.values, categorical_idx)
+        k_proto.save_class()
+
+    optimal_clusters = [18, 25]
+    for n_clusters in optimal_clusters:
+        k_proto = GenerateKPrototypes2()
+        fitted_k_proto = k_proto.fit(df.values, categorical_idx, n_clusters)
+        labels = fitted_k_proto.labels_
+        name = f'k_proto_labs_{str(n_clusters)}'
+        output_df[name] = labels
+    output_df.to_csv(output_path, index=False)
+    print(f'Finished adding k_prototypes labels to {output_path}')
+
+
