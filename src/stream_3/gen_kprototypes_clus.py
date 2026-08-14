@@ -79,11 +79,17 @@ class GenerateKPrototypes2:
         else:
             raise FileNotFoundError('Save path not found for k_prototypes')
 
-    def fit(self, arr : np.array, categorical_idx : list[int]):
+    def optimise_fit(self, arr : np.array, categorical_idx : list[int]):
         for n in tqdm(range(2, 80)):
             k_proto = KPrototypes(n_clusters=n, n_jobs=-1, random_state=42)
-            k_proto.fit_predict(arr, categorical = categorical_idx)
+            k_proto.fit(arr, categorical = categorical_idx)
             self.cost.append(k_proto.cost_)
+        print('Finished k-prototypes n_clusters search')
+
+    def fit(self, arr : np.array, categorical_idx : list[int], n_clusters):
+        k_proto = KPrototypes(n_clusters = n_clusters, n_jobs=-1, random_state = 42)
+        k_proto.fit(arr, categorical = categorical_idx)
+        return k_proto
 
     def get_costs(self):
         return self.cost
@@ -100,10 +106,28 @@ class GenerateKPrototypes2:
 if __name__ == '__main__':
     df = get_master_clustering_input()
     dc = DataCatalogue()
+
     categoricals = dc.get_clustering_categoricals()
     print(f'Categoricals: {categoricals}')
+
     categorical_idx = [df.columns.get_loc(col) for col in categoricals]
 
-    k_proto = GenerateKPrototypes2()
-    k_proto.fit(df.values, categorical_idx)
-    k_proto.save_class()
+    k_proto_path = ROOT / 'src' / 'stream_3' / 'k_prototypes' / 'GenerateKPrototypes2.sav'
+    output_path = ROOT / 'data' / 'master_data' / '2016_to_2023_clustering_output_data.csv'
+    output_df = pd.read_csv(output_path)
+    if not k_proto_path.exists():
+        k_proto = GenerateKPrototypes2()
+        k_proto.optimise_fit(df.values, categorical_idx)
+        k_proto.save_class()
+
+    optimal_clusters = [18, 25]
+    for n_clusters in optimal_clusters:
+        k_proto = GenerateKPrototypes2()
+        fitted_k_proto = k_proto.fit(df.values, categorical_idx, n_clusters)
+        labels = fitted_k_proto.labels_
+        name = f'k_proto_labs_{str(n_clusters)}'
+        output_df[name] = labels
+    output_df.to_csv(output_path, index=False)
+    print(f'Finished adding k_prototypes labels to {output_path}')
+
+
