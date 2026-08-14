@@ -72,7 +72,6 @@ class GenerateKPrototypes:
 
 class GenerateKPrototypes2:
     def __init__(self):
-        self.model = None
         self.cost = []
         self.save_path = ROOT / 'src' / 'stream_3' / 'k_prototypes'
         if self.save_path.exists():
@@ -81,8 +80,8 @@ class GenerateKPrototypes2:
             raise FileNotFoundError('Save path not found for k_prototypes')
 
     def fit(self, arr : np.array, categorical_idx : list[int]):
-        for n in tqdm(range(2,100)):
-            k_proto = KPrototypes(n_clusters=n, init = 'huang', random_state=42)
+        for n in tqdm(range(2, 80)):
+            k_proto = KPrototypes(n_clusters=n, n_jobs=-1, random_state=42)
             k_proto.fit_predict(arr, categorical = categorical_idx)
             self.cost.append(k_proto.cost_)
 
@@ -102,6 +101,7 @@ if __name__ == '__main__':
     df = get_master_clustering_input()
     dc = DataCatalogue()
     categoricals = dc.get_clustering_categoricals()
+    print(f'Categoricals: {categoricals}')
     categorical_idx = [df.columns.get_loc(col) for col in categoricals]
 
     k_proto = GenerateKPrototypes2()
