@@ -147,7 +147,6 @@ class GenerateHDBSCAN2:
             'min_cluster_size' : None,
             'cluster_selection_method' : None,
             'metric' : None,
-            'random_state' : 42,
             'core_dist_n_jobs' : -1
         }
         self.min_samples = [5, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
@@ -157,6 +156,7 @@ class GenerateHDBSCAN2:
         self.name = self.__class__.__name__
         self.save_path = ROOT / 'src' / 'stream_3' / 'saved_models'
         self.output_df = None
+        self.dbcv = None
 
     def fit(self, emb : np.array):
         print('Tuning HDBSCAN hyperparameters')
@@ -177,7 +177,7 @@ class GenerateHDBSCAN2:
             'unclustered_prop' : 0,
             'dbcv' : float('-inf')
         }
-        for min_sample in self.min_samples:
+        for min_sample in tqdm(self.min_samples):
             for min_cluster_size in self.min_cluster_size:
                 for cluster_selection_method in self.cluster_selection_method:
                     for metric in self.metric:
@@ -187,7 +187,6 @@ class GenerateHDBSCAN2:
                             cluster_selection_method = cluster_selection_method,
                             metric = metric,
                             gen_min_span_tree = True,
-                            random_state = 42,
                             core_dist_n_jobs = -1
                         ).fit(emb) 
                         num_clusters = len(set(hdb.labels_))
@@ -210,6 +209,7 @@ class GenerateHDBSCAN2:
         self.hyperparams['metric'] = best['metric']
         self.hyperparams['gen_min_span_tree'] = True
         self.output_df = df_output
+        self.dbcv = best['dbcv']
 
     def get_model(self):
         return self.model
@@ -226,3 +226,5 @@ class GenerateHDBSCAN2:
         print(f'{self.__class__.__name__} saved to: {path}')
     def get_df_output(self):
         return self.output_df
+    def get_dbcv(self):
+        return self.dbcv
