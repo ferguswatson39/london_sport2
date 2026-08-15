@@ -146,21 +146,24 @@ class GenerateHDBSCAN2:
             'min_samples' : None,
             'min_cluster_size' : None,
             'cluster_selection_method' : None,
-            'metric' : None
+            'metric' : None,
+            'random_state' : 42,
+            'core_dist_n_jobs' : -1
         }
         self.min_samples = [5, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
         self.min_cluster_size = [50, 100, 150, 200, 250, 300, 350, 400, 450, 500]
         self.cluster_selection_method = ['eom', 'leaf']
         self.metric = ['euclidean', 'manhattan']
-        self.name = GenerateHDBSCAN2.__name__
+        self.name = self.__class__.__name__
         self.save_path = ROOT / 'src' / 'stream_3' / 'saved_models'
         self.output_df = None
 
     def fit(self, emb : np.array):
+        print('Tuning HDBSCAN hyperparameters')
         self.tune_hyperparams(emb)
         self.model = hdbscan.HDBSCAN(**self.hyperparams).fit(emb)
         print('HBDCSAN fit successfully.')
-        self.save_class()
+        # self.save_class()
 
     def tune_hyperparams(self, emb : np.array):
         ## Adapted From: https://towardsdatascience.com/tuning-with-hdbscan-149865ac2970/
@@ -174,7 +177,7 @@ class GenerateHDBSCAN2:
             'unclustered_prop' : 0,
             'dbcv' : float('-inf')
         }
-        for min_sample in tqdm(self.min_samples):
+        for min_sample in self.min_samples:
             for min_cluster_size in self.min_cluster_size:
                 for cluster_selection_method in self.cluster_selection_method:
                     for metric in self.metric:
@@ -183,7 +186,9 @@ class GenerateHDBSCAN2:
                             min_cluster_size = min_cluster_size,
                             cluster_selection_method = cluster_selection_method,
                             metric = metric,
-                            gen_min_span_tree = True
+                            gen_min_span_tree = True,
+                            random_state = 42,
+                            core_dist_n_jobs = -1
                         ).fit(emb) 
                         num_clusters = len(set(hdb.labels_))
                         unclustered_prop = len([c for c in hdb.labels_ if c == -1])/len(hdb.labels_)
@@ -205,6 +210,7 @@ class GenerateHDBSCAN2:
         self.hyperparams['metric'] = best['metric']
         self.hyperparams['gen_min_span_tree'] = True
         self.output_df = df_output
+
     def get_model(self):
         return self.model
     def get_condensed_tree(self):

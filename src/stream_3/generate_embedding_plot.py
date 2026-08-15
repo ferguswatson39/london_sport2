@@ -4,29 +4,74 @@ ROOT = Path(__file__).resolve().parent.parent.parent
 sys.path.append(str(ROOT))
 import matplotlib.pyplot as plt
 import numpy as np
-import re
+from tqdm import tqdm
+import pickle
 from natsort import natsorted
+from src.stream_3.gen_hdb_clus import GenerateHDBSCAN2
 
 def retrieve_sort_emb_paths():
     embedding_folder = ROOT / 'src' / 'stream_3' / 'embeddings' 
     embedding_paths = [file for file in embedding_folder.iterdir() if file.name != 'classes']
     all_sorted = []
     for i in [500, 281, 158, 89, 50]:
-        paths = [path for path in embedding_paths if re.search(fr'conn_{i}_', path.name)]
+        f_name = f'conn_{i}_'
+        paths = [path for path in embedding_paths if f_name in path.name]
         paths = natsorted(paths)
         all_sorted += paths
     return all_sorted
 
+def make_n_cluster_dict(sorted_paths : list[Path], cluster_dict_path : Path) -> dict:
+    print('Making cluster dictionary')
+    cluster_dict = {}
+    for path in tqdm(sorted_paths):
+        emb = np.load(path)
+        hdb = GenerateHDBSCAN2()
+        hdb.fit(emb)
+        labels = hdb.get_model().labels_
+        # -1 to remove inclusion of noise grouping in n_custers
+        n_unique_clusters = len(np.unique(labels)) - 1
+
+        cluster_dict[path.name] = {'n_clusters' : n_unique_clusters, 'labels' : labels}
+
+    print('Finished making cluster dictionary')
+    print(f'Saving cluster dict to: {cluster_dict_path}')
+
+    with open(cluster_dict_path, 'wb') as file:
+        pickle.dump(cluster_dict, file)
+    
+    return cluster_dict
+
 if __name__ == '__main__':
     fig, axes = plt.subplots(5, 5, figsize=(15, 20))
     axes = axes.flatten()
-    all_sorted = retrieve_sort_emb_paths()
 
-    for idx, path in enumerate(all_sorted):
+    sorted_paths = retrieve_sort_emb_paths()
+    cluster_dict_path = ROOT / 'src' / 'stream_3' / 'hdb_clusters'  / 'hdb_cluster_dict.pkl'
+
+    if not cluster_dict_path.exists():
+        print('Cluster dictionary has not been found.')
+        print('Proceeding to create cluster dictionary...')
+
+        cluster_dict = make_n_cluster_dict(sorted_paths, cluster_dict_path)
+
+        print('Finished cluster dictionary')
+    else:
+        print('Cluster dictionary has been location')
+        print('Loading cluster dictinary...')
+
+        with open(cluster_dict_path, 'rb') as file:
+            cluster_dict = pickle.load(file)
+
+    for idx, path in enumerate(sorted_paths):
+        labels = cluster_dict[path.name]['labels']
+        n_clusters = cluster_dict[path.name]['n_clusters']
+
         emb = np.load(path)
-        axes[idx].scatter(emb[:,0], emb[:,1], s=0.05, alpha=0.1)
+
+        axes[idx].scatter(emb[:,0], emb[:,1], s=0.05, alpha=0.1, c=labels)
         axes[idx].set_xticks([])
         axes[idx].set_yticks([])
+
     fig.supxlabel('Categorical n_neighbors: 50 to 500 (left to right)')
     fig.supylabel('Continuous n_neighbors n_neighbors: 500 to 50 (top to bottom)')
     fig.savefig('full_emb_plot.png')
