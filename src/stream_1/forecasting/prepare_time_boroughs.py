@@ -6,7 +6,7 @@ import sys
 
 ROOT = Path(__file__).resolve().parent.parent.parent.parent
 sys.path.append(str(ROOT))
-from src.stream_1.covid_analysis import covid_adjustment
+# from src.stream_1.covid_analysis import covid_adjustment
 from src.loading_data.load_data import get_geographic_data
 from src.loading_data.data_catalogue import DataCatalogue
 
