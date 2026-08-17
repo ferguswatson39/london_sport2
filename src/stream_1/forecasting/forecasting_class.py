@@ -63,21 +63,21 @@ class Forecast:
             results = model.fit(disp=False)
             forecast = results.forecast(self.forecast_steps).values
 
-            final.append([borough, df_borough_train, df_borough_test, forecast, self.calculate_mape(df_borough_test, forecast)])
-        self.sarima_forecast = pd.DataFrame(final, columns=[self.group_col, 'y_train', 'y_test', 'y_forecast', 'mape'])
+            final.append([borough, df_borough_train, df_borough_test, forecast, self.calculate_mae(df_borough_test, forecast)])
+        self.sarima_forecast = pd.DataFrame(final, columns=[self.group_col, 'y_train', 'y_test', 'y_forecast', 'mae'])
         return self.sarima_forecast
 
 
-    def calculate_mape(self, y_test, y_forecast):
+    def calculate_mae(self, y_test, y_forecast):
         return np.mean(abs(np.array(y_test) - y_forecast[:len(np.array(y_test))]) / np.array(y_test)) * 100
 
-    def get_mape(self, toget='prophet'):
+    def get_mae(self, toget='prophet'):
         if toget == 'prophet':
-            return np.mean(self.prophet_forecast['mape'])
+            return np.mean(self.prophet_forecast['mae'])
         elif toget == 'sarima':
-            return np.mean(self.sarima_forecast['mape'])
+            return np.mean(self.sarima_forecast['mae'])
         elif toget == 'bayesian_ridge':
-            return np.mean(self.bayesian_ridge_forecast['mape'])
+            return np.mean(self.bayesian_ridge_forecast['mae'])
         else:
             return -1
 
@@ -124,9 +124,9 @@ class Forecast:
             y_lower = forecast_df['yhat_lower'].values[-self.forecast_steps:]
             y_upper = forecast_df['yhat_upper'].values[-self.forecast_steps:]
             # borough, train, test, forecast results
-            final.append([borough, df_borough_train.values, df_borough_test.values, y_forecast, y_lower, y_upper, self.calculate_mape(df_borough_test.values, y_forecast)])
+            final.append([borough, df_borough_train.values, df_borough_test.values, y_forecast, y_lower, y_upper, self.calculate_mae(df_borough_test.values, y_forecast)])
 
-        self.prophet_forecast = pd.DataFrame(final, columns=[self.group_col, 'y_train', 'y_test', 'y_forecast', 'y_lower', 'y_upper', 'mape'])
+        self.prophet_forecast = pd.DataFrame(final, columns=[self.group_col, 'y_train', 'y_test', 'y_forecast', 'y_lower', 'y_upper', 'mae'])
         return self.prophet_forecast
 
 
@@ -147,67 +147,107 @@ class Forecast:
             model.fit(X_train, y_train)
             y_forecast, e_forecast = model.predict(X_forecast, return_std = True)    
 
-            final.append([borough, y_train, y_test, y_forecast, e_forecast, self.calculate_mape(y_test, y_forecast)])
+            final.append([borough, y_train, y_test, y_forecast, e_forecast, self.calculate_mae(y_test, y_forecast)])
 
-        self.bayesian_ridge_forecast = pd.DataFrame(final, columns=[self.group_col, 'y_train', 'y_test', 'y_forecast', 'e_forecast', 'mape'])
+        self.bayesian_ridge_forecast = pd.DataFrame(final, columns=[self.group_col, 'y_train', 'y_test', 'y_forecast', 'e_forecast', 'mae'])
         return self.bayesian_ridge_forecast
 
 
-    def plot(self, toplot='prophet', UNCERTAINTY=False):
+    def plot_four(self, toplot='prophet', UNCERTAINTY=True):
         if toplot == 'prophet':
             data = self.prophet_forecast
-            UNCERTAINTY = True
         elif toplot == 'sarima':
             data = self.sarima_forecast
         elif toplot == 'bayesian_ridge':
             data = self.bayesian_ridge_forecast
 
-        if self.group_col == 'LA_Name':
-            n_boroughs = len(data)
-            n_cols = 4
-            n_rows = n_boroughs // 4
-            fig, axes = plt.subplots(n_rows, n_cols, figsize=(20, 24))
-            for ax, (idx, row) in zip(axes.flatten(), data.iterrows()):
-                t_train = range(len(row['y_train']))
-                t_test = range(self.t_train_cutoff, self.t_train_cutoff + len(row['y_test']))
-                t_forecast = range(self.t_train_cutoff, self.t_train_cutoff + len(row['y_forecast']))
-                t_all = list(t_train) + list(t_test)
-                y_all = np.concatenate([row['y_train'], row['y_test']])
-                ax.plot(t_all, y_all, color='black')
-                ax.plot(t_forecast, row['y_forecast'], color='blue')
-                ax.scatter(t_forecast, row['y_forecast'], color='black', s=7)
-                if UNCERTAINTY: ax.fill_between(t_forecast, row['y_lower'], row['y_upper'], alpha=0.2, color='blue')
-                ax.set_xticks(self.ticks)
-                ax.set_ylim(0, 1500)
-                ax.set_xticklabels(self.labels, rotation=45, fontsize=7)
-                ax.text(0.05, 0.95, f"MAPE: {row['mape']:.1f}%",fontsize=7, transform=ax.transAxes, verticalalignment='top')
-                ax.set_title(row[self.group_col], fontweight='bold', fontsize=8)
-                ax.spines['right'].set_visible(False)
-            plt.tight_layout()
-            plt.show()
+        n_cols = 4
+        n_rows = math.ceil(len(data) / n_cols)
+        fig, axes = plt.subplots(n_rows, n_cols, figsize=(20, n_rows * 4))
 
-        else:
-            n_boroughs = len(data)
-            n_cols = 3
-            n_rows = math.ceil(n_boroughs / 3)
-            fig, axes = plt.subplots(n_rows, n_cols, figsize=(20, 20))
+        all_vals = np.concatenate([np.concatenate([np.array(r['y_train']), np.array(r['y_forecast'])]) for _, r in data.iterrows()])
+        global_min, global_max = all_vals.min(), all_vals.max()
+
+        boroughs_to_show = ['Barking and Dagenham', 'Barnet', 'Hackney', 'Wandsworth']
+        data = data[data[self.group_col].isin(boroughs_to_show)]
+
+        for ax, (idx, row) in zip(axes.flatten(), data.iterrows()):
+            vmin = np.percentile(all_vals, 2)
+            vmax = np.percentile(all_vals, 98)
+            y_train = np.array(row['y_train'])
+            y_forecast = np.array(row['y_forecast'])
+            t_train = np.arange(len(y_train))
+            t_forecast = np.arange(self.t_train_cutoff, self.t_train_cutoff + len(y_forecast))
+
+            train_colors = plt.cm.YlOrRd((y_train - vmin) / (vmax - vmin))
+            forecast_colors = plt.cm.YlOrRd((y_forecast - vmin) / (vmax - vmin))
+
+            ax.plot(np.concatenate([t_train, t_forecast]),
+                    np.concatenate([y_train, y_forecast]),
+                    color='#00BCD4', linewidth=1.5, alpha=0.7, zorder=1)
+
+            ax.scatter(t_train, y_train, c=train_colors, s=55, zorder=5, edgecolors='none')
+            ax.scatter(t_forecast, y_forecast, c=forecast_colors, s=55, zorder=5, edgecolors='none')
+
+            ax.set_title(row[self.group_col], fontweight='bold', fontsize=10)
+            ax.set_xlabel('Year')
+            ax.set_ylabel('Average MEMS')
+            ax.set_xticks(self.ticks)
+            ax.set_xticklabels(self.labels, rotation=45, fontsize=7)
+            ax.spines['top'].set_visible(False)
+            ax.spines['right'].set_visible(False)
+
+        for ax in axes.flatten()[len(data):]:
+            ax.set_visible(False)
+
+        plt.tight_layout()
+        plt.show()
+
+    def plot(self, toplot='prophet', UNCERTAINTY=True):
+            if toplot == 'prophet':
+                data = self.prophet_forecast
+            elif toplot == 'sarima':
+                data = self.sarima_forecast
+            elif toplot == 'bayesian_ridge':
+                data = self.bayesian_ridge_forecast
+    
+            n_cols = 4
+            n_rows = math.ceil(len(data) / n_cols)
+            fig, axes = plt.subplots(n_rows, n_cols, figsize=(20, n_rows * 4))
+    
+            all_vals = np.concatenate([np.concatenate([np.array(r['y_train']), np.array(r['y_forecast'])]) for _, r in data.iterrows()])
+            global_min, global_max = all_vals.min(), all_vals.max()
+    
+            data = data[data[self.group_col].isin(boroughs_to_show)]
+    
             for ax, (idx, row) in zip(axes.flatten(), data.iterrows()):
-                t_train = range(len(row['y_train']))
-                t_test = range(self.t_train_cutoff, self.t_train_cutoff + len(row['y_test']))
-                t_forecast = range(self.t_train_cutoff,self.t_train_cutoff + len(row['y_forecast']))
-                t_all = list(t_train) + list(t_test)
-                y_all = np.concatenate([row['y_train'], row['y_test']])
-                ax.plot(t_all, y_all, color='black')
-                ax.plot(t_forecast, row['y_forecast'], color='blue')
-                ax.scatter(t_forecast, row['y_forecast'], color='black', s=7)
-                if UNCERTAINTY: ax.fill_between(t_forecast, row['y_lower'], row['y_upper'], alpha=0.2, color='blue')
+                vmin = np.percentile(all_vals, 2)
+                vmax = np.percentile(all_vals, 98)
+                y_train = np.array(row['y_train'])
+                y_forecast = np.array(row['y_forecast'])
+                t_train = np.arange(len(y_train))
+                t_forecast = np.arange(self.t_train_cutoff, self.t_train_cutoff + len(y_forecast))
+    
+                train_colors = plt.cm.YlOrRd((y_train - vmin) / (vmax - vmin))
+                forecast_colors = plt.cm.YlOrRd((y_forecast - vmin) / (vmax - vmin))
+    
+                ax.plot(np.concatenate([t_train, t_forecast]),
+                        np.concatenate([y_train, y_forecast]),
+                        color='#00BCD4', linewidth=1.5, alpha=0.7, zorder=1)
+    
+                ax.scatter(t_train, y_train, c=train_colors, s=55, zorder=5, edgecolors='none')
+                ax.scatter(t_forecast, y_forecast, c=forecast_colors, s=55, zorder=5, edgecolors='none')
+    
+                ax.set_title(row[self.group_col], fontweight='bold', fontsize=10)
+                ax.set_xlabel('Year')
+                ax.set_ylabel('Average MEMS')
                 ax.set_xticks(self.ticks)
-                ax.set_ylim(0, max(y_all) * 1.3)
                 ax.set_xticklabels(self.labels, rotation=45, fontsize=7)
-                ax.text(0.05, 0.95, f"MAPE: {row['mape']:.1f}%",fontsize=7, transform=ax.transAxes, verticalalignment='top')
-                ax.set_title(f'Cluster {row[self.group_col]}', fontweight='bold', fontsize=8)
+                ax.spines['top'].set_visible(False)
                 ax.spines['right'].set_visible(False)
+    
             for ax in axes.flatten()[len(data):]:
                 ax.set_visible(False)
+    
             plt.tight_layout()
             plt.show()
