@@ -153,7 +153,7 @@ class Forecast:
         return self.bayesian_ridge_forecast
 
 
-    def plot(self, toplot='prophet', UNCERTAINTY=True):
+    def plot_four(self, toplot='prophet', UNCERTAINTY=True):
         if toplot == 'prophet':
             data = self.prophet_forecast
         elif toplot == 'sarima':
@@ -202,3 +202,52 @@ class Forecast:
 
         plt.tight_layout()
         plt.show()
+
+    def plot(self, toplot='prophet', UNCERTAINTY=True):
+            if toplot == 'prophet':
+                data = self.prophet_forecast
+            elif toplot == 'sarima':
+                data = self.sarima_forecast
+            elif toplot == 'bayesian_ridge':
+                data = self.bayesian_ridge_forecast
+    
+            n_cols = 4
+            n_rows = math.ceil(len(data) / n_cols)
+            fig, axes = plt.subplots(n_rows, n_cols, figsize=(20, n_rows * 4))
+    
+            all_vals = np.concatenate([np.concatenate([np.array(r['y_train']), np.array(r['y_forecast'])]) for _, r in data.iterrows()])
+            global_min, global_max = all_vals.min(), all_vals.max()
+    
+            data = data[data[self.group_col].isin(boroughs_to_show)]
+    
+            for ax, (idx, row) in zip(axes.flatten(), data.iterrows()):
+                vmin = np.percentile(all_vals, 2)
+                vmax = np.percentile(all_vals, 98)
+                y_train = np.array(row['y_train'])
+                y_forecast = np.array(row['y_forecast'])
+                t_train = np.arange(len(y_train))
+                t_forecast = np.arange(self.t_train_cutoff, self.t_train_cutoff + len(y_forecast))
+    
+                train_colors = plt.cm.YlOrRd((y_train - vmin) / (vmax - vmin))
+                forecast_colors = plt.cm.YlOrRd((y_forecast - vmin) / (vmax - vmin))
+    
+                ax.plot(np.concatenate([t_train, t_forecast]),
+                        np.concatenate([y_train, y_forecast]),
+                        color='#00BCD4', linewidth=1.5, alpha=0.7, zorder=1)
+    
+                ax.scatter(t_train, y_train, c=train_colors, s=55, zorder=5, edgecolors='none')
+                ax.scatter(t_forecast, y_forecast, c=forecast_colors, s=55, zorder=5, edgecolors='none')
+    
+                ax.set_title(row[self.group_col], fontweight='bold', fontsize=10)
+                ax.set_xlabel('Year')
+                ax.set_ylabel('Average MEMS')
+                ax.set_xticks(self.ticks)
+                ax.set_xticklabels(self.labels, rotation=45, fontsize=7)
+                ax.spines['top'].set_visible(False)
+                ax.spines['right'].set_visible(False)
+    
+            for ax in axes.flatten()[len(data):]:
+                ax.set_visible(False)
+    
+            plt.tight_layout()
+            plt.show()
