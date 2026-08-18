@@ -451,6 +451,23 @@ data_dict = {
             }
         },
 
+    'VolAny' : {
+        'type' : 'categorical',
+        'demographic' : False,
+        'geographic' : False,
+        'dummy_encode' : False,
+        'target' : True,
+        'clustering' : False,
+        'clustering_categorical' : False,
+        'graph_label' : 'Has Volunteered',
+        'value_labels' : {0 : 'Not volunteered' , 1 : 'Volunteered'},
+        'perturbation' : {
+            'core' : True,
+            'to_perturb' : False,
+            'encode' : False
+            }
+        },
+
     'LOG_MEMS7_ALL' : {
         'type' : 'continuous',
         'demographic' : False,
@@ -613,24 +630,6 @@ data_dict = {
         },
 """
 
-"""
-    'VolAny' : {
-        'type' : 'categorical',
-        'demographic' : False,
-        'geographic' : False,
-        'dummy_encode' : False,
-        'target' : False,
-        'clustering' : False,
-        'clustering_categorical' : False,
-        'graph_label' : 'Has Volunteered',
-        'value_labels' : {0 : 'Not volunteered' , 1 : 'Volunteered'},
-        'perturbation' : {
-            'core' : True,
-            'to_perturb' : False,
-            'encode' : False
-            }
-        },
-"""
 
 """
 
