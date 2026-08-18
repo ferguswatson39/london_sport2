@@ -12,12 +12,16 @@ class LogisticBoroughForecaster:
                  INCLUDED_YEARS : List[int] = [2017, 2018, 2019, 2020, 2021, 2022, 2023],
                  FORECAST_YEARS : List[int] = [2024, 2025, 2026, 2027],
                  target_col: str = 'active',
-                 ADJUST_COVID: bool = False
+                 ADJUST_COVID: bool = False,
+                 BOROUGH_ORDER: List[str] = None,
+                 BOROUGH_HIGHLIGHT: List[str] = None
     ):
         self.INCLUDED_YEARS = INCLUDED_YEARS
         self.FORECAST_YEARS = FORECAST_YEARS
         self.target_col = target_col
         self.ADJUST_COVID = ADJUST_COVID
+        self.BOROUGH_ORDER = BOROUGH_ORDER
+        self.BOROUGH_HIGHLIGHT = BOROUGH_HIGHLIGHT
         self.forecast_df : pd.DataFrame = None
 
     def fit_predict(self) -> pd.DataFrame:
@@ -55,16 +59,19 @@ class LogisticBoroughForecaster:
             alpha = 0.3, 
             zorder = 0)
     
-    def plot_forecast(self) -> sns.FacetGrid:
+    def plot_forecast(self, highlight : bool = False) -> sns.FacetGrid:
         if self.forecast_df is None:
             self.fit_predict()
+        if highlight: boroughs = self.BOROUGH_HIGHLIGHT
+        else: boroughs = self.BOROUGH_ORDER
         colours = ['#808080'] * len(self.INCLUDED_YEARS) + ['#00BFFF'] * len(self.FORECAST_YEARS)
         g = sns.relplot(kind = 'scatter', 
                         data = self.forecast_df, 
                         x = 'year', 
                         y = 'target', 
                         col = 'borough', 
-                        col_wrap = 8,
+                        col_wrap = 4,
+                        col_order = boroughs,
                         height = 2, 
                         aspect = 1.4,
                         s = 50,
@@ -78,16 +85,33 @@ class LogisticBoroughForecaster:
             borough_df = self.forecast_df[self.forecast_df['borough'] == borough]
             self.plot_logistic_line(ax = ax, data = borough_df)
         g.set_titles('{col_name}', weight = 'bold')
-        g.set(xlabel = 'Year', ylabel = f'Avg {self.target_col.upper()}')
-        g.set_xticklabels([])
-        if self.ADJUST_COVID:
-            plt.savefig(f'src/stream_1/figures/Logistic Borough Forecast - {self.target_col.upper()} (COVID Adjusted)', bbox_inches = 'tight')
+        g.set(xlabel = 'Year', ylabel = f'% {self.target_col.upper()}')
+        tick_years = [2017, 2019, 2021, 2023, 2025, 2027]
+        g.set(xlim = (2016.5, 2027.5), xticks = tick_years)
+        if highlight: 
+            last_ax = g.axes_dict[boroughs[-1]]
+            last_ax.text(s = '(+28 boroughs)', x = 2029, y = 17, fontsize = 12, ha = 'left', va = 'center', color = '#999999', weight = 'bold')
         else:
-            plt.savefig(f'src/stream_1/figures/Logistic Borough Forecast - {self.target_col.upper()}', bbox_inches = 'tight')
+            g.set_xticklabels([])
+        if self.ADJUST_COVID:
+            plt.savefig(f'src/stream_1/figures/Logistic Borough Forecast - {self.target_col.upper()} - Highlight: {highlight} (COVID Adjusted)', bbox_inches = 'tight')
+        else:
+            plt.savefig(f'src/stream_1/figures/Logistic Borough Forecast - {self.target_col.upper()} - Highlight: {highlight}', bbox_inches = 'tight')
         plt.show()
         return g
     
 if __name__ == "__main__":
-    forecaster = LogisticBoroughForecaster()
+    borough_highlight = ['Barking and Dagenham', 'Barnet', 'Hackney' , 'Wandsworth']
+    borough_order = [
+        'Barking and Dagenham', 'Barnet', 'Hackney', 'Wandsworth', 
+        'Bexley', 'Brent', 'Bromley', 'Camden',
+        'Croydon', 'Ealing', 'Enfield', 'Greenwich', 
+        'Tower Hamlets', 'Hammersmith and Fulham', 'Haringey', 'Harrow',
+        'Havering', 'Hillingdon', 'Hounslow', 'Richmond', 
+        'Kensington and Chelsea', 'Kingston', 'Lambeth', 'Lewisham',
+        'Merton', 'Newham', 'Redbridge', 'Southwark', 
+        'Sutton', 'Islington', 'Waltham Forest', 'Westminster'
+    ]
+    forecaster = LogisticBoroughForecaster(BOROUGH_ORDER = borough_order, BOROUGH_HIGHLIGHT = borough_highlight)
     forecaster.fit_predict()
-    forecaster.plot_forecast()
+    forecaster.plot_forecast(highlight = True)
