@@ -163,7 +163,7 @@ class Forecast:
 
         n_cols = 4
         n_rows = math.ceil(len(data) / n_cols)
-        fig, axes = plt.subplots(n_rows, n_cols, figsize=(20, n_rows * 4))
+        fig, axes = plt.subplots(n_rows, n_cols, figsize=(20, n_rows * 4), sharey=True)
 
         all_vals = np.concatenate([np.concatenate([np.array(r['y_train']), np.array(r['y_forecast'])]) for _, r in data.iterrows()])
         global_min, global_max = all_vals.min(), all_vals.max()
@@ -179,8 +179,8 @@ class Forecast:
             t_train = np.arange(len(y_train))
             t_forecast = np.arange(self.t_train_cutoff, self.t_train_cutoff + len(y_forecast))
 
-            train_colors = plt.cm.YlOrRd((y_train - vmin) / (vmax - vmin))
-            forecast_colors = plt.cm.YlOrRd((y_forecast - vmin) / (vmax - vmin))
+            train_colors = plt.cm.YlOrRd_r((y_train - vmin) / (vmax - vmin))
+            forecast_colors = plt.cm.YlOrRd_r((y_forecast - vmin) / (vmax - vmin))
 
             ax.plot(np.concatenate([t_train, t_forecast]),
                     np.concatenate([y_train, y_forecast]),
@@ -188,6 +188,7 @@ class Forecast:
 
             ax.scatter(t_train, y_train, c=train_colors, s=55, zorder=5, edgecolors='none')
             ax.scatter(t_forecast, y_forecast, c=forecast_colors, s=55, zorder=5, edgecolors='none')
+            ax.plot(t_train, y_train, color='black', linewidth=1, alpha=0.6, zorder=2)
 
             ax.set_title(row[self.group_col], fontweight='bold', fontsize=10)
             ax.set_xlabel('Year')
@@ -228,8 +229,8 @@ class Forecast:
                 t_train = np.arange(len(y_train))
                 t_forecast = np.arange(self.t_train_cutoff, self.t_train_cutoff + len(y_forecast))
     
-                train_colors = plt.cm.YlOrRd((y_train - vmin) / (vmax - vmin))
-                forecast_colors = plt.cm.YlOrRd((y_forecast - vmin) / (vmax - vmin))
+                train_colors = plt.cm.YlOrR_r((y_train - vmin) / (vmax - vmin))
+                forecast_colors = plt.cm.YlOrRd_r((y_forecast - vmin) / (vmax - vmin))
     
                 ax.plot(np.concatenate([t_train, t_forecast]),
                         np.concatenate([y_train, y_forecast]),
