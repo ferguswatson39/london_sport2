@@ -14,9 +14,9 @@ from models.stream_2.bayesian_ridge import Bayesian
 from models.stream_2.exponential_smoothing import ExponentialSmoothingModels
 
 LABEL_MAP = {'WorkStat8_2' : 'Work Status: Unemployed', 'WorkStat8_4' : 'Work Status: Domestic',
-             'IMD10_9' : 'Deprivation: 9 (High)', 'IMD10_8' : 'Deprivation: 8', 'IMD10_7' : 'Deprivation: 7',
+             'IMD10_9' : 'Deprivation: 9 (Low)', 'IMD10_8' : 'Deprivation: 8', 'IMD10_7' : 'Deprivation: 7',
              'IMD10_6' : 'Deprivation: 6', 'IMD10_5' : 'Deprivation: 5', 'IMD10_4' : 'Deprivation: 4',
-             'IMD10_3' : 'Deprivation: 3', 'IMD10_2' : 'Deprivation: 2', 'IMD10_1' : 'Deprivation: 1 (Low)'}
+             'IMD10_3' : 'Deprivation: 3', 'IMD10_2' : 'Deprivation: 2', 'IMD10_1' : 'Deprivation: 1 (High)'}
 
 class CoefGeneration:
     def __init__(self, model: str, df : pd.DataFrame):
