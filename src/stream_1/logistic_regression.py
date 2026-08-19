@@ -94,9 +94,9 @@ class LogisticBoroughForecaster:
         else:
             g.set_xticklabels([])
         if self.ADJUST_COVID:
-            plt.savefig(f'src/stream_1/figures/Logistic Borough Forecast - {self.target_col.upper()} - Highlight: {highlight} (COVID Adjusted)', bbox_inches = 'tight')
+            plt.savefig(f'src/stream_1/figures/Logistic Borough Forecast - {self.target_col.upper()} - Highlight {highlight} (COVID Adjusted)', bbox_inches = 'tight')
         else:
-            plt.savefig(f'src/stream_1/figures/Logistic Borough Forecast - {self.target_col.upper()} - Highlight: {highlight}', bbox_inches = 'tight')
+            plt.savefig(f'src/stream_1/figures/Logistic Borough Forecast - {self.target_col.upper()} - Highlight {highlight}', bbox_inches = 'tight')
         plt.show()
         return g
     
