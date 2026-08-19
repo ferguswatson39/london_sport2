@@ -106,8 +106,6 @@ class BayesianBoroughForecaster:
         if highlight: 
             last_ax = g.axes_dict[boroughs[-1]]
             last_ax.text(s = '(+28 boroughs)', x = 2029, y = 810, fontsize = 12, ha = 'left', va = 'center', color = '#999999', weight = 'bold')        
-        else: 
-            g.set_xticklabels([])
         if self.ADJUST_COVID:
             plt.savefig(f'src/stream_1/figures/Bayesian Borough Forecast - {self.target_col.upper()} - Highlight {highlight} (COVID Adjusted)', bbox_inches = 'tight', dpi = 500)
         else:
