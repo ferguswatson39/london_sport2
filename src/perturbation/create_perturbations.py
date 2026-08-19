@@ -15,7 +15,7 @@ def create_save_heatplot(breakdowns : pd.DataFrame, heatplot_name : str):
     heatplot_path = ROOT / 'figures' / 'perturbation'
 
     heat = breakdowns.drop(columns = 'labels').T
-    mask = heat.abs() < 0.01
+    mask = heat.abs() < 0.02
     plt.figure(figsize=(15, 10))
     sns.heatmap(
         heat,
@@ -23,8 +23,6 @@ def create_save_heatplot(breakdowns : pd.DataFrame, heatplot_name : str):
         #cmap="YlOrBr",
         cmap='coolwarm',
         fmt='.2f',
-        linecolor='white',
-        #linewidths=0.1,
         mask=mask,
         center=0,
         yticklabels=[
