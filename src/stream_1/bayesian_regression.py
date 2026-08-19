@@ -109,9 +109,9 @@ class BayesianBoroughForecaster:
         else: 
             g.set_xticklabels([])
         if self.ADJUST_COVID:
-            plt.savefig(f'src/stream_1/figures/Bayesian Borough Forecast - {self.target_col.upper()} - Highlight: {highlight} (COVID Adjusted)', bbox_inches = 'tight', dpi = 500)
+            plt.savefig(f'src/stream_1/figures/Bayesian Borough Forecast - {self.target_col.upper()} - Highlight {highlight} (COVID Adjusted)', bbox_inches = 'tight', dpi = 500)
         else:
-            plt.savefig(f'src/stream_1/figures/Bayesian Borough Forecast - {self.target_col.upper()} - Highlight: {highlight}', bbox_inches = 'tight', dpi = 500)
+            plt.savefig(f'src/stream_1/figures/Bayesian Borough Forecast - {self.target_col.upper()} - Highlight {highlight}', bbox_inches = 'tight', dpi = 500)
         plt.show()
         return g
 
