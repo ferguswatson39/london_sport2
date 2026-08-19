@@ -18,32 +18,32 @@ class Forecast:
         self.prophet_forecast = None
         self.bayesian_ridge_forecast = None
         self.group_col = group_col
-        self.labels = ['2017', '2018', '2019', '2020', '2021', '2022']
+        self.labels = ['2017', '2018', '2019', '2020', '2021', '2022', '2023']
         self.forecast_steps = forecast_steps
         self.seasonal_period = self._set_seasonal_period()
-
+        
     def _set_seasonal_period(self):
         if 'month' in self.df.columns:
-            self.t_train_cutoff = 60
-            self.ticks = [2, 14, 26, 38, 50, 62]
-            
+            self.t_train_cutoff = 84
+            self.ticks = [2, 14, 26, 38, 50, 62, 74]
             for i in range(self.forecast_steps // 12):
-                self.labels.append(str(2023 + i))
-                self.ticks.append(i*12 + 72)
+                self.labels.append(str(2024 + i))   # was 2023
+                self.ticks.append(i*12 + 86)         # was 72
             return 12
-        
+
         elif 'quarter' in self.df.columns:
-            self.t_train_cutoff = 18
-            self.ticks = [0, 4, 8, 12, 16, 20]
+            self.t_train_cutoff = 28
+            self.ticks = [0, 4, 8, 12, 16, 20, 24]
             for i in range(self.forecast_steps // 4):
-                self.labels.append(str(2023 + i))
-                self.ticks.append(i*4 + 24)
+                self.labels.append(str(2024 + i))   # was 2023
+                self.ticks.append(i*4 + 28)          # was 24
             return 4
+
         else:
-            self.t_train_cutoff = 5
-            self.ticks = [1,2,3,4,5,6]
+            self.t_train_cutoff = 7
+            self.ticks = [0, 1, 2, 3, 4, 5, 6]     # was [1..7], avoids overlap with forecast
             for i in range(self.forecast_steps):
-                self.labels.append(str(2023 + i))
+                self.labels.append(str(2024 + i))   # was 2023
                 self.ticks.append(i + 7)
             return 1
 
