@@ -36,7 +36,7 @@ def create_save_heatplot(breakdowns : pd.DataFrame, heatplot_name : str):
     plt.xlabel('Clusters', fontweight='bold')
     plt.xticks(fontweight='bold')
     plt.yticks(fontweight='bold')
-    plt.savefig(heatplot_path / heatplot_name, bbox_inches='tight')
+    plt.savefig(heatplot_path / heatplot_name, bbox_inches='tight', dpi=500)
     print(f'Saved hatplot figure to: {heatplot_path / heatplot_name}')
 
 def create_and_join_diff_series(df : pd.DataFrame, group_by : str):
