@@ -81,11 +81,12 @@ if __name__ == '__main__':
         axes[idx].set_yticks([])
         axes[idx].set_title(f'n = {n_clusters} | dbcv : {dbcv:.2f}', fontweight='bold')
 
-    fig.supxlabel('Categorical n_neighbors: 50 to 500 (left to right)')
-    fig.supylabel('Continuous n_neighbors n_neighbors: 500 to 50 (top to bottom)')
+
+    fig.supxlabel('Categorical n_neighbors: 50 to 500 (left to right)', fontsize=16, fontweight='bold', y=0.08)
+    fig.supylabel('Continuous n_neighbors: 500 to 50 (top to bottom)', fontsize=16, fontweight='bold', x=0.08)
 
     save_path = ROOT / 'figures' / 'umap' / 'full_emb_plot.png'
-    fig.savefig(save_path)
+    fig.savefig(save_path, bbox_inches='tight', dpi=500)
 
 
 

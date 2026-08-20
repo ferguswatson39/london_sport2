@@ -7,25 +7,36 @@ sys.path.append(str(ROOT))
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pickle
+from lightgbm import LGBMClassifier
 from src.loading_data.data_catalogue import DataCatalogue
 
 
 def create_save_heatplot(breakdowns : pd.DataFrame, heatplot_name : str):
     heatplot_path = ROOT / 'figures' / 'perturbation'
 
-    title = 'Average Change in the Probability of Participating in Over 150 Minutes of Moderate Activity Per Week'
-
-    heat = breakdowns.drop(columns = 'labels')
+    heat = breakdowns.drop(columns = 'labels').T
+    mask = heat.abs() < 0.02
     plt.figure(figsize=(15, 10))
     sns.heatmap(
         heat,
         annot=True,
-        cmap="YlOrBr",
-        fmt='.2f'
+        #cmap="YlOrBr",
+        cmap='coolwarm',
+        fmt='.2f',
+        mask=mask,
+        center=0,
+        yticklabels=[
+            'Intrinsic Motivation', 'Extrinsic Motivation', 'Achieve Goals', 'Persistence',
+            'Inclusive Area', 'See Similar People', 'Safe Excercise Spaces', 'Local Trust',
+            'Neighborhood Cohesion', 'Anxiety', 'Happiness', 'Loneliness', 'Life Worthwhile'
+        ],
+        cbar=False
+
     )
-    plt.title(title)
-    plt.ylabel('Clusters')
-    plt.savefig(heatplot_path / heatplot_name)
+    plt.xlabel('Clusters', fontweight='bold')
+    plt.xticks(fontweight='bold')
+    plt.yticks(fontweight='bold')
+    plt.savefig(heatplot_path / heatplot_name, bbox_inches='tight', dpi=500)
     print(f'Saved hatplot figure to: {heatplot_path / heatplot_name}')
 
 def create_and_join_diff_series(df : pd.DataFrame, group_by : str):
