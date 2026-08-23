@@ -14,4 +14,4 @@ hdbscan
 xgboost
 imbalanced-learn
 natsort
-
+plotly
