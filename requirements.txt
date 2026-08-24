@@ -16,3 +16,4 @@ imbalanced-learn
 natsort
 plotly
 nbformat
+kaleido
