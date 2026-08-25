@@ -74,7 +74,7 @@ class AnalysisPlots:
         plt.show()
 
     def plot_national_comparison(self, borough_df, national):
-        _, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize = (14, 6), sharey = True)
+        _, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize = (20, 6), sharey = True)
         for borough in borough_df['LA_Name'].unique():
             subset = borough_df[borough_df['LA_Name'] == borough].reset_index(drop = True)
 
@@ -86,10 +86,15 @@ class AnalysisPlots:
                 ax1.set_xticklabels(national['year'], rotation = 45, ha = 'right')
                 ax1.set_title('Always Above Average', weight = 'bold', fontsize = 15, color = '#82B366')
                 if borough == 'Lambeth':
-                    ax1.annotate(borough, xy = (subset.iloc[-1]['year'], subset.iloc[-1]['MEMS7_ALL']), textcoords = 'offset points', xytext = (12, -5), color = '#82B366',  fontweight = 'semibold', fontsize = 9)
+                    ax1.annotate(borough, xy = (subset.iloc[-1]['year'], subset.iloc[-1]['MEMS7_ALL']), textcoords = 'offset points', xytext = (5, -6), color = '#82B366',  fontweight = 'semibold', fontsize = 12, ha = 'left')
+                elif borough == 'Westminster':
+                    ax1.annotate(borough, xy = (subset.iloc[-1]['year'], subset.iloc[-1]['MEMS7_ALL']), textcoords = 'offset points', xytext = (5, -4), color = '#82B366',  fontweight = 'semibold', fontsize = 12, ha = 'left')
                 else:
-                    ax1.annotate(borough, xy = (subset.iloc[-1]['year'], subset.iloc[-1]['MEMS7_ALL']), textcoords = 'offset points', xytext = (12, 0), color = '#82B366',  fontweight = 'semibold', fontsize = 9)
-                ax1.set_aspect(0.023) 
+                    ax1.annotate(borough, xy = (subset.iloc[-1]['year'], subset.iloc[-1]['MEMS7_ALL']), textcoords = 'offset points', xytext = (5, 0), color = '#82B366',  fontweight = 'semibold', fontsize = 12, ha = 'left')
+                ax1.set_xlim(2017, 2024)
+                ax1.spines['top'].set_visible(False)
+                ax1.spines['right'].set_visible(False)
+
 
             # Below Average Always
             elif (subset['MEMS7_ALL'].values < national['MEMS7_ALL'].values).all():
@@ -98,24 +103,35 @@ class AnalysisPlots:
                 ax2.set_xticks(national['year'])
                 ax2.set_xticklabels(national['year'], rotation = 45, ha = 'right')
                 ax2.set_title('Always Below Average', weight = 'bold', fontsize = 15, color = '#B85450')
-                if borough in ['Barking', 'Newham', 'Havering']:
-                    ax2.annotate(borough, xy = (subset.iloc[-1]['year'], subset.iloc[-1]['MEMS7_ALL']), textcoords = 'offset points', xytext = (12, -7), color = '#B85450', fontweight = 'semibold', fontsize = 9) 
-                elif borough in ['Bexley', 'Hillingdon', 'Redbridge']:
-                    ax2.annotate(borough, xy = (subset.iloc[-1]['year'], subset.iloc[-1]['MEMS7_ALL']), textcoords = 'offset points', xytext = (12, -9), color = '#B85450', fontweight = 'semibold', fontsize = 9) 
-                elif borough == 'Croydon':
-                    ax2.annotate(borough, xy = (subset.iloc[-1]['year'], subset.iloc[-1]['MEMS7_ALL']), textcoords = 'offset points', xytext = (12, -25), color = '#B85450', fontweight = 'semibold', fontsize = 9) 
+                if borough == 'Barking':
+                    ax2.annotate(borough, xy = (subset.iloc[-1]['year'], subset.iloc[-1]['MEMS7_ALL']), textcoords = 'offset points', xytext = (5, -25), color = '#B85450', fontweight = 'semibold', fontsize = 12, ha = 'left' )  
+                elif borough == 'Hillingdon':  
+                    ax2.annotate(borough, xy = (subset.iloc[-1]['year'], subset.iloc[-1]['MEMS7_ALL']), textcoords = 'offset points', xytext = (5, -26), color = '#B85450', fontweight = 'semibold', fontsize = 12, ha = 'left' )  
+                elif borough == 'Havering':  
+                    ax2.annotate(borough, xy = (subset.iloc[-1]['year'], subset.iloc[-1]['MEMS7_ALL']), textcoords = 'offset points', xytext = (5, -20), color = '#B85450', fontweight = 'semibold', fontsize = 12, ha = 'left' )     
+                elif borough == 'Croydon':  
+                    ax2.annotate(borough, xy = (subset.iloc[-1]['year'], subset.iloc[-1]['MEMS7_ALL']), textcoords = 'offset points', xytext = (5, -20), color = '#B85450', fontweight = 'semibold', fontsize = 12, ha = 'left' ) 
+                elif borough == 'Redbridge':  
+                    ax2.annotate(borough, xy = (subset.iloc[-1]['year'], subset.iloc[-1]['MEMS7_ALL']), textcoords = 'offset points', xytext = (5, -10), color = '#B85450', fontweight = 'semibold', fontsize = 12, ha = 'left' )   
+                elif borough == 'Bexley':  
+                    ax2.annotate(borough, xy = (subset.iloc[-1]['year'], subset.iloc[-1]['MEMS7_ALL']), textcoords = 'offset points', xytext = (5, -3), color = '#B85450', fontweight = 'semibold', fontsize = 12, ha = 'left' )  
                 else:
-                    ax2.annotate(borough, xy = (subset.iloc[-1]['year'], subset.iloc[-1]['MEMS7_ALL']), textcoords = 'offset points', xytext = (12, -2.5), color = '#B85450', fontweight = 'semibold', fontsize = 9)     
-                ax2.set_aspect(0.022) 
+                    ax2.annotate(borough, xy = (subset.iloc[-1]['year'], subset.iloc[-1]['MEMS7_ALL']), textcoords = 'offset points', xytext = (5, 0), color = '#B85450', fontweight = 'semibold', fontsize = 12, ha = 'left' )     
+                ax2.set_xlim(2017, 2024)
+                ax2.spines['top'].set_visible(False)
+                ax2.spines['right'].set_visible(False)
 
             # Fluctuating
             else:
-                ax3.plot(subset['year'], subset['MEMS7_ALL'], alpha = 0.55, color = '#FFCC99', zorder = 2, linewidth = 1.5, marker='o', markersize = 4)
+                ax3.plot(subset['year'], subset['MEMS7_ALL'], alpha = 0.55, color = '#777777', zorder = 2, linewidth = 1.5, marker='o', markersize = 4)
                 ax3.plot(national['year'], national['MEMS7_ALL'], linestyle = 'dashed', color = 'black', linewidth = 3, zorder = 5)
                 ax3.set_xticks(national['year'])
                 ax3.set_xticklabels(national['year'], rotation = 45, ha = 'right')
-                ax3.set_aspect(0.022) 
-                ax3.set_title('Fluctuating', weight = 'bold', fontsize = 15, color = "#EABA8A") 
+                ax3.set_title('Fluctuating', weight = 'bold', fontsize = 15, color = "#777777")
+                ax3.set_xlim(2017, 2024)
+                ax3.spines['top'].set_visible(False)
+                ax3.spines['right'].set_visible(False)
+
         plt.savefig('src/stream_1//figures/National Comparison', bbox_inches = 'tight', dpi = 400)
         plt.show()  
 
@@ -132,8 +148,8 @@ if __name__ == "__main__":
     borough_df = borough_df[borough_df['year'] != 2016]
     national = national[national['year'] != 2016]
     analysis = AnalysisPlots()
-    analysis.plot_modality_graph(modal_df)
-    analysis.plot_quarterly(quarterly_df, ADJUST_COVID = ADJUST_COVID)
+    # analysis.plot_modality_graph(modal_df)
+    # analysis.plot_quarterly(quarterly_df, ADJUST_COVID = ADJUST_COVID)
     analysis.plot_national_comparison(borough_df, national)
-    analysis.plot_monthly(monthly_df, ADJUST_COVID = ADJUST_COVID)
-    analysis.plot_sport_distribution(distribution_df)
+    # analysis.plot_monthly(monthly_df, ADJUST_COVID = ADJUST_COVID)
+    # analysis.plot_sport_distribution(distribution_df)
