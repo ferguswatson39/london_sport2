@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import pickle
 from lightgbm import LGBMClassifier
+from sklearn.ensemble import RandomForestClassifier
 from src.loading_data.data_catalogue import DataCatalogue
 
 
@@ -15,6 +16,7 @@ def create_save_heatplot(breakdowns : pd.DataFrame, heatplot_name : str):
     heatplot_path = ROOT / 'figures' / 'perturbation'
 
     heat = breakdowns.drop(columns = 'labels').T
+    heat.columns = heat.columns + 1
     mask = heat.abs() < 0.02
     plt.figure(figsize=(15, 10))
     sns.heatmap(
@@ -102,13 +104,12 @@ def create_perturbations(X_test : pd.DataFrame, Y_test : pd.DataFrame, model : o
     
     return output_df
 
-def check_perturbed_counts(dc = DataCatalogue()):
+def check_perturbed_counts(df_path : Path, dc = DataCatalogue()):
 
-    df_path = ROOT / 'results' / 'perturbation' / '103_LightGBMClassifier_perturbation_results_FINAL.csv'
     df = pd.read_csv(df_path)
 
     save_path = ROOT / 'results' / 'perturbation'
-    file_name = 'perturbation_counts.csv'
+    file_name = f'{df_path.stem}_perturbation_counts.csv'
 
     diff_cols = [var for var in df.columns if 'DIFFERENCE' in var]
     results = []
@@ -143,7 +144,8 @@ if __name__ == '__main__':
     X_test = pd.read_csv(ROOT / 'data' / 'perturbation' / 'X_test.csv', index_col=0)
     Y_test = pd.read_csv(ROOT / 'data' / 'perturbation' / 'Y_test.csv', index_col=0)
     test_set_clusters = pd.read_csv(ROOT / 'data' / 'perturbation' / 'test_set_clusters.csv', index_col=0)
-    model_path = ROOT / 'src' / 'perturbation' / 'models' / 'saved_models' / 'classifiers' / '103_LightGBMClassifier.sav'
+    model_path = ROOT / 'models' / 'perturbation' / 'trained_models' / '103_LightGBMClassifier.sav'
+
 
     for col in ['Gend3', 'Disab2_POP', 'Eth7', 'WorkStat8', 'HHLiv9']:
         X_test[col] = X_test[col].astype(int).astype('category')
@@ -172,6 +174,8 @@ if __name__ == '__main__':
     create_save_heatplot(breakdowns, heatplot_name)
 
     print('Checking perturbation counts...')
-    check_perturbed_counts()
+
+    results_path = ROOT / 'results' /'perturbation' / df_name
+    check_perturbed_counts(results_path)
 
     print(f'Finished perturbaiton process for {model.__class__.__name__}')
