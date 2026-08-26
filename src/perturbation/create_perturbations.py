@@ -109,7 +109,7 @@ def check_perturbed_counts(df_path : Path, dc = DataCatalogue()):
     df = pd.read_csv(df_path)
 
     save_path = ROOT / 'results' / 'perturbation'
-    file_name = 'perturbation_counts.csv'
+    file_name = f'{df_path.stem}_perturbation_counts.csv'
 
     diff_cols = [var for var in df.columns if 'DIFFERENCE' in var]
     results = []
