@@ -27,7 +27,7 @@ class RFClassifier:
         self.confusion = None
         self.study = None
         self.name = self.__class__.__name__
-        self.save_path = ROOT / 'src' / 'perturbation' / 'models' / 'saved_models' 
+        self.save_path = ROOT / 'models' / 'perturbation' / 'trained_models'
         self.scaler = None
 
     def objective(self, trial):
@@ -84,7 +84,7 @@ class RFClassifier:
     
     def save_class(self, run_num : int):
         filename = f'{run_num}_{self.name}.sav'
-        path = ROOT / 'src' / 'perturbation' / 'models' / 'saved_models' / 'classifiers' / filename
+        path = self.save_path / filename
         with open(path, 'wb') as file:
             pickle.dump(self, file)
         print(f'{self.name} saved to: {path}')

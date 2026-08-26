@@ -7,9 +7,9 @@ from src.loading_data.data_catalogue import DataCatalogue
 from src.loading_data.load_data import get_clean_2022
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
-from perturbation.models.classifiers.lgbm_classifier import LightGBMClassifier
-from perturbation.models.classifiers.rf_classifier import RFClassifier
-from perturbation.models.classifiers.xgboost_classifier import XGBoostClassifier
+from models.perturbation.lgbm_classifier import LightGBMClassifier
+from models.perturbation.rf_classifier import RFClassifier
+from models.perturbation.xgboost_classifier import XGBoostClassifier
 
 run_cases = {
     101 : {'model' : XGBoostClassifier(),'target' : 'active'},

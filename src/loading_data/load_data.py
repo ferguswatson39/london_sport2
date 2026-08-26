@@ -170,10 +170,12 @@ def get_2022_data() -> pd.DataFrame:
 def get_master_2022_data():
     dc = DataCatalogue()
     core_vars = dc.get_perturbation_core()
+    core_vars = [var for var in core_vars if var not in ['VolAny']]
     all = core_vars + ['serial', 'year', 'LCA_Class', 'MEMS7_ALL']
 
     print(all)
-    path = ROOT / 'data' / 'master_data' / '2016_to_2023_master_clustering_data_set.csv'
+    path = ROOT / 'data' / 'master_data' / '2016_to_2023_clustering_output_data.csv'
+
     df = pd.read_csv(path, usecols = all)
     missing = [var for var in all if var not in df.columns]
     if missing:
@@ -182,7 +184,7 @@ def get_master_2022_data():
     df = df[df['year'] == '2022/23']
     df = df[df['LCA_Class'].notna()]
     df['active'] = df['MEMS7_ALL'] >= 150
-    df['NSSEC5'] = df['NSSEC5'].fillna(5)
+    # df['NSSEC5'] = df['NSSEC5'].fillna(5)
     # df['MEMS7_ALL'] = df['MEMS7_ALL'].clip(upper=6720)
     #active_groupings = [df['MEMS7_ALL'] == 0, (df['MEMS7_ALL'] > 0) & (df['MEMS7_ALL'] < 150), df['MEMS7_ALL'] >= 150]
     #values = [0.0, 1.0, 2.0]
