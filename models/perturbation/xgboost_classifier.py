@@ -5,7 +5,9 @@ import optuna
 from optuna.samplers import TPESampler
 from sklearn.model_selection import StratifiedKFold
 from pathlib import Path
-ROOT = Path(__file__).resolve().parent.parent.parent.parent.parent
+
+ROOT = Path(__file__).resolve().parent.parent.parent
+print(ROOT)
 import pickle
 
 class XGBoostClassifier:
