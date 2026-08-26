@@ -1,5 +1,6 @@
 import pandas as pd
 import sys
+import pickle
 from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent.parent
 sys.path.append(str(ROOT))
@@ -115,3 +116,28 @@ if __name__ == '__main__':
         model.get_preds(X_test, Y_test, save_metric = True)
 
         model.save_class(run_num)
+
+    print('Finished fitting models')
+    print('Verifying model metrics...')
+
+    model_folder = ROOT / 'models' / 'perturbation' / 'trained_models'
+    file_paths = [(file, file.name) for file in model_folder.iterdir()]
+    best_f1 = float('-inf')
+    best_model = None
+    for path, file_name in file_paths:
+        with open(path, 'rb') as file:
+            model = pickle.load(file)
+            if best_f1 < model.get_f1():
+                best_f1 = model.get_f1()
+                best_model = file_name
+            print('________________________________')
+            print(file_name)
+            print(model.get_confusion())
+            print(f'F1 Score: {model.get_f1()}')
+            print(f'ROC AUC Score: {model.get_roc_auc()}')
+            print(f'Accuracy: {model.get_accuracy()}')
+            print(model.hyperparams)
+            print(model.get_model().get_params())
+    print('__________________________')
+    print('__________________________')
+    print(f'BEST Model:\n>>>> Name: {best_model}\n>>>> F1: {best_f1}')
