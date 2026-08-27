@@ -3,18 +3,26 @@ import numpy as np
 import pandas as pd
 import sys
 from pathlib import Path
-ROOT = Path(__file__).resolve().parent.parent.parent
+ROOT = Path(__file__).resolve().parent.parent.parent.parent
 sys.path.append(str(ROOT))
 from tqdm import tqdm
 import pickle
+
+"""
+File contains the HDBSCAN classes used to generate the HDBSCAN cluster labels
+Such labels are used for both sports profiling and UMAP-HDBSCAN clustering
+"""
 
 
 class GenerateHDBSCAN:
     """
     HDBSCAN Class.
-    Uses a grid-search approach to find optimal hdbcv based off of dbcv
-    Returns clusterer object with optimal hyperparams
-    For labels:     clusterer.labels_
+    Uses a grid-search approach, optimising for DBCV
+    Used for sport clustering analysis
+
+    Class has been adapted from: 
+    Frenzel, C. (2025) Tuning with HDBSCAN, Towards Data Science. 
+    Available at: https://towardsdatascience.com/tuning-with-hdbscan-149865ac2970/ (Accessed: 27 August 2026). 
     """
     def __init__(self, emb : np.ndarray):
         self.emb = emb
@@ -32,7 +40,7 @@ class GenerateHDBSCAN:
         return self.get_clusterer()
 
     def hdb_dbcv(
-        ## Adapted From: https://towardsdatascience.com/tuning-with-hdbscan-149865ac2970/
+
         self,
         min_samples: list[int] = [5, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100],
         min_cluster_size : list[int] = [50, 100, 150, 200, 250, 300, 350, 400, 450, 500],
@@ -87,7 +95,7 @@ class GenerateHDBSCAN:
         return self.get_clusterer()
 
     def hdb_dbcv_narrowed(
-        ## Adapted From: https://towardsdatascience.com/tuning-with-hdbscan-149865ac2970/
+
         self,
         min_samples: list[int] = [20, 30, 40, 50, 60, 70, 80, 90, 100],
         min_cluster_size : list[int] = [250, 300, 350, 400, 450, 500],
@@ -136,8 +144,12 @@ class GenerateHDBSCAN:
 class GenerateHDBSCAN2:
     """
     HDBSCAN2 Class.
+    Similar to GenerateHBDSCAN2 however the .fit method takes emb as an input compared to __init__()
+    Used for UMAP embedding clustering.
 
-    Uses grid search approach, using dbcv for density based optimisation for hyperparams
+    Class has been adapted from: 
+    Frenzel, C. (2025) Tuning with HDBSCAN, Towards Data Science. 
+    Available at: https://towardsdatascience.com/tuning-with-hdbscan-149865ac2970/ (Accessed: 27 August 2026). 
 
     """
     def __init__(self):
@@ -166,7 +178,6 @@ class GenerateHDBSCAN2:
         # self.save_class()
 
     def tune_hyperparams(self, emb : np.array):
-        ## Adapted From: https://towardsdatascience.com/tuning-with-hdbscan-149865ac2970/
         frames = []
         best = {
             'min_samples': 0,

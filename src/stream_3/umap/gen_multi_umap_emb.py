@@ -1,15 +1,19 @@
 import umap
-#import umap.plot
 import numpy as np
 import pandas as pd
 import sys
 from pathlib import Path
-ROOT = Path(__file__).resolve().parent.parent.parent
+ROOT = Path(__file__).resolve().parent.parent.parent.parent
 sys.path.append(str(ROOT))
 from tqdm import tqdm
 from src.loading_data.data_catalogue import DataCatalogue
 from src.loading_data.load_data import get_master_clustering_input
-from src.stream_3.gen_umap_emb import GenerateUmapEmb2
+from src.stream_3.umap.gen_umap_emb import GenerateUmapEmb2
+
+"""
+Pipeline used to generate the 25 UMAP embeddings for the UMAP-HDBSCAN clustering pipeline. 
+Searches through n_neighbors search space logarithmically using .fit_fuzzy_umap() create and saves embedding
+"""
 
 if __name__ == '__main__':
     dc = DataCatalogue()
@@ -19,7 +23,7 @@ if __name__ == '__main__':
     clustering_categoricals = dc.get_clustering_categoricals()
     clustering_continuous = dc.get_clustering_continuous()
 
-    categorical_neighbors, continuous_neighbors = np.unique(np.round(np.logspace(np.log10(50), np.log10(500), 5)).astype(int)), np.unique(np.round(np.logspace(np.log10(50), np.log10(500), 5)).astype(int))
+    categorical_neighbors, continuous_neighbors = np.round(np.logspace(np.log10(50), np.log10(500), 5)).astype(int) , np.round(np.logspace(np.log10(50), np.log10(500), 5)).astype(int)
     i = 0
     for cat_neighbor in tqdm(categorical_neighbors):
         for contin_neighbor in continuous_neighbors:

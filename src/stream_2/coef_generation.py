@@ -10,8 +10,12 @@ import statsmodels.api as sm
 from sklearn.preprocessing import StandardScaler
 from sklearn.preprocessing import OneHotEncoder
 from src.loading_data.data_catalogue import DataCatalogue
-from models.stream_2.bayesian_ridge import Bayesian
-from models.stream_2.exponential_smoothing import ExponentialSmoothingModels
+
+"""
+File contians the CoefGeneration class which was used as part of EDA.
+Class has multiple methods enabling it to fit OLS or Logistic model.
+"""
+
 
 LABEL_MAP = {'WorkStat8_2' : 'Work Status: Unemployed', 'WorkStat8_4' : 'Work Status: Domestic',
              'IMD10_9' : 'Deprivation: 9 (Low)', 'IMD10_8' : 'Deprivation: 8', 'IMD10_7' : 'Deprivation: 7',
@@ -230,10 +234,11 @@ class CoefGeneration:
             print(f"{self.model_catalogue[self.model]['forecast_plot_path'] / f'{self.model}_{model}_forecasts.png'}")
         print(f'Forecast plots for {models} finished.')
 
-df = get_coefficient_data()
-OLS = CoefGeneration('ols', df)
-OLS.save_results(OLS.generate_coefs())
-LOGISTIC = CoefGeneration('logistic', df)
-LOGISTIC.save_results(LOGISTIC.generate_coefs())
-OLS.generate_forest_plot()
-LOGISTIC.generate_forest_plot()
+if __name__ == '__main__':
+    df = get_coefficient_data()
+    OLS = CoefGeneration('ols', df)
+    OLS.save_results(OLS.generate_coefs())
+    LOGISTIC = CoefGeneration('logistic', df)
+    LOGISTIC.save_results(LOGISTIC.generate_coefs())
+    OLS.generate_forest_plot()
+    LOGISTIC.generate_forest_plot()

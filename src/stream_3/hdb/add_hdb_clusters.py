@@ -5,8 +5,13 @@ import pandas as pd
 ROOT = Path(__file__).resolve().parent.parent.parent.parent
 sys.path.append(str(ROOT))
 
+"""
+File finds and adds UMAP-HDBSCAN cluster labels to 2016_to_2023_clustering_output_data.csv
+EMB_UMAP_conn_281_catn_50_conm_euclidean_catm_jaccard_plus labels were chosen due to their highest DBCV across the 25 embeddings
+"""
+
 cluster_output_path = ROOT / 'data' / 'master_data' / '2016_to_2023_clustering_output_data.csv'
-hdb_dict_path = ROOT / 'src' / 'stream_3'/ 'hdb_clusters' / 'hdb_cluster_dict.pkl'
+hdb_dict_path = ROOT / 'results' / 'stream_3'/ 'hdb_clusters' / 'hdb_cluster_dict.pkl'
 
 print('Retrieving hdbscan labels...')
 
