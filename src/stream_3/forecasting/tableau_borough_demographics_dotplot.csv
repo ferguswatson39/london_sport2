@@ -1,0 +1,166 @@
+LA Name,Variable,Value,London_Mean
+Barking and Dagenham,% Active,58.18,70.36
+Barking and Dagenham,Deprivation,92.99,64.03
+Barking and Dagenham,% Volunteering,15.87,17.65
+Barking and Dagenham,Community Trust,46.32,57.09
+Barking and Dagenham,% Ethnic Minority,23.42,14.5
+Barnet,% Active,69.15,70.36
+Barnet,Deprivation,54.71,64.03
+Barnet,% Volunteering,18.09,17.65
+Barnet,Community Trust,57.75,57.09
+Barnet,% Ethnic Minority,12.21,14.5
+Bexley,% Active,66.36,70.36
+Bexley,Deprivation,51.39,64.03
+Bexley,% Volunteering,18.62,17.65
+Bexley,Community Trust,55.09,57.09
+Bexley,% Ethnic Minority,11.45,14.5
+Brent,% Active,63.46,70.36
+Brent,Deprivation,76.79,64.03
+Brent,% Volunteering,17.6,17.65
+Brent,Community Trust,53.84,57.09
+Brent,% Ethnic Minority,20.38,14.5
+Bromley,% Active,73.43,70.36
+Bromley,Deprivation,41.01,64.03
+Bromley,% Volunteering,23.31,17.65
+Bromley,Community Trust,60.14,57.09
+Bromley,% Ethnic Minority,7.94,14.5
+Camden,% Active,74.81,70.36
+Camden,Deprivation,66.37,64.03
+Camden,% Volunteering,14.14,17.65
+Camden,Community Trust,58.05,57.09
+Camden,% Ethnic Minority,15.68,14.5
+City of London,% Active,58.97,70.36
+City of London,Deprivation,40.41,64.03
+City of London,% Volunteering,10.76,17.65
+City of London,Community Trust,67.72,57.09
+City of London,% Ethnic Minority,10.28,14.5
+Croydon,% Active,69.35,70.36
+Croydon,Deprivation,64.23,64.03
+Croydon,% Volunteering,20.01,17.65
+Croydon,Community Trust,55.18,57.09
+Croydon,% Ethnic Minority,17.87,14.5
+Ealing,% Active,68.93,70.36
+Ealing,Deprivation,66.12,64.03
+Ealing,% Volunteering,19.35,17.65
+Ealing,Community Trust,56.63,57.09
+Ealing,% Ethnic Minority,14.96,14.5
+Enfield,% Active,66.69,70.36
+Enfield,Deprivation,66.16,64.03
+Enfield,% Volunteering,19.16,17.65
+Enfield,Community Trust,53.66,57.09
+Enfield,% Ethnic Minority,18.55,14.5
+Greenwich,% Active,68.94,70.36
+Greenwich,Deprivation,72.68,64.03
+Greenwich,% Volunteering,16.48,17.65
+Greenwich,Community Trust,55.3,57.09
+Greenwich,% Ethnic Minority,19.22,14.5
+Hackney,% Active,76.03,70.36
+Hackney,Deprivation,90.52,64.03
+Hackney,% Volunteering,14.07,17.65
+Hackney,Community Trust,57.95,57.09
+Hackney,% Ethnic Minority,18.15,14.5
+Hammersmith and Fulham,% Active,75.33,70.36
+Hammersmith and Fulham,Deprivation,69.99,64.03
+Hammersmith and Fulham,% Volunteering,17.63,17.65
+Hammersmith and Fulham,Community Trust,57.15,57.09
+Hammersmith and Fulham,% Ethnic Minority,13.79,14.5
+Haringey,% Active,72.4,70.36
+Haringey,Deprivation,72.42,64.03
+Haringey,% Volunteering,17.17,17.65
+Haringey,Community Trust,57.6,57.09
+Haringey,% Ethnic Minority,18.1,14.5
+Harrow,% Active,63.26,70.36
+Harrow,Deprivation,48.81,64.03
+Harrow,% Volunteering,17.23,17.65
+Harrow,Community Trust,56.72,57.09
+Harrow,% Ethnic Minority,10.07,14.5
+Havering,% Active,66.4,70.36
+Havering,Deprivation,52.57,64.03
+Havering,% Volunteering,18.77,17.65
+Havering,Community Trust,56.07,57.09
+Havering,% Ethnic Minority,8.27,14.5
+Hillingdon,% Active,65.92,70.36
+Hillingdon,Deprivation,55.15,64.03
+Hillingdon,% Volunteering,19.4,17.65
+Hillingdon,Community Trust,55.81,57.09
+Hillingdon,% Ethnic Minority,10.7,14.5
+Hounslow,% Active,65.02,70.36
+Hounslow,Deprivation,71.04,64.03
+Hounslow,% Volunteering,18.09,17.65
+Hounslow,Community Trust,56.02,57.09
+Hounslow,% Ethnic Minority,11.46,14.5
+Islington,% Active,75.87,70.36
+Islington,Deprivation,82.93,64.03
+Islington,% Volunteering,14.08,17.65
+Islington,Community Trust,57.71,57.09
+Islington,% Ethnic Minority,16.29,14.5
+Kensington and Chelsea,% Active,72.72,70.36
+Kensington and Chelsea,Deprivation,64.02,64.03
+Kensington and Chelsea,% Volunteering,15.9,17.65
+Kensington and Chelsea,Community Trust,60.2,57.09
+Kensington and Chelsea,% Ethnic Minority,15.31,14.5
+Kingston,% Active,73.87,70.36
+Kingston,Deprivation,37.82,64.03
+Kingston,% Volunteering,22.08,17.65
+Kingston,Community Trust,63.08,57.09
+Kingston,% Ethnic Minority,7.78,14.5
+Lambeth,% Active,76.94,70.36
+Lambeth,Deprivation,80.8,64.03
+Lambeth,% Volunteering,19.37,17.65
+Lambeth,Community Trust,56.82,57.09
+Lambeth,% Ethnic Minority,16.08,14.5
+Lewisham,% Active,74.16,70.36
+Lewisham,Deprivation,80.15,64.03
+Lewisham,% Volunteering,15.01,17.65
+Lewisham,Community Trust,57.44,57.09
+Lewisham,% Ethnic Minority,20.58,14.5
+Merton,% Active,72.87,70.36
+Merton,Deprivation,42.56,64.03
+Merton,% Volunteering,19.34,17.65
+Merton,Community Trust,60.14,57.09
+Merton,% Ethnic Minority,11.75,14.5
+Newham,% Active,63.27,70.36
+Newham,Deprivation,90.07,64.03
+Newham,% Volunteering,15.82,17.65
+Newham,Community Trust,47.6,57.09
+Newham,% Ethnic Minority,21.75,14.5
+Redbridge,% Active,63.83,70.36
+Redbridge,Deprivation,59.84,64.03
+Redbridge,% Volunteering,18.76,17.65
+Redbridge,Community Trust,54.4,57.09
+Redbridge,% Ethnic Minority,12.07,14.5
+Richmond,% Active,77.68,70.36
+Richmond,Deprivation,31.23,64.03
+Richmond,% Volunteering,23.27,17.65
+Richmond,Community Trust,67.32,57.09
+Richmond,% Ethnic Minority,5.57,14.5
+Southwark,% Active,76.02,70.36
+Southwark,Deprivation,76.83,64.03
+Southwark,% Volunteering,15.91,17.65
+Southwark,Community Trust,57.08,57.09
+Southwark,% Ethnic Minority,19.91,14.5
+Sutton,% Active,69.82,70.36
+Sutton,Deprivation,43.72,64.03
+Sutton,% Volunteering,19.69,17.65
+Sutton,Community Trust,59.07,57.09
+Sutton,% Ethnic Minority,8.56,14.5
+Tower Hamlets,% Active,71.48,70.36
+Tower Hamlets,Deprivation,79.7,64.03
+Tower Hamlets,% Volunteering,13.98,17.65
+Tower Hamlets,Community Trust,52.78,57.09
+Tower Hamlets,% Ethnic Minority,15.28,14.5
+Waltham Forest,% Active,71.14,70.36
+Waltham Forest,Deprivation,79.97,64.03
+Waltham Forest,% Volunteering,16.51,17.65
+Waltham Forest,Community Trust,56.88,57.09
+Waltham Forest,% Ethnic Minority,15.17,14.5
+Wandsworth,% Active,79.21,70.36
+Wandsworth,Deprivation,55.47,64.03
+Wandsworth,% Volunteering,20.09,17.65
+Wandsworth,Community Trust,61.91,57.09
+Wandsworth,% Ethnic Minority,10.37,14.5
+Westminster,% Active,71.59,70.36
+Westminster,Deprivation,68.69,64.03
+Westminster,% Volunteering,14.16,17.65
+Westminster,Community Trust,58.36,57.09
+Westminster,% Ethnic Minority,16.49,14.5
