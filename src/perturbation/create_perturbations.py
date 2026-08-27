@@ -11,6 +11,12 @@ from lightgbm import LGBMClassifier
 from sklearn.ensemble import RandomForestClassifier
 from src.loading_data.data_catalogue import DataCatalogue
 
+"""
+File contains the pipeline used to take a fitted classifier and implement sensitivity analysis.
+
+All sensitivity analysis results are saved in \results\perturbation
+Heatplots are saved in \figures\perturbation
+"""
 
 def create_save_heatplot(breakdowns : pd.DataFrame, heatplot_name : str):
     heatplot_path = ROOT / 'figures' / 'perturbation'

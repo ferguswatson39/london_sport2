@@ -9,7 +9,15 @@ ROOT = Path(__file__).resolve().parent.parent.parent
 import pickle
 
 class LightGBMClassifier:
-    # adapted from: https://medium.com/@sarahzouinina/a-deep-dive-into-lightgbm-how-to-choose-and-tune-parameters-7c584945842e
+
+    """
+    LightGBM Classifier Class
+    
+    Optuna Hyperparameter search adapted from: 
+        Zouinina, S. (2024) A deep dive into LIGHTGBM: How to choose and tune parameters, Medium
+        Available at: https://medium.com/@sarahzouinina/a-deep-dive-into-lightgbm-how-to-choose-and-tune-parameters-7c584945842e (Accessed: 27 August 2026). 
+    """
+
     def __init__(self):
         self.hyperparams = None
         self.model = None

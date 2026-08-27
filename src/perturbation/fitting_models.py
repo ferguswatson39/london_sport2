@@ -12,6 +12,12 @@ from models.perturbation.lgbm_classifier import LightGBMClassifier
 from models.perturbation.rf_classifier import RFClassifier
 from models.perturbation.xgboost_classifier import XGBoostClassifier
 
+"""
+File defines the classifier fitting pipeline across XGBOOST, LIGHTGBM and RANDOMFOREST models.
+
+Conducts model comparison at the end of the pipeline to determine which model had the best results.
+"""
+
 run_cases = {
     101 : {'model' : XGBoostClassifier(),'target' : 'active'},
     102 : {'model' : RFClassifier(),'target' : 'active'},

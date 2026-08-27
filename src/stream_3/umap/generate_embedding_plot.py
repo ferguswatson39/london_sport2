@@ -1,13 +1,19 @@
 from pathlib import Path
 import sys 
-ROOT = Path(__file__).resolve().parent.parent.parent
+ROOT = Path(__file__).resolve().parent.parent.parent.parent
 sys.path.append(str(ROOT))
 import matplotlib.pyplot as plt
 import numpy as np
 from tqdm import tqdm
 import pickle
 from natsort import natsorted
-from src.stream_3.gen_hdb_clus import GenerateHDBSCAN2
+from src.stream_3.hdb.gen_hdb_clus import GenerateHDBSCAN2
+
+"""
+Pipeline used to generate UMAP-HDBSCAN embedding plot. 
+If no cluster dict can be found one will be made. 
+
+"""
 
 def retrieve_sort_emb_paths():
     embedding_folder = ROOT / 'src' / 'stream_3' / 'embeddings' 
@@ -79,11 +85,11 @@ if __name__ == '__main__':
         axes[idx].scatter(emb[:,0], emb[:,1], s=0.05, alpha=0.1, c=labels)
         axes[idx].set_xticks([])
         axes[idx].set_yticks([])
-        axes[idx].set_title(f'n = {n_clusters} | dbcv : {dbcv:.2f}', fontweight='bold')
+        axes[idx].set_title(rf'$n = {n_clusters}$ | $\mathrm{{DBCV}} = {dbcv:.2f}$', fontweight='bold')
 
 
-    fig.supxlabel('Categorical n_neighbors: 50 to 500 (left to right)', fontsize=16, fontweight='bold', y=0.08)
-    fig.supylabel('Continuous n_neighbors: 500 to 50 (top to bottom)', fontsize=16, fontweight='bold', x=0.08)
+    fig.supxlabel('Categorical Number of Neighbours: 50 to 500 (left to right)', fontsize=16, fontweight='bold', y=0.08)
+    fig.supylabel('Ordinal Number of Neighbours: 500 to 50 (top to bottom)', fontsize=16, fontweight='bold', x=0.08)
 
     save_path = ROOT / 'figures' / 'umap' / 'full_emb_plot.png'
     fig.savefig(save_path, bbox_inches='tight', dpi=500)

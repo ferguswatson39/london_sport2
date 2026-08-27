@@ -4,21 +4,24 @@ import numpy as np
 import pandas as pd
 import sys
 from pathlib import Path
-ROOT = Path(__file__).resolve().parent.parent.parent
+ROOT = Path(__file__).resolve().parent.parent.parent.parent
 import pickle
 sys.path.append(str(ROOT))
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler
 from sklearn.preprocessing import OneHotEncoder
 from src.loading_data.data_catalogue import DataCatalogue
-from src.stream_3.gower_distance import get_gower
-
 
 class GenerateUmapEmb:
     """
     Generates n dimensional umap embedding
-    Splits data into continuous and categorical and applied separate umap models using euclidean and dice distance respectively
-    Then performs a fuzzy set intersection which combined the two fuzzy graphs then re-embeds using the combined graph
+    This UMAP class was used for the sports clustering pipeline
+    
+    Adapted from: 
+        McInnes, L. (2018):
+        Combining multiple UMAP models - umap 0.5.8 documentation. 
+        Available at: https://umap-learn.readthedocs.io/en/latest/composing_models.html (Accessed: 27 August 2026). 
+
     """
     def __init__(self, df: pd.DataFrame):
         self.df = df
@@ -73,14 +76,6 @@ class GenerateUmapEmb:
         print('UMAP fit complete!')
         return self.get_intersection_umap()
 
-    def fit_umap_using_gower(self, num_dimensions : int = 2):
-        catogs = ['Eth7', 'Gend3', 'HHLiv12', 'WorkStat10']
-        contins = ['Age9', 'Educ6', 'IMD10', 'NSSEC5', 'Motiva_POP', 'motivd_POP', 'happy', 'lifesat', 'lone', 'worthw', 'comm1', 'inclus_a']
-        distances = get_gower(self.df[catogs + contins], catogs)
-        emb = umap.UMAP(min_dist = 0.1, n_components = num_dimensions, n_neighbors = 25, random_state = 42).fit(distances)
-        self.gower_umap = emb
-        return self.get_gower_umap()
-
     def fit_umap_using_euclidean(self, num_dimensions : int = 2):
         categoricals = ['Gend3', 'Eth7', 'Disab2_POP', 'WorkStat8', 'HHLiv9']
         contins = ['Age9', 'Educ6', 'NSSEC5', 'IMD10', 'Child4', 'motivd_POP', 'Motiva_POP']
@@ -92,7 +87,6 @@ class GenerateUmapEmb:
         self.euclidean_umap = umap.UMAP(min_dist=0.1, n_components = num_dimensions,n_neighbors = 20, metric='euclidean').fit(X_scaled)
         return self.get_euclidean_umap()
 
-    
     def fit_umap_sports(self, metric : str = 'jaccard', num_neighbours : int = 25, num_dimensions : int = 2):
         self.sports_umap = umap.UMAP(min_dist = 0.1, n_components = num_dimensions, n_neighbors = num_neighbours, random_state = 42, metric = metric, init = 'random').fit(self.df.values)
         return self.sports_umap
@@ -118,9 +112,16 @@ class GenerateUmapEmb:
 class GenerateUmapEmb2:
     """
     Generates n dimensional umap embedding
-    Splits data into continuous and categorical and applied separate umap models using euclidean and dice distance respectively
-    Then performs a fuzzy set intersection which combined the two fuzzy graphs then re-embeds using the combined graph
+    Splits data into continuous and categorical and applied separate umap models using euclidean and jaccard distance respectively
+    Then performs a fuzzy set intersection then re-embeds using the combined graph
     
+    This UMAP class was used for generating the UMAP embedding for the UMAP-HDBSCAN clustering pipeline
+
+    Adapted from: 
+        McInnes, L. (2018):
+        Combining multiple UMAP models - umap 0.5.8 documentation. 
+        Available at: https://umap-learn.readthedocs.io/en/latest/composing_models.html (Accessed: 27 August 2026). 
+
     """
 
     def __init__(self):
@@ -138,7 +139,6 @@ class GenerateUmapEmb2:
             print('Save path found.')
         else:
             raise FileNotFoundError(f'{self.save_path} not found.')
-
 
     def scale_continuous(self, df : pd.DataFrame, avail_contins : list[str]):
         scaler = StandardScaler()

@@ -5,6 +5,10 @@ ROOT = Path(__file__).resolve().parent.parent.parent
 sys.path.append(str(ROOT))
 import plotly.express as px
 
+"""
+Generates plotly heatmap showing distribution of LCA clusters within UMAP-HDBSCAN clusters
+"""
+
 df_path = ROOT / 'data' /'master_data'/ '2016_to_2023_clustering_output_data.csv'
 save_path = ROOT / 'figures' / 'clustering' / 'cluster_comparison.png'
 
