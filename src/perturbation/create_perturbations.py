@@ -17,7 +17,7 @@ def create_save_heatplot(breakdowns : pd.DataFrame, heatplot_name : str):
 
     heat = breakdowns.drop(columns = 'labels').T
     heat.columns = heat.columns + 1
-    mask = heat.abs() < 0.02
+    mask = heat.abs() < 0.03
     plt.figure(figsize=(15, 10))
     sns.heatmap(
         heat,
@@ -137,6 +137,9 @@ def check_perturbed_counts(df_path : Path, dc = DataCatalogue()):
 
     print(f'Saved {file_name} to {save_path}')
 
+models = [
+    '101_XGBoostClassifier.sav', '102_RFClassifier.sav', '103_LightGBMClassifier.sav'
+]
 
 if __name__ == '__main__':
 

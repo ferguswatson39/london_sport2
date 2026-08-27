@@ -155,3 +155,4 @@ class DataCatalogue:
 if __name__ == '__main__':
     dc = DataCatalogue()
     print(dc.get_perturbation_processing_categoricals())
+    print(dc.get_perturbation_vars())
