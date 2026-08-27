@@ -34,16 +34,13 @@ class LogisticBoroughForecaster:
             X_forecast = (np.array(self.FORECAST_YEARS) - 2017).reshape(-1, 1)
             X_full = np.concat((X_train, X_forecast))
             Y_train = borough_df[borough_df['LA_Name'] == borough][self.target_col].values
-            MIN, MAX, HISTORICAL_RANGE = Y_train.min(), Y_train.max(), Y_train.max() - Y_train.min()
-            BUFFER = max(0.05, HISTORICAL_RANGE / 5)
-            LOWER_BOUND, UPPER_BOUND = max(0, MIN - BUFFER), min(1.0, MAX + BUFFER)
-            SCALE = UPPER_BOUND - LOWER_BOUND
-            Y_train_scaled = (Y_train - LOWER_BOUND) / SCALE
+            MIN, MAX = Y_train.min() -  np.std(Y_train), Y_train.max() + np.std(Y_train)
+            Y_train_scaled = (Y_train - MIN) / (MAX - MIN)
             Y_train_logit = logit(Y_train_scaled)
             model = LinearRegression()
             model.fit(X_train, Y_train_logit)
-            Y_forecast = (LOWER_BOUND + (expit(model.predict(X_forecast)) * SCALE)) * 100
-            Y_predicted = (LOWER_BOUND + (expit(model.predict(X_full)) * SCALE)) * 100
+            Y_forecast = (MIN + (expit(model.predict(X_forecast)) * (MAX - MIN))) * 100
+            Y_predicted = (MIN + (expit(model.predict(X_full)) * (MAX - MIN))) * 100
             Y_target = np.concat((Y_train * 100, Y_forecast))
             for year, target, predicted in zip(self.INCLUDED_YEARS + self.FORECAST_YEARS, Y_target, Y_predicted):
                 output.append({'borough': borough, 'year' : year, 'target' : target, 'predicted' : predicted})
@@ -85,16 +82,16 @@ class LogisticBoroughForecaster:
             borough_df = self.forecast_df[self.forecast_df['borough'] == borough]
             self.plot_logistic_line(ax = ax, data = borough_df)
         g.set_titles('{col_name}', weight = 'bold')
-        g.set(xlabel = 'Year', ylabel = f'% {self.target_col.upper()}')
+        g.set(xlabel = 'Year', ylabel = f'Volunteering %')
         tick_years = [2017, 2019, 2021, 2023, 2025, 2027]
         g.set(xlim = (2016.5, 2027.5), xticks = tick_years)
         if highlight: 
             last_ax = g.axes_dict[boroughs[-1]]
             last_ax.text(s = '(+28 boroughs)', x = 2029, y = 17, fontsize = 12, ha = 'left', va = 'center', color = '#999999', weight = 'bold')
         if self.ADJUST_COVID:
-            plt.savefig(f'src/stream_1/figures/Logistic Borough Forecast - {self.target_col.upper()} - Highlight {highlight} (COVID Adjusted)', bbox_inches = 'tight')
+            plt.savefig(f'src/stream_1/figures/Bounded Borough Forecast - {self.target_col.upper()} - Highlight {highlight} (COVID Adjusted)', bbox_inches = 'tight')
         else:
-            plt.savefig(f'src/stream_1/figures/Logistic Borough Forecast - {self.target_col.upper()} - Highlight {highlight}', bbox_inches = 'tight')
+            plt.savefig(f'src/stream_1/figures/Bounded Borough Forecast - {self.target_col.upper()} - Highlight {highlight}', bbox_inches = 'tight')
         plt.show()
         return g
     
@@ -110,6 +107,6 @@ if __name__ == "__main__":
         'Merton', 'Newham', 'Redbridge', 'Southwark', 
         'Sutton', 'Islington', 'Waltham Forest', 'Westminster'
     ]
-    forecaster = LogisticBoroughForecaster(BOROUGH_ORDER = borough_order, BOROUGH_HIGHLIGHT = borough_highlight)
+    forecaster = LogisticBoroughForecaster(BOROUGH_ORDER = borough_order, BOROUGH_HIGHLIGHT = borough_highlight, target_col='VolAny')
     forecaster.fit_predict()
-    forecaster.plot_forecast(highlight = False)
+    forecaster.plot_forecast(highlight = True)
