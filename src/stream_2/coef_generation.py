@@ -16,7 +16,6 @@ File contians the CoefGeneration class which was used as part of EDA.
 Class has multiple methods enabling it to fit OLS or Logistic model.
 """
 
-
 LABEL_MAP = {'WorkStat8_2' : 'Work Status: Unemployed', 'WorkStat8_4' : 'Work Status: Domestic',
              'IMD10_9' : 'Deprivation: 9 (Low)', 'IMD10_8' : 'Deprivation: 8', 'IMD10_7' : 'Deprivation: 7',
              'IMD10_6' : 'Deprivation: 6', 'IMD10_5' : 'Deprivation: 5', 'IMD10_4' : 'Deprivation: 4',
@@ -54,12 +53,6 @@ class CoefGeneration:
                 'forecast_plot_path' : Path(ROOT / 'figures' / 'ols_forecasts')}
         }
 
-        self.forecast_models = {
-            'bayesian_ridge' : Bayesian('ridge'),
-            'simple_exp' : ExponentialSmoothingModels('simple_exp'),
-            'exp' : ExponentialSmoothingModels('exp'),
-            'holt' : ExponentialSmoothingModels('holt')
-        }
         if self.model not in ['logistic', 'ols']:
             raise KeyError(f"{self.model} not in ['logistic', 'ols'] ")
     def fit_logistic(self, Y, X):
@@ -161,78 +154,7 @@ class CoefGeneration:
         fig.savefig(self.model_catalogue[self.model]['fig_save_path'], bbox_inches = 'tight')
         print(f"Coef forest plot generated successfully for {self.model}.\nFigure saved to {self.model_catalogue[self.model]['fig_save_path']}")
 
-    def generate_coef_trend_plot(self):
-        df = pd.read_csv(self.model_catalogue[self.model]['save_path'] / self.model_catalogue[self.model]['file_name'])
-        df = df[df['feature_names'] != 'const']
-        fig, axes = plt.subplots(9,6, figsize=(20,3*10), sharey=True)
-        axes = axes.flatten()
-        for idx, name in enumerate(sorted(list(df['feature_names'].unique()))):
-            trend_colour = 'red'
-            new = df[df['feature_names'] == name]
-            coef = np.polyfit(np.arange(len(new['year'])), new[self.model_catalogue[self.model]['main_var']], deg=1)
-            trend = np.poly1d(coef)
-            if coef[0] > 0:
-                trend_colour = 'green'
-            axes[idx].plot(new['year'], new[self.model_catalogue[self.model]['main_var']], marker='o')
-            axes[idx].plot(new['year'], trend(np.arange(len(new['year']))), c=trend_colour)
-            axes[idx].text(2, 2.5, name, weight='bold')
-        fig.savefig(self.model_catalogue[self.model]['fig_save_path_trends'])
-        print(f"Coef trend plots generated successfully for {self.model}.\nFigure saved to {self.model_catalogue[self.model]['fig_save_path_trends']}")
-    
-    def generate_forecasts(self):
-        df = pd.read_csv(self.model_catalogue[self.model]['save_path'] / self.model_catalogue[self.model]['file_name'])
-        df = df[df['feature_names'] != 'const']
-        names = list(sorted(df['feature_names'].unique()))
-        dfs = []
-        for n in names:
-            new = df[df['feature_names'] == n]
-            data = new[self.model_catalogue[self.model]['main_var']].values
-            for key, model in self.forecast_models.items():
-                if key == 'bayesian_ridge':
-                    preds, std = model.estimate(data, len(data))
-                    std = np.concatenate((np.zeros(len(data)), std)) 
-                else:
-                    preds = model.estimate(data, len(data))
-                    std = 0
-                full = np.concatenate((data, preds))
-                is_pred = [False if i < len(data) else True for i in range(len(full))]
-                another_df = pd.DataFrame({
-                    'feature_names' : n,
-                    'values' : full,
-                    'is_pred': is_pred,
-                    'model_name' : key,
-                    'std' : std
-                })
-                dfs.append(another_df)
-        combined = pd.concat(dfs, ignore_index=True)
-        combined.to_csv(self.model_catalogue[self.model]['save_path'] / self.model_catalogue[self.model]['forecast_file_name'], index=False)
-        print(f'Forecasts completed successfully for {self.model} coefficients')
-        print(f'Data saved to {self.model_catalogue[self.model]["save_path"] / self.model_catalogue[self.model]["forecast_file_name"]}')
-    
-    def generate_full_forecast_plots(self):
-        df = pd.read_csv(self.model_catalogue[self.model]['save_path'] / self.model_catalogue[self.model]['forecast_file_name'])
-        models = list(sorted(df['model_name'].unique()))
-        names = list(sorted(df['feature_names'].unique()))
-        for model in models:
-            df_m = df[df['model_name'] == model]
-            fig, axes = plt.subplots(9,6, figsize=(20,3*10), sharey=True)
-            axes = axes.flatten()
-            for idx, name in enumerate(names):
-                df_n = df_m[df_m['feature_names'] == name]
-                actuals = df_n[df_n['is_pred'] == False]
-                preds = df_n[df_n['is_pred'] == True]
-                colour = 'red'
-                if preds['values'].values[0] < preds['values'].values[-1]:
-                    colour = 'green'
-                actual_len = np.arange(len(actuals))
-                pred_len = np.arange(len(actuals), len(actuals) + len(preds))
-                axes[idx].plot(actual_len, actuals['values'], c='black', marker='o')
-                axes[idx].plot(pred_len, preds['values'], c=colour, marker='o')
-                axes[idx].text(2, 2.5, name, weight='bold')
-            fig.savefig(self.model_catalogue[self.model]['forecast_plot_path'] / f'{self.model}_{model}_forecasts.png')
-            print(f'Forecast plot for {model} saved successfully to:')
-            print(f"{self.model_catalogue[self.model]['forecast_plot_path'] / f'{self.model}_{model}_forecasts.png'}")
-        print(f'Forecast plots for {models} finished.')
+
 
 if __name__ == '__main__':
     df = get_coefficient_data()
