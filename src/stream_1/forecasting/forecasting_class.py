@@ -179,8 +179,8 @@ class Forecast:
             t_train = np.arange(len(y_train))
             t_forecast = np.arange(self.t_train_cutoff, self.t_train_cutoff + len(y_forecast))
 
-            train_colors = plt.cm.YlOrRd_r((y_train - vmin) / (vmax - vmin))
-            forecast_colors = plt.cm.YlOrRd_r((y_forecast - vmin) / (vmax - vmin))
+            train_colors = plt.cm.RdYlGn((y_train - vmin) / (vmax - vmin))
+            forecast_colors = plt.cm.RdYlGn((y_forecast - vmin) / (vmax - vmin)) # YlOrRd_r
 
             ax.plot(np.concatenate([t_train, t_forecast]),
                     np.concatenate([y_train, y_forecast]),
@@ -190,14 +190,14 @@ class Forecast:
             ax.scatter(t_forecast, y_forecast, c=forecast_colors, s=55, zorder=5, edgecolors='none')
             ax.plot(t_train, y_train, color='black', linewidth=1, alpha=0.6, zorder=2)
 
-            ax.set_title(row[self.group_col], fontweight='bold', fontsize=10)
-            ax.set_xlabel('Year')
+            ax.set_title(row[self.group_col], fontweight='bold', fontsize=15)
+            ax.set_xlabel('Year', fontsize=11)
             if idx == 0:
-                ax.set_ylabel('Average MEMS')
+                ax.set_ylabel('Average MEMS', fontsize=13)
             else:
                 ax.set_ylabel('')
             ax.set_xticks(self.ticks)
-            ax.set_xticklabels(self.labels, rotation=45, fontsize=7)
+            ax.set_xticklabels(self.labels, rotation=45, fontsize=13)
             ax.spines['top'].set_visible(False)
             ax.spines['right'].set_visible(False)
 
