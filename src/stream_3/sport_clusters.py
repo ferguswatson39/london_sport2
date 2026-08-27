@@ -4,8 +4,8 @@ import pandas as pd
 ROOT = Path(__file__).resolve().parent.parent.parent
 sys.path.append(str(ROOT))
 from src.loading_data.load_data import get_sports_matrix
-from src.stream_3.gen_umap_emb import GenerateUmapEmb
-from src.stream_3.gen_hdb_clus import GenerateHDBSCAN
+from stream_3.umap.gen_umap_emb import GenerateUmapEmb
+from stream_3.hdb.gen_hdb_clus import GenerateHDBSCAN
 import seaborn as sns
 import matplotlib.pyplot as plt
 import plotly.express as px

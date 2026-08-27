@@ -7,7 +7,7 @@ import numpy as np
 from tqdm import tqdm
 import pickle
 from natsort import natsorted
-from src.stream_3.gen_hdb_clus import GenerateHDBSCAN2
+from stream_3.hdb.gen_hdb_clus import GenerateHDBSCAN2
 
 def retrieve_sort_emb_paths():
     embedding_folder = ROOT / 'src' / 'stream_3' / 'embeddings' 
