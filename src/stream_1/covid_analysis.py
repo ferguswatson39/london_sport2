@@ -3,8 +3,6 @@ import pandas as pd
 import sys
 ROOT = Path(__file__).resolve().parent.parent.parent
 sys.path.append(str(ROOT))
-import seaborn as sns
-import matplotlib.pyplot as plt
 
 class Covid:
     def correct_year_and_month(self, dataframe : pd.DataFrame):
