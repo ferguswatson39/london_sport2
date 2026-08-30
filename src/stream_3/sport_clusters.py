@@ -78,7 +78,7 @@ class SportsClustering:
         plt.figure(figsize = (12, 8))
         sns.scatterplot(data = dataframe, x = 'DIM1', y = 'DIM2', hue = 'LABEL', s = 150, palette = 'tab10', alpha = 0.8)
         plt.tight_layout()
-        plt.savefig(f"figures/sports-clusters-{self.metric}", bbox_inches = 'tight', dpi = 500)
+        plt.savefig(f"figures/profiling/sports-clusters-{self.metric}", bbox_inches = 'tight', dpi = 500)
         plt.show()
 
     def calculate_lift_matrix(self, dataframe : pd.DataFrame) -> pd.DataFrame:
@@ -93,7 +93,7 @@ class SportsClustering:
         plt.tight_layout()
         plt.xticks(fontweight = 'bold')
         plt.ylabel('Sporting Cluster', fontweight = 'bold', fontsize = 12)
-        plt.savefig(f"figures/lift-matrix-{self.metric}", bbox_inches = 'tight', dpi = 500)
+        plt.savefig(f"figures/profiling/lift-matrix-{self.metric}", bbox_inches = 'tight', dpi = 500)
         plt.show()
 
     def merge_clustering_data(self) -> pd.DataFrame:
@@ -116,7 +116,7 @@ class SportsClustering:
         plt.ylabel('Sporting Preference', fontweight = 'bold', fontsize = 15)
         plt.xlabel('Population Sub-Group', fontweight = 'bold', fontsize = 15)
         plt.tight_layout()
-        plt.savefig(f"figures/co-occurence.png", bbox_inches = 'tight', dpi = 500)
+        plt.savefig(f"figures/profiling/co-occurence.png", bbox_inches = 'tight', dpi = 500)
         plt.show()
 
     def prepare_persona_proportions(self) -> pd.DataFrame:

@@ -34,7 +34,7 @@ class CoefGeneration:
                 'plot_values' : ['odds_ratios', 'pvalues', 'confidence_lower', 'confidence_upper', 'std_error'],
                 'plot_title' : 'Odds ratio of participating in >150 minutes of PA per week, 2016-2023',
                 'main_var' : 'odds_ratios', 
-                'fig_save_path' : Path(ROOT / 'figures' / 'logistic_coef_plot.png'),
+                'fig_save_path' : Path(ROOT / 'figures' / 'coefficients' / 'logistic_coef_plot.png'),
                 'fig_save_path_trends' : Path(ROOT / 'figures' / 'logistic_coef_trend_plot.png'),
                 'forecast_file_name' : 'logistic_forecast_results.csv',
                 'forecast_plot_path' : Path(ROOT / 'figures' / 'logistic_forecasts')},
@@ -47,7 +47,7 @@ class CoefGeneration:
                 'plot_values' : ['coef_as_percent', 'pvalues', 'confidence_lower', 'confidence_upper', 'std_error'],
                 'plot_title' : 'Percentage change in Activity (MEMS), per unit change in predictor (2016-2023)',
                 'main_var' : 'coef_as_percent',
-                'fig_save_path' : Path(ROOT / 'figures' / 'ols_coef_plot.png'),
+                'fig_save_path' : Path(ROOT / 'figures' / 'coefficients' /'ols_coef_plot.png'),
                 'fig_save_path_trends' : Path(ROOT / 'figures' / 'ols_coef_trend_plot.png'),
                 'forecast_file_name' : 'ols_forecast_results.csv',
                 'forecast_plot_path' : Path(ROOT / 'figures' / 'ols_forecasts')}

@@ -89,9 +89,9 @@ class LogisticBoroughForecaster:
             last_ax = g.axes_dict[boroughs[-1]]
             last_ax.text(s = '(+28 boroughs)', x = 2029, y = 17, fontsize = 12, ha = 'left', va = 'center', color = '#999999', weight = 'bold')
         if self.ADJUST_COVID:
-            plt.savefig(f'src/stream_1/figures/Bounded Borough Forecast - {self.target_col.upper()} - Highlight {highlight} (COVID Adjusted)', bbox_inches = 'tight', dpi = 400)
+            plt.savefig(f'figures/borough/Bounded Borough Forecast - {self.target_col.upper()} - Highlight {highlight} (COVID Adjusted)', bbox_inches = 'tight', dpi = 400)
         else:
-            plt.savefig(f'src/stream_1/figures/Bounded Borough Forecast - {self.target_col.upper()} - Highlight {highlight}', bbox_inches = 'tight', dpi = 400)
+            plt.savefig(f'figures/borough/Bounded Borough Forecast - {self.target_col.upper()} - Highlight {highlight}', bbox_inches = 'tight', dpi = 400)
         plt.show()
         return g
     
