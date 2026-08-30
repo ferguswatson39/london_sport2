@@ -107,9 +107,9 @@ class BayesianBoroughForecaster:
             last_ax = g.axes_dict[boroughs[-1]]
             last_ax.text(s = '(+28 boroughs)', x = 2029, y = 810, fontsize = 12, ha = 'left', va = 'center', color = '#999999', weight = 'bold')        
         if self.ADJUST_COVID:
-            plt.savefig(f'src/stream_1/figures/Bayesian Borough Forecast - {self.target_col.upper()} - Highlight {highlight} (COVID Adjusted)', bbox_inches = 'tight', dpi = 500)
+            plt.savefig(f'figures/borough/Bayesian Borough Forecast - {self.target_col.upper()} - Highlight {highlight} (COVID Adjusted)', bbox_inches = 'tight', dpi = 500)
         else:
-            plt.savefig(f'src/stream_1/figures/Bayesian Borough Forecast - {self.target_col.upper()} - Highlight {highlight}', bbox_inches = 'tight', dpi = 500)
+            plt.savefig(f'figures/borough/Bayesian Borough Forecast - {self.target_col.upper()} - Highlight {highlight}', bbox_inches = 'tight', dpi = 500)
         plt.show()
         return g
 
@@ -147,7 +147,7 @@ class BayesianBoroughForecaster:
         ax.legend(ncols = 2, loc = 'upper right', bbox_to_anchor = (0.7, 1.0))
         plt.xticks(rotation = 45, ha = 'right')
         plt.tight_layout()
-        plt.savefig(f'src/stream_1/figures/Borough Mean Average Error - {self.target_col.upper()}', bbox_inches = 'tight', dpi = 500)
+        plt.savefig(f'figures/borough/Borough Mean Average Error - {self.target_col.upper()}', bbox_inches = 'tight', dpi = 500)
         plt.show()
     
 if __name__ == "__main__":
