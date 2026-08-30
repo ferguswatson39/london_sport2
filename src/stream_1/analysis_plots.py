@@ -32,7 +32,7 @@ class AnalysisPlots:
         AnalysisPlots.annotate_modality_plot(self, ax, dataframe)
         min, max = ax.get_ylim()
         ax.set_ylim(min, max - 0.3)
-        plt.savefig('figures/cluster-geography', bbox_inches = 'tight', dpi = 500)
+        plt.savefig('figures/profiling/cluster-geography', bbox_inches = 'tight', dpi = 500)
         plt.show()
     
     def plot_sport_distribution(self, dataframe):
@@ -41,7 +41,7 @@ class AnalysisPlots:
         plt.legend('', frameon = False)
         plt.tight_layout()
         plt.ylabel(None)
-        plt.savefig('figures/specific-sports', bbox_inches = 'tight', dpi = 500)
+        plt.savefig('figures/profiling/specific-sports', bbox_inches = 'tight', dpi = 500)
         plt.show()
 
     def plot_monthly(self, dataframe, ADJUST_COVID):
@@ -54,9 +54,9 @@ class AnalysisPlots:
         ax.axvspan('2020-03-01', '2021-01-01', alpha = 0.2, color = 'skyblue')
         ax.text(x = pd.to_datetime('2020-08-01'), y = 850, s = 'COVID Lockdowns', color = 'skyblue', ha = 'center', fontweight = 'bold')
         if ADJUST_COVID: 
-            plt.savefig('src/stream_1/figures/Monthly Participation (COVID Adjusted)', bbox_inches = 'tight')
+            plt.savefig('figures/seasonality/Monthly Participation (COVID Adjusted)', bbox_inches = 'tight')
         else:
-            plt.savefig('src/stream_1/figures/Monthly Participation', bbox_inches = 'tight', dpi = 500)
+            plt.savefig('figures/seasonality/Monthly Participation', bbox_inches = 'tight', dpi = 500)
         plt.show()
     
     def plot_quarterly(self, dataframe, ADJUST_COVID):
@@ -68,9 +68,9 @@ class AnalysisPlots:
         ax.axvspan('2020-03-01', '2021-01-01', alpha = 0.2, color = 'skyblue')
         ax.text(x = pd.to_datetime('2020-08-01'), y = 900, s = 'COVID Lockdowns', color = 'skyblue', ha = 'center', fontweight = 'bold')
         if ADJUST_COVID: 
-            plt.savefig('src/stream_1/figures/Quarterly Participation (COVID Adjusted)', bbox_inches = 'tight')
+            plt.savefig('figures/seasonality/Quarterly Participation (COVID Adjusted)', bbox_inches = 'tight')
         else:
-            plt.savefig('src/stream_1/figures/Quarterly Participation', bbox_inches = 'tight')
+            plt.savefig('figures/seasonality/figures/Quarterly Participation', bbox_inches = 'tight')
         plt.show()
 
     def plot_national_comparison(self, borough_df, national):
@@ -132,7 +132,7 @@ class AnalysisPlots:
                 ax3.spines['top'].set_visible(False)
                 ax3.spines['right'].set_visible(False)
 
-        plt.savefig('src/stream_1//figures/National Comparison', bbox_inches = 'tight', dpi = 400)
+        plt.savefig('figures/borough/National Comparison', bbox_inches = 'tight', dpi = 400)
         plt.show()  
 
 
@@ -148,8 +148,8 @@ if __name__ == "__main__":
     borough_df = borough_df[borough_df['year'] != 2016]
     national = national[national['year'] != 2016]
     analysis = AnalysisPlots()
-    # analysis.plot_modality_graph(modal_df)
-    # analysis.plot_quarterly(quarterly_df, ADJUST_COVID = ADJUST_COVID)
+    analysis.plot_modality_graph(modal_df)
+    analysis.plot_quarterly(quarterly_df, ADJUST_COVID = ADJUST_COVID)
     analysis.plot_national_comparison(borough_df, national)
-    # analysis.plot_monthly(monthly_df, ADJUST_COVID = ADJUST_COVID)
-    # analysis.plot_sport_distribution(distribution_df)
+    analysis.plot_monthly(monthly_df, ADJUST_COVID = ADJUST_COVID)
+    analysis.plot_sport_distribution(distribution_df)
