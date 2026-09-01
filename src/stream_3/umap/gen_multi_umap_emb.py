@@ -8,7 +8,7 @@ sys.path.append(str(ROOT))
 from tqdm import tqdm
 from src.loading_data.data_catalogue import DataCatalogue
 from src.loading_data.load_data import get_master_clustering_input
-from src.stream_3.umap.gen_umap_emb import GenerateUmapEmb2
+from src.stream_3.umap.gen_umap_emb import GenerateUmapEmb
 
 """
 Pipeline used to generate the 25 UMAP embeddings for the UMAP-HDBSCAN clustering pipeline. 
@@ -18,7 +18,7 @@ Searches through n_neighbors search space logarithmically using .fit_fuzzy_umap(
 if __name__ == '__main__':
     dc = DataCatalogue()
     df = get_master_clustering_input()
-    emb_generator = GenerateUmapEmb2()
+    emb_generator = GenerateUmapEmb()
 
     clustering_categoricals = dc.get_clustering_categoricals()
     clustering_continuous = dc.get_clustering_continuous()

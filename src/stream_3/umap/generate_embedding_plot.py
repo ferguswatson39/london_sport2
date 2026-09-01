@@ -7,7 +7,7 @@ import numpy as np
 from tqdm import tqdm
 import pickle
 from natsort import natsorted
-from src.stream_3.hdb.gen_hdb_clus import GenerateHDBSCAN2
+from src.stream_3.hdb.gen_hdb_clus import GenerateHDBSCAN
 
 """
 Pipeline used to generate UMAP-HDBSCAN embedding plot. 
@@ -16,7 +16,7 @@ If no cluster dict can be found one will be made.
 """
 
 def retrieve_sort_emb_paths():
-    embedding_folder = ROOT / 'src' / 'stream_3' / 'embeddings' 
+    embedding_folder = ROOT / 'results' / 'stream_3' / 'umap_embeddings' 
     embedding_paths = [file for file in embedding_folder.iterdir() if file.name != 'classes']
     all_sorted = []
     for i in [500, 281, 158, 89, 50]:
@@ -31,7 +31,7 @@ def make_n_cluster_dict(sorted_paths : list[Path], cluster_dict_path : Path) -> 
     cluster_dict = {}
     for path in tqdm(sorted_paths):
         emb = np.load(path)
-        hdb = GenerateHDBSCAN2()
+        hdb = GenerateHDBSCAN()
         hdb.fit(emb)
         labels = hdb.get_model().labels_
         dbcv = hdb.get_dbcv()
@@ -58,7 +58,7 @@ if __name__ == '__main__':
 
     print('Retrieving embedding paths')
     sorted_paths = retrieve_sort_emb_paths()
-    cluster_dict_path = ROOT / 'src' / 'stream_3' / 'hdb_clusters'  / 'hdb_cluster_dict.pkl'
+    cluster_dict_path = ROOT / 'results' / 'stream_3' / 'hdb_clusters'  / 'hdb_cluster_dict.pkl'
     print('Checking if cluster dictionary has been found...')
 
     if not cluster_dict_path.exists():
@@ -69,7 +69,7 @@ if __name__ == '__main__':
 
         print('Finished cluster dictionary')
     else:
-        print('Cluster dictionary has been location')
+        print('Cluster dictionary has been located')
         print('Loading cluster dictinary...')
 
         with open(cluster_dict_path, 'rb') as file:
@@ -85,7 +85,7 @@ if __name__ == '__main__':
         axes[idx].scatter(emb[:,0], emb[:,1], s=0.05, alpha=0.1, c=labels)
         axes[idx].set_xticks([])
         axes[idx].set_yticks([])
-        axes[idx].set_title(rf'$n = {n_clusters}$ | $\mathrm{{DBCV}} = {dbcv:.2f}$', fontweight='bold')
+        axes[idx].set_title(rf'$n = {n_clusters}$    $\mathrm{{DBCV}} = {dbcv:.2f}$', fontweight='bold')
 
 
     fig.supxlabel('Categorical Number of Neighbours: 50 to 500 (left to right)', fontsize=16, fontweight='bold', y=0.08)
