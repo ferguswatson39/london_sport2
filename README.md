@@ -41,3 +41,27 @@ By leveraging machine learning techniques and data from **Sport England’s Acti
 * **Role Distribution:** Forecasted distribution of specific volunteer roles that different demographic groups (including ethnicity, disability status, gender, and age) are most likely to take on.
 
 ---
+
+## Repository Structure
+
+### **src** 
+The src folder is comprised of 4 main sections representing the 4 core areas of our analysis
+* **stream_1:** Relates to borough level analysis conducted on the 32 London boroughs. Forecasts were developed using a Bayesian Ridge forecaster and seasonal forecasts used ARIMA.
+* **stream_2:** Contains exploratory analysis relating to ols and logistic coefficient analysis for determinants of physical activity participation.
+* **stream_3:** Encompasses code relating to clustering analysis for both LCA and HDBSCAN. Additionally it also contains a UMAP class which was used to generate the embeddings for both sports clustering and the UMAP-HDBSCAN pipeline. Cluster-wise forecasting methods are also included in this directory.
+* **perturbation:** Contains two files relating to the model training pipleine for perturbation (sensitivity analysis) pipeline. Additionally contains the perturbation algorithm used to test the trained models.
+
+### **data**
+The data directory contains the data used throughout this project. In particular, the master_data subdirectory contains the data used as an input to the clustering pipeline and the output which contains the generated cluster labels. Additionally, the test data used for the sensitivity analysis is also contained within the perturbation subdirectory.
+
+### **results**
+Contains the results for the sensitivity analysis across all of the tested models. Additionally, it also contains the saved umap embeddings used for the n neighbors search, and the optimised hdbscan instance labels saved in dictionary format in hdb_cluster_dict.pkl.
+
+### **figures**
+This folder contains all figures generated throughout the project and used in the final report.
+
+### **models** 
+Saved models relating to sensitivity analysis, and the trained stepmix (LCA) instance are saved in this folder.
+
+### **notebooks**
+Comprised of exploratory or test notebooks used to develop files in the src folder.
