@@ -150,12 +150,12 @@ if __name__ == "__main__":
     sports_matrix = sc.fix_hillwalk_duplication(sports_matrix)
     sc.serials = sports_matrix['serial']
     sc.sports_matrix = sports_matrix[SPORTS_NO_OVERLAP]
-    generator = GenerateUmapEmb(sc.sports_matrix)
+    generator = GenerateUmapEmb()
+    umap = generator.fit_umap_sports(sc.sports_matrix, metric = sc.metric)
     metric = 'cosine'
-    umap = generator.fit_umap_sports(metric = sc.metric)
     coordinates = umap.embedding_
-    hdbscan = GenerateHDBSCAN(coordinates)
-    labels = hdbscan.hdb_narrowed().labels_
+    hdbscan = GenerateHDBSCAN()
+    labels = hdbscan.fit_narrowed(coordinates).labels_
     plot_df = pd.DataFrame({'DIM1': coordinates[:, 0], 'DIM2': coordinates[:, 1], 'LABEL': labels})
     sc.plot_sports_clusters(plot_df)
     sc.sports_matrix_labeled = sc.sports_matrix.copy()
