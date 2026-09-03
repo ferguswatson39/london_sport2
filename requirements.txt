@@ -13,6 +13,7 @@ scikit-learn
 statsmodels
 lightgbm
 xgboost
+pmdarima
 optuna
 
 umap-learn[plot]

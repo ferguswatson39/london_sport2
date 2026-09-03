@@ -69,7 +69,7 @@ class RFClassifier:
         preds_class = self.model.predict(X_test)
         if save_metric:
             self.f1 = f1_score(Y_test, preds_class, average='macro')
-            # Use 'ovo' to adjust for class imbalances
+
             self.roc_auc_score = roc_auc_score(Y_test, preds_prob[:, 1])
             self.accuracy = accuracy_score(Y_test, preds_class)
             self.confusion = confusion_matrix(Y_test, preds_class)

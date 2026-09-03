@@ -35,6 +35,10 @@ class XGBoostClassifier:
 
 
     def objective(self, trial):
+        """ 
+        F1 scores for both Optuna optimised models and models with the default configuration were tested.
+        Analysis revealed that the default configuration yielded a highr F1.
+        """
         model = XGBClassifier(
             #n_estimators = trial.suggest_int('n_estimators', 50, 150),
             #learning_rate = trial.suggest_float('learning_rate', 0.01, 0.3, log=True),
@@ -69,7 +73,7 @@ class XGBoostClassifier:
         preds_class = self.model.predict(X_test)
         if save_metric:
             self.f1 = f1_score(Y_test, preds_class, average='macro')
-            # Use 'ovo' to adjust for class imbalances
+
             self.roc_auc_score = roc_auc_score(Y_test, preds_prob[:, 1])
             self.accuracy = accuracy_score(Y_test, preds_class)
             self.confusion = confusion_matrix(Y_test, preds_class)
