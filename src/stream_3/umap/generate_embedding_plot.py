@@ -85,7 +85,7 @@ if __name__ == '__main__':
         axes[idx].scatter(emb[:,0], emb[:,1], s=0.05, alpha=0.1, c=labels)
         axes[idx].set_xticks([])
         axes[idx].set_yticks([])
-        axes[idx].set_title(rf'$n = {n_clusters}$    $\mathrm{{DBCV}} = {dbcv:.2f}$', fontweight='bold')
+        axes[idx].set_title(rf'$k = {n_clusters}$    $\mathrm{{DBCV}} = {dbcv:.2f}$', fontweight='bold')
 
 
     fig.supxlabel('Categorical Number of Neighbours: 50 to 500 (left to right)', fontsize=16, fontweight='bold', y=0.08)

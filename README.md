@@ -1,67 +1,62 @@
-#  London Sport: Predictive Modeling for Physical Activity & Volunteering
+#  Predictive Modeling for Physical Activity & Volunteering
 
-data - https://datacatalogue.ukdataservice.ac.uk/series/series/2000120#access-data
+## Project Overview
+This repository contains code and analytical findings in association with dissertation submitted to the University of Bristol for MSc Data Science. The project investigates physical activity (PA) inequalities, through the lens of intersectionality, employing unsupervised learning techniques to cluster heterogeneous populations. This analysis is based on Active Lives survey data from years 2016-2023, on which we will track trends to identify subpopulations and geographies in need of attention. Furthermore, we will employ one-at-a-time sensitivity analysis to identify targeted policy initiatives, based on a selection of psycho-social features.
 
-A machine learning project focused on forecasting physical activity participation, volunteering trends, and activity patterns across London's boroughs over the next decade.
+Our results indicate significant spatial and cluster-level PA inequalities suggesting the urgent need of policymakers’ attention. Though we were unable to definitively ascertain the specific number of subpopulations within London, strong evidence exists that socio-demographic and psycho-social features can yield splits. Furthermore, analysis was able to identify ‘Unemployed, Low Social Group Adults’ as a specific subpopulation requiring attention and recommend that policy initiatives target subsidised classes and flexible access.
 
----
 
-##  Project Overview
-London Sport seeks to strengthen its forecasting capabilities by building a clearer understanding of future scenarios that may affect Londoners’ participation in sport, physical activity, and volunteering. 
+## Project Objectives
 
-By leveraging machine learning techniques and data from **Sport England’s Active Lives Survey**, this project explores complex interactions between demographic, environmental, and behavioral factors to anticipate operational and behavioral patterns over the next **ten years**.
+* **Objective 1:** Examine geographical disparities in physical activity and investigate differences at borough-level throughout London.
+* **Objective 2:** Identify and characterise intersectional subpopulations using unsupervised clustering techniques, profiling these groupings.
+* **Objective 3:** Develop forecasts for physical activity at both borough and subpopulation-level, while considering uncertainty and seasonality.
+* **Objective 4:** Explore the sensitivity of distinct subpopulations to changes in different psychosocial determinants, directly informing the design of targeted interventions.
 
----
 
-##  Core Analysis Areas
+## Core Methodologies
 
-### 1. Overall Participation Forecasts
-* **Macro Trends:** Projected levels of physical activity and sport-specific club membership across London as a whole over the next ten years.
-* **Activity Types:** The likelihood of Londoners participating in specific sports and activities over the next decade.
-* **Geographic Mapping:** Granular forecasts of activity levels mapped individually for each London borough.
-* **Time Barriers:** Identification of key factors that may reduce individuals’ available free time and subsequently affect participation rates.
+* **Clustering:** We employ two separate clustering pipelines, harnessing the combination of UMAP-HDBSCAN and Latent Class Analysis (LCA). 
+* **Forecasting:** Models such as Bayesian Linear Regression, Bounded Regression and Seasonal ARIMA were used to forecast PA trends. Logistic regression analysis was also used for exploratory coefficient investigation.
+* **Sensitivity Analysis:** LightGBM, Random Forest and XGBoost classifiers were trained using Optuna for hyperparameter optimisation. Sensitivity analysis, by which a one standard deviation perturbation was applied to a selected psycho-social feature, was conducted using LightGBM.
 
-### 2. Demographic-Specific Insights
-* **Borough Intersectionality:** Projected likelihood of participation in specific activities within each individual London borough.
-* **Targeted Cohorts:** Forecasted participation levels and specific sport preferences broken down by:
-  * Age
-  * Gender
-  * Ethnicity
-  * Disability status
-  * Socio-economic groups
-* **Health Metrics:** Likelihood of physical activity participation among individuals living with general or long-term health conditions.
-
-### 3. Indoor vs. Outdoor Activity
-* **Environmental Balance:** The expected split and structural balance of indoor versus outdoor physical activity over the next ten years.
-* **Preference Dynamics:** Differences in indoor and outdoor activity environments among people with varying baseline activity levels (from highly active to least active).
-* **Regional Disparities:** Statistical relationships between inner vs. outer London locations, baseline activity levels, and socio-economic factors.
-
-### 4. Volunteering in Sport
-* **Inclusion Metrics:** The likelihood of individuals from diverse backgrounds volunteering in sport and physical activity over the next decade.
-* **Role Distribution:** Forecasted distribution of specific volunteer roles that different demographic groups (including ethnicity, disability status, gender, and age) are most likely to take on.
-
----
 
 ## Repository Structure
 
 ### **src** 
 The src folder is comprised of 4 main sections representing the 4 core areas of our analysis
-* **stream_1:** Relates to borough level analysis conducted on the 32 London boroughs. Forecasts were developed using a Bayesian Ridge forecaster and seasonal forecasts used ARIMA.
+* **stream_1:** Relates to borough level analysis conducted on the 32 London boroughs. Forecasts were developed using a Bayesian Ridge forecaster and seasonal forecasts used SARIMA.
 * **stream_2:** Contains exploratory analysis relating to ols and logistic coefficient analysis for determinants of physical activity participation.
 * **stream_3:** Encompasses code relating to clustering analysis for both LCA and HDBSCAN. Additionally it also contains a UMAP class which was used to generate the embeddings for both sports clustering and the UMAP-HDBSCAN pipeline. Cluster-wise forecasting methods are also included in this directory.
-* **perturbation:** Contains two files relating to the model training pipleine for perturbation (sensitivity analysis) pipeline. Additionally contains the perturbation algorithm used to test the trained models.
+* **perturbation:** Contains files relating to the model training pipeline for perturbation (sensitivity analysis) pipeline. Additionally contains the perturbation algorithm used to test the trained models and the models subdirectory provides the code for the classifiers.
 
 ### **data**
 The data directory contains the data used throughout this project. In particular, the master_data subdirectory contains the data used as an input to the clustering pipeline and the output which contains the generated cluster labels. Additionally, the test data used for the sensitivity analysis is also contained within the perturbation subdirectory.
 
 ### **results**
-Contains the results for the sensitivity analysis across all of the tested models. Additionally, it also contains the saved umap embeddings used for the n neighbors search, and the optimised hdbscan instance labels saved in dictionary format in hdb_cluster_dict.pkl.
+Contains the results for the sensitivity analysis across all of the tested models and LCA outputs. Additionally, it also contains the saved umap embeddings used for the n neighbors search, and the optimised hdbscan instance labels saved in dictionary format in hdb_cluster_dict.pkl.
 
 ### **figures**
 This folder contains all figures generated throughout the project and used in the final report.
 
-### **models** 
+### **trained_models** 
 Saved models relating to sensitivity analysis, and the trained stepmix (LCA) instance are saved in this folder.
 
 ### **notebooks**
 Comprised of exploratory or test notebooks used to develop files in the src folder.
+
+### **visualisation**
+An additional Tableau visualisation had been added to aid further investigation by policymakers.
+
+
+## References
+
+* Frenzel, C. (2025) Tuning with HDBSCAN, Towards Data Science. 
+    Available at: https://towardsdatascience.com/tuning-with-hdbscan-149865ac2970/ (Accessed: 27 August 2026). 
+
+* McInnes, L. (2018):
+    Combining multiple UMAP models - umap 0.5.8 documentation. 
+    Available at: https://umap-learn.readthedocs.io/en/latest/composing_models.html (Accessed: 27 August 2026). 
+
+* Zouinina, S. (2024) A deep dive into LIGHTGBM: How to choose and tune parameters, Medium
+    Available at: https://medium.com/@sarahzouinina/a-deep-dive-into-lightgbm-how-to-choose-and-tune-parameters-7c584945842e (Accessed: 27 August 2026). 
