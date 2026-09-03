@@ -8,9 +8,9 @@ from src.loading_data.data_catalogue import DataCatalogue
 from src.loading_data.load_data import get_clean_2022
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
-from models.perturbation.lgbm_classifier import LightGBMClassifier
-from models.perturbation.rf_classifier import RFClassifier
-from models.perturbation.xgboost_classifier import XGBoostClassifier
+from perturbation.models.lgbm_classifier import LightGBMClassifier
+from perturbation.models.rf_classifier import RFClassifier
+from perturbation.models.xgboost_classifier import XGBoostClassifier
 
 """
 File defines the classifier fitting pipeline across XGBOOST, LIGHTGBM and RANDOMFOREST models.
