@@ -3,7 +3,7 @@
 ## Project Overview
 This repository contains code and analytical findings in association with dissertation submitted to the University of Bristol for MSc Data Science. The project investigates physical activity (PA) inequalities, through the lens of intersectionality, employing unsupervised learning techniques to cluster heterogeneous populations. This analysis is based on Active Lives survey data from years 2016-2023, on which we will track trends to identify subpopulations and geographies in need of attention. Furthermore, we will employ one-at-a-time sensitivity analysis to identify targeted policy initiatives, based on a selection of psycho-social features.
 
-Our results indicate significant spatial and individual-level PA inequalities suggesting the urgent need of policymakers’ attention. Though we were unable to definitively ascertain the specific number of subpopulations within London, strong evidence exists that socio-demographic and psycho-social features can yield splits. Furthermore, analysis was able to identify ‘Unemployed, Low Social Group Adults’ as a specific subpopulation requiring attention and recommend that policy initiatives target subsidised classes and flexible access.
+Our results indicate significant spatial and cluster-level PA inequalities suggesting the urgent need of policymakers’ attention. Though we were unable to definitively ascertain the specific number of subpopulations within London, strong evidence exists that socio-demographic and psycho-social features can yield splits. Furthermore, analysis was able to identify ‘Unemployed, Low Social Group Adults’ as a specific subpopulation requiring attention and recommend that policy initiatives target subsidised classes and flexible access.
 
 
 ## Project Objectives
