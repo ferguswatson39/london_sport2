@@ -5,6 +5,7 @@
 !exploration/clustering/stepmix_27_class_model.pkl
 !exploration/clustering/stepmix_28_class_model.pkl
 !models/stream_3/stepmix_27_class_model.pkl
+!results/stream_3/hdb_clusters/hdb_cluster_dict.pkl
 .DS_Store
 *.pyc
 __pycache__/
