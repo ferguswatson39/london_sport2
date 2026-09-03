@@ -22,6 +22,7 @@ class AnalysisPlots:
         
     def plot_modality_graph(self, dataframe):
         plt.figure(figsize = (9, 4.5))
+        dataframe['LCA_Class'] = dataframe['LCA_Class'] + 1
         ax = sns.scatterplot(data = dataframe, x = 'LCA_Class', y = 'LA', hue = 'LA', size = 'Percentage', sizes = (75, 150), zorder = 3)
         plt.legend('', frameon = False)
         plt.ylabel('Modal Borough', fontweight = 'bold', fontsize = 12)
@@ -70,7 +71,7 @@ class AnalysisPlots:
         if ADJUST_COVID: 
             plt.savefig('figures/seasonality/Quarterly Participation (COVID Adjusted)', bbox_inches = 'tight')
         else:
-            plt.savefig('figures/seasonality/figures/Quarterly Participation', bbox_inches = 'tight')
+            plt.savefig('figures/seasonality/Quarterly Participation', bbox_inches = 'tight')
         plt.show()
 
     def plot_national_comparison(self, borough_df, national):
