@@ -14,6 +14,7 @@ By leveraging machine learning techniques and data from **Sport England’s Acti
 ---
 
 ##  Core Analysis Areas
+project objectives
 
 ### 1. Overall Participation Forecasts
 * **Macro Trends:** Projected levels of physical activity and sport-specific club membership across London as a whole over the next ten years.
