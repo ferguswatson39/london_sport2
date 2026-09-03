@@ -138,3 +138,16 @@ display_names = {
     "motivd_POP": "Extrinsic Motivation"
 
 }
+
+heatmap_order = ["Age9",
+                "Gend3",
+                "Eth7",
+                "Disab2_POP",
+                "Educ6",
+                "NSSEC5",
+                "Child4",
+                "WorkStat8",
+                "HHLiv9",
+                "IMD10",
+                "Motiva_POP",
+                "motivd_POP"]
