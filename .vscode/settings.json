@@ -1,5 +1,6 @@
 {
     "python.analysis.extraPaths": [
-        "./src/stream_1/forecasting"
+        "./src/stream_1/forecasting",
+        "./src/stream_1"
     ]
 }

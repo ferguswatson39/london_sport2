@@ -60,6 +60,8 @@ LCA_DESCRIPTIONS = {
     26.0: "Young Professionals Living with Parents"
 }
 
+LCA_INDICES = {x : x + 1 for x in range(0, 26)}
+
 class SportsClustering:
     def __init__(self, metric : str = 'cosine', target_year : str = '2022/23'):
         self.metric = metric
@@ -108,13 +110,13 @@ class SportsClustering:
         crosstab = pd.crosstab(merged_df['LABEL'], merged_df['LCA_Class'], normalize = 'index')
         baseline = merged_df['LCA_Class'].value_counts(normalize = True)
         lift_matrix = crosstab.div(baseline, axis = 1) - 1
-        lift_matrix = lift_matrix.rename(index = SPORTS_DESCRIPTIONS, columns = LCA_DESCRIPTIONS)
-        plt.figure(figsize = (20, 10))
-        sns.heatmap(data = lift_matrix, annot = True, center = 0.0, cmap = "vlag", fmt = "+.1f", vmin = -1.0,  linecolor = 'white')
-        plt.xticks(fontweight = 'bold', rotation = 45, ha = 'right')
-        plt.yticks(fontweight = 'bold')
-        plt.ylabel('Sporting Preference', fontweight = 'bold', fontsize = 15)
-        plt.xlabel('Population Sub-Group', fontweight = 'bold', fontsize = 15)
+        lift_matrix = lift_matrix.rename(index = SPORTS_DESCRIPTIONS, columns = LCA_INDICES)
+        plt.figure(figsize = (20, 9))
+        sns.heatmap(data = lift_matrix, annot = True, center = 0.0, cmap = "vlag", fmt = "+.1f", vmin = -1.0,  linecolor = 'white', annot_kws = {'size' : 12})
+        plt.xticks(fontweight = 'bold', ha = 'center', fontsize = 12)
+        plt.yticks(fontweight = 'bold', fontsize = 12)
+        plt.ylabel(None)
+        plt.xlabel('Population Sub-Group', fontweight = 'bold', fontsize = 16)
         plt.tight_layout()
         plt.savefig(f"figures/profiling/co-occurence.png", bbox_inches = 'tight', dpi = 500)
         plt.show()
@@ -157,12 +159,12 @@ if __name__ == "__main__":
     hdbscan = GenerateHDBSCAN()
     labels = hdbscan.fit_narrowed(coordinates).labels_
     plot_df = pd.DataFrame({'DIM1': coordinates[:, 0], 'DIM2': coordinates[:, 1], 'LABEL': labels})
-    sc.plot_sports_clusters(plot_df)
+    # sc.plot_sports_clusters(plot_df)
     sc.sports_matrix_labeled = sc.sports_matrix.copy()
     sc.sports_matrix_labeled['LABEL'] = labels
     lift_matrix = sc.calculate_lift_matrix(sc.sports_matrix_labeled)
-    sc.plot_lift_matrix(lift_matrix)
+    # sc.plot_lift_matrix(lift_matrix)
     merged_df = sc.merge_clustering_data()
     sc.plot_co_occurence(merged_df)
     proportions = sc.prepare_persona_proportions()
-    sc.plot_radar(proportions)
+    # sc.plot_radar(proportions)
