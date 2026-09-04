@@ -1,9 +1,9 @@
 .ipynb_checkpoints/
 .virtual_documents/
 *.pkl
-!exploration/clustering/stepmix_24_class_model.pkl
-!exploration/clustering/stepmix_27_class_model.pkl
-!exploration/clustering/stepmix_28_class_model.pkl
+!trained_models/stream_3/stepmix_24_class_model.pkl
+!trained_models/stream_3/stepmix_27_class_model.pkl
+!trained_models/stream_3/stepmix_28_class_model.pkl
 !models/stream_3/stepmix_27_class_model.pkl
 !results/stream_3/hdb_clusters/hdb_cluster_dict.pkl
 .DS_Store
