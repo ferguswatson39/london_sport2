@@ -154,16 +154,15 @@ if __name__ == "__main__":
     sc.sports_matrix = sports_matrix[SPORTS_NO_OVERLAP]
     generator = GenerateUmapEmb()
     umap = generator.fit_umap_sports(sc.sports_matrix, metric = sc.metric)
-    metric = 'cosine'
     coordinates = umap.embedding_
     hdbscan = GenerateHDBSCAN()
     labels = hdbscan.fit_narrowed(coordinates).labels_
     plot_df = pd.DataFrame({'DIM1': coordinates[:, 0], 'DIM2': coordinates[:, 1], 'LABEL': labels})
-    # sc.plot_sports_clusters(plot_df)
+    sc.plot_sports_clusters(plot_df)
     sc.sports_matrix_labeled = sc.sports_matrix.copy()
     sc.sports_matrix_labeled['LABEL'] = labels
     lift_matrix = sc.calculate_lift_matrix(sc.sports_matrix_labeled)
-    # sc.plot_lift_matrix(lift_matrix)
+    sc.plot_lift_matrix(lift_matrix)
     merged_df = sc.merge_clustering_data()
     sc.plot_co_occurence(merged_df)
     proportions = sc.prepare_persona_proportions()
