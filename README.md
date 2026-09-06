@@ -1,10 +1,15 @@
 #  Predictive Modeling for Physical Activity & Volunteering
 
 ## Project Overview
-This repository contains code and analytical findings in association with dissertation submitted to the University of Bristol for MSc Data Science. The project investigates physical activity (PA) inequalities, through the lens of intersectionality, employing unsupervised learning techniques to cluster heterogeneous populations. This analysis is based on Active Lives survey data from years 2016-2023, on which we will track trends to identify subpopulations and geographies in need of attention. Furthermore, we will employ one-at-a-time sensitivity analysis to identify targeted policy initiatives, based on a selection of psycho-social features.
+This repository contains the code and analytical findings associated with a dissertation submitted to the University of Bristol for MSc Data Science. The project uses unsupervised learning techniques to investigate physical activity (PA) inequalities through the lens of intersectionality, across London's heterogeneous population. This analysis is based on Active Lives survey data from 2016-2023, on which we will track trends to identify subpopulations and geographies in need of attention. Furthermore, we will employ sensitivity analysis to identify subpopulations most responsive to targeted psycho-social intervention. Using both geographic and intersectional perspectives, our results indicate significant spatial and cluster-level PA inequalities, thus urgently requiring the attention of policymakers. Though we were unable to definitively ascertain the specific number of subpopulations within London, strong evidence exists of heterogeneous subpopulations within London, with socio-demographic and psycho-social features yielding non-trivial splits. Additionally, this work hopes to promote the advantages of intersectional perspectives for policy makers, enabling more targeted intervention.
 
-Our results indicate significant spatial and cluster-level PA inequalities suggesting the urgent need of policymakers’ attention. Though we were unable to definitively ascertain the specific number of subpopulations within London, strong evidence exists that socio-demographic and psycho-social features can yield splits. Furthermore, analysis was able to identify ‘Unemployed, Low Social Group Adults’ as a specific subpopulation requiring attention and recommend that policy initiatives target subsidised classes and flexible access.
+### Core Findings: Boroughs Requiring Attention
+* **Chronically Inactive Boroughs:** Barking and Dagenham, Bexley, Brent, Croydon, Enfield, Havering, Hillingdon, Hounslow and Newham.
+* **Disguised Inactive Boroughs:** Hackney, Greenwich, Tower Hamlets, Haringey, Kensington and Chelsea, Lambeth, Lewisham, Southwark and Waltham Forest.
 
+### Core Findings: Subpopulations Requiring Attention
+* **Chronically Inactive Subpopulations:** Unemployed Low Social Group Adults, Long-term Sick and Disabled Adults and Disabled Old Retirees.
+* **Disguised Inactive Subpopulations:** Low Social Group Mothers and Carers and Middle-Aged Working Fathers.
 
 ## Project Objectives
 
@@ -13,13 +18,11 @@ Our results indicate significant spatial and cluster-level PA inequalities sugge
 * **Objective 3:** Develop forecasts for physical activity at both borough and subpopulation-level, while considering uncertainty and seasonality.
 * **Objective 4:** Explore the sensitivity of distinct subpopulations to changes in different psychosocial determinants, directly informing the design of targeted interventions.
 
-
 ## Core Methodologies
 
 * **Clustering:** We employ two separate clustering pipelines, harnessing the combination of UMAP-HDBSCAN and Latent Class Analysis (LCA). 
 * **Forecasting:** Models such as Bayesian Linear Regression, Bounded Regression and Seasonal ARIMA were used to forecast PA trends. Logistic regression analysis was also used for exploratory coefficient investigation.
 * **Sensitivity Analysis:** LightGBM, Random Forest and XGBoost classifiers were trained using Optuna for hyperparameter optimisation. Sensitivity analysis, by which a one standard deviation perturbation was applied to a selected psycho-social feature, was conducted using LightGBM.
-
 
 ## Repository Structure
 
@@ -48,15 +51,16 @@ Comprised of exploratory or test notebooks used to develop files in the src fold
 ### **visualisation**
 An additional Tableau visualisation had been added to aid further investigation by policymakers.
 
-
 ## References
 
-* Frenzel, C. (2025) Tuning with HDBSCAN, Towards Data Science. 
+* Frenzel, C. (2025) 
+    Tuning with HDBSCAN, Towards Data Science. 
     Available at: https://towardsdatascience.com/tuning-with-hdbscan-149865ac2970/ (Accessed: 27 August 2026). 
 
-* McInnes, L. (2018):
+* McInnes, L. (2018)
     Combining multiple UMAP models - umap 0.5.8 documentation. 
     Available at: https://umap-learn.readthedocs.io/en/latest/composing_models.html (Accessed: 27 August 2026). 
 
-* Zouinina, S. (2024) A deep dive into LIGHTGBM: How to choose and tune parameters, Medium
+* Zouinina, S. (2024)
+    A deep dive into LIGHTGBM: How to choose and tune parameters, Medium
     Available at: https://medium.com/@sarahzouinina/a-deep-dive-into-lightgbm-how-to-choose-and-tune-parameters-7c584945842e (Accessed: 27 August 2026). 
