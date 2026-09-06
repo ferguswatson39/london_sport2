@@ -1,0 +1,353 @@
+borough,year,mems_mins_per_week,pct_active,pct_volunteering,period
+Barking and Dagenham,2017,551.55,51.48,15.56,historical
+Barking and Dagenham,2018,665.65,55.96,15.15,historical
+Barking and Dagenham,2019,573.74,53.1,19.14,historical
+Barking and Dagenham,2020,515.22,52.64,15.77,historical
+Barking and Dagenham,2021,542.3,52.68,12.74,historical
+Barking and Dagenham,2022,594.32,52.35,15.92,historical
+Barking and Dagenham,2023,588.76,53.71,13.66,historical
+Barking and Dagenham,2024,575.93,53.02,13.79,forecast
+Barking and Dagenham,2025,575.93,52.99,13.45,forecast
+Barking and Dagenham,2026,575.93,52.97,13.13,forecast
+Barking and Dagenham,2027,575.93,52.94,12.85,forecast
+Barnet,2017,558.53,61.49,16.38,historical
+Barnet,2018,674.9,68.27,21.5,historical
+Barnet,2019,557.97,60.9,20.47,historical
+Barnet,2020,574.49,65.53,16.1,historical
+Barnet,2021,694.24,68.04,12.86,historical
+Barnet,2022,677.86,66.41,16.71,historical
+Barnet,2023,800.19,74.1,20.26,historical
+Barnet,2024,755.61,72.66,16.79,forecast
+Barnet,2025,782.43,73.88,16.54,forecast
+Barnet,2026,809.25,74.88,16.28,forecast
+Barnet,2027,836.08,75.69,16.03,forecast
+Bexley,2017,661.99,62.16,26.35,historical
+Bexley,2018,666.4,68.13,21.55,historical
+Bexley,2019,654.39,64.54,20.56,historical
+Bexley,2020,569.32,59.63,21.11,historical
+Bexley,2021,664.61,65.05,12.71,historical
+Bexley,2022,617.65,60.98,16.27,historical
+Bexley,2023,668.3,66.09,17.38,historical
+Bexley,2024,643.23,63.3,13.14,forecast
+Bexley,2025,643.23,63.18,12.07,forecast
+Bexley,2026,643.23,63.06,11.22,forecast
+Bexley,2027,643.23,62.94,10.55,forecast
+Brent,2017,619.15,61.86,21.36,historical
+Brent,2018,679.12,60.61,21.38,historical
+Brent,2019,647.3,57.59,21.36,historical
+Brent,2020,582.78,59.31,15.47,historical
+Brent,2021,608.64,57.28,16.36,historical
+Brent,2022,667.38,62.43,14.99,historical
+Brent,2023,677.73,59.53,13.03,historical
+Brent,2024,640.3,59.29,12.13,forecast
+Brent,2025,640.3,59.17,11.35,forecast
+Brent,2026,640.31,59.05,10.8,forecast
+Brent,2027,640.31,58.93,10.42,forecast
+Bromley,2017,729.68,70.65,26.61,historical
+Bromley,2018,704.37,67.11,28.29,historical
+Bromley,2019,728.4,71.4,25.44,historical
+Bromley,2020,740.34,72.63,22.22,historical
+Bromley,2021,691.74,69.5,14.76,historical
+Bromley,2022,720.2,70.25,18.91,historical
+Bromley,2023,873.6,69.67,23.29,historical
+Bromley,2024,777.84,70.52,16.87,forecast
+Bromley,2025,787.0,70.6,15.65,forecast
+Bromley,2026,796.16,70.68,14.6,forecast
+Bromley,2027,805.33,70.76,13.72,forecast
+Camden,2017,708.37,70.37,20.0,historical
+Camden,2018,745.28,68.46,17.3,historical
+Camden,2019,770.73,71.73,13.33,historical
+Camden,2020,678.2,67.16,12.77,historical
+Camden,2021,736.04,68.89,10.99,historical
+Camden,2022,809.77,71.51,11.61,historical
+Camden,2023,902.08,77.32,18.66,historical
+Camden,2024,844.55,74.53,12.21,forecast
+Camden,2025,864.6,75.39,11.63,forecast
+Camden,2026,884.65,76.18,11.1,forecast
+Camden,2027,904.7,76.88,10.63,forecast
+Croydon,2017,621.51,65.29,22.29,historical
+Croydon,2018,594.58,63.95,26.89,historical
+Croydon,2019,643.97,66.05,21.51,historical
+Croydon,2020,600.03,64.12,20.22,historical
+Croydon,2021,567.41,62.28,13.4,historical
+Croydon,2022,644.82,66.46,15.22,historical
+Croydon,2023,627.16,64.76,16.34,historical
+Croydon,2024,614.21,64.7,12.99,forecast
+Croydon,2025,614.21,64.69,11.99,forecast
+Croydon,2026,614.21,64.68,11.22,forecast
+Croydon,2027,614.21,64.68,10.63,forecast
+Ealing,2017,608.51,59.69,24.23,historical
+Ealing,2018,658.27,63.37,20.12,historical
+Ealing,2019,762.59,66.74,19.05,historical
+Ealing,2020,570.91,61.98,19.87,historical
+Ealing,2021,585.96,61.11,13.2,historical
+Ealing,2022,779.87,66.05,16.49,historical
+Ealing,2023,706.79,68.2,22.19,historical
+Ealing,2024,667.57,67.62,16.18,forecast
+Ealing,2025,667.57,68.33,15.47,forecast
+Ealing,2026,667.58,68.92,14.79,forecast
+Ealing,2027,667.58,69.41,14.17,forecast
+Enfield,2017,600.28,59.63,22.89,historical
+Enfield,2018,740.0,65.15,20.32,historical
+Enfield,2019,639.77,65.33,20.12,historical
+Enfield,2020,592.01,62.19,16.27,historical
+Enfield,2021,586.75,60.73,11.38,historical
+Enfield,2022,700.23,60.45,18.21,historical
+Enfield,2023,657.05,61.82,21.94,historical
+Enfield,2024,645.16,61.15,16.21,forecast
+Enfield,2025,645.16,60.9,15.56,forecast
+Enfield,2026,645.16,60.66,14.93,forecast
+Enfield,2027,645.16,60.43,14.32,forecast
+Greenwich,2017,703.27,66.67,21.46,historical
+Greenwich,2018,709.95,65.27,16.31,historical
+Greenwich,2019,745.91,67.07,16.81,historical
+Greenwich,2020,659.82,66.46,14.71,historical
+Greenwich,2021,700.78,65.75,8.84,historical
+Greenwich,2022,693.99,65.07,15.06,historical
+Greenwich,2023,721.43,62.88,16.77,historical
+Greenwich,2024,705.02,63.59,11.68,forecast
+Greenwich,2025,705.02,63.17,10.81,forecast
+Greenwich,2026,705.02,62.82,10.01,forecast
+Greenwich,2027,705.02,62.53,9.29,forecast
+Hackney,2017,745.46,73.61,16.55,historical
+Hackney,2018,814.71,75.54,17.68,historical
+Hackney,2019,759.58,69.17,14.17,historical
+Hackney,2020,744.95,70.59,14.31,historical
+Hackney,2021,735.72,68.14,9.97,historical
+Hackney,2022,762.33,72.55,13.48,historical
+Hackney,2023,811.5,67.67,13.44,historical
+Hackney,2024,767.75,67.58,10.98,forecast
+Hackney,2025,767.75,67.0,10.34,forecast
+Hackney,2026,767.75,66.53,9.79,forecast
+Hackney,2027,767.75,66.15,9.34,forecast
+Hammersmith and Fulham,2017,774.08,70.94,22.71,historical
+Hammersmith and Fulham,2018,777.64,70.0,19.73,historical
+Hammersmith and Fulham,2019,917.39,74.95,20.22,historical
+Hammersmith and Fulham,2020,744.7,71.49,17.03,historical
+Hammersmith and Fulham,2021,765.46,71.05,13.02,historical
+Hammersmith and Fulham,2022,827.82,72.38,16.75,historical
+Hammersmith and Fulham,2023,962.5,76.06,16.4,historical
+Hammersmith and Fulham,2024,854.97,74.95,13.48,forecast
+Hammersmith and Fulham,2025,862.66,75.49,12.69,forecast
+Hammersmith and Fulham,2026,870.34,75.97,12.06,forecast
+Hammersmith and Fulham,2027,878.03,76.38,11.56,forecast
+Haringey,2017,687.51,69.57,21.34,historical
+Haringey,2018,739.22,69.49,20.36,historical
+Haringey,2019,772.45,71.01,22.22,historical
+Haringey,2020,676.52,68.11,16.16,historical
+Haringey,2021,671.5,67.98,12.04,historical
+Haringey,2022,706.02,67.34,12.78,historical
+Haringey,2023,797.3,66.08,18.05,historical
+Haringey,2024,721.51,66.1,12.53,forecast
+Haringey,2025,721.51,65.71,11.6,forecast
+Haringey,2026,721.51,65.41,10.83,forecast
+Haringey,2027,721.51,65.18,10.22,forecast
+Harrow,2017,551.87,56.49,19.43,historical
+Harrow,2018,543.4,60.16,20.13,historical
+Harrow,2019,656.13,65.33,20.0,historical
+Harrow,2020,549.79,56.75,16.84,historical
+Harrow,2021,586.0,59.6,12.7,historical
+Harrow,2022,619.07,58.69,17.03,historical
+Harrow,2023,627.02,64.01,21.93,historical
+Harrow,2024,615.82,62.3,17.62,forecast
+Harrow,2025,622.16,62.84,17.44,forecast
+Harrow,2026,628.5,63.35,17.26,forecast
+Harrow,2027,634.84,63.83,17.08,forecast
+Havering,2017,649.94,60.62,21.57,historical
+Havering,2018,660.34,66.53,20.56,historical
+Havering,2019,684.86,65.23,25.21,historical
+Havering,2020,580.27,60.13,15.1,historical
+Havering,2021,597.8,59.51,12.58,historical
+Havering,2022,685.46,63.21,15.56,historical
+Havering,2023,612.72,63.72,16.83,historical
+Havering,2024,638.76,62.06,13.22,forecast
+Havering,2025,638.76,61.91,12.31,forecast
+Havering,2026,638.76,61.77,11.54,forecast
+Havering,2027,638.76,61.62,10.9,forecast
+Hillingdon,2017,562.17,62.96,22.57,historical
+Hillingdon,2018,614.69,63.05,22.67,historical
+Hillingdon,2019,593.96,62.5,23.22,historical
+Hillingdon,2020,678.32,63.21,19.7,historical
+Hillingdon,2021,539.17,56.03,10.23,historical
+Hillingdon,2022,621.34,62.4,17.72,historical
+Hillingdon,2023,607.08,61.78,17.99,historical
+Hillingdon,2024,602.4,59.97,13.44,forecast
+Hillingdon,2025,602.4,59.49,12.14,forecast
+Hillingdon,2026,602.4,59.0,10.98,forecast
+Hillingdon,2027,602.4,58.53,9.98,forecast
+Hounslow,2017,607.03,59.52,21.05,historical
+Hounslow,2018,653.95,64.03,21.74,historical
+Hounslow,2019,690.92,62.69,19.89,historical
+Hounslow,2020,599.75,60.33,19.23,historical
+Hounslow,2021,591.18,60.5,9.43,historical
+Hounslow,2022,677.13,62.27,17.91,historical
+Hounslow,2023,691.28,60.49,20.62,historical
+Hounslow,2024,644.48,61.01,15.49,forecast
+Hounslow,2025,644.49,60.92,14.67,forecast
+Hounslow,2026,644.49,60.83,13.86,forecast
+Hounslow,2027,644.5,60.74,13.07,forecast
+Islington,2017,738.32,71.37,17.71,historical
+Islington,2018,815.79,71.32,22.58,historical
+Islington,2019,828.1,73.61,16.99,historical
+Islington,2020,696.75,68.93,15.91,historical
+Islington,2021,820.21,74.9,9.13,historical
+Islington,2022,672.75,71.38,11.66,historical
+Islington,2023,868.81,71.8,14.24,historical
+Islington,2024,777.25,72.36,9.88,forecast
+Islington,2025,777.25,72.47,8.88,forecast
+Islington,2026,777.25,72.59,8.05,forecast
+Islington,2027,777.25,72.7,7.38,forecast
+Kensington and Chelsea,2017,655.02,68.16,22.19,historical
+Kensington and Chelsea,2018,784.07,72.3,16.38,historical
+Kensington and Chelsea,2019,718.07,70.26,16.93,historical
+Kensington and Chelsea,2020,693.57,68.28,12.61,historical
+Kensington and Chelsea,2021,692.55,65.9,14.77,historical
+Kensington and Chelsea,2022,783.18,67.26,16.41,historical
+Kensington and Chelsea,2023,758.56,66.35,15.18,historical
+Kensington and Chelsea,2024,738.41,65.72,13.16,forecast
+Kensington and Chelsea,2025,741.41,65.29,12.57,forecast
+Kensington and Chelsea,2026,744.4,64.94,12.07,forecast
+Kensington and Chelsea,2027,747.4,64.67,11.64,forecast
+Kingston,2017,676.77,66.53,27.76,historical
+Kingston,2018,724.57,71.22,29.37,historical
+Kingston,2019,707.11,74.07,23.05,historical
+Kingston,2020,756.74,72.14,23.17,historical
+Kingston,2021,691.55,67.38,15.7,historical
+Kingston,2022,840.74,73.09,18.31,historical
+Kingston,2023,802.07,71.69,19.03,historical
+Kingston,2024,816.95,72.74,15.09,forecast
+Kingston,2025,835.49,73.15,13.98,forecast
+Kingston,2026,854.02,73.53,13.15,forecast
+Kingston,2027,872.56,73.89,12.53,forecast
+Lambeth,2017,767.05,72.0,22.04,historical
+Lambeth,2018,833.42,73.14,26.54,historical
+Lambeth,2019,804.45,72.88,19.67,historical
+Lambeth,2020,747.63,73.45,19.75,historical
+Lambeth,2021,723.2,70.38,14.68,historical
+Lambeth,2022,822.84,68.8,15.99,historical
+Lambeth,2023,787.08,71.97,20.24,historical
+Lambeth,2024,783.67,70.09,15.38,forecast
+Lambeth,2025,783.67,69.69,14.56,forecast
+Lambeth,2026,783.67,69.32,13.86,forecast
+Lambeth,2027,783.67,68.98,13.29,forecast
+Lewisham,2017,652.6,68.39,20.95,historical
+Lewisham,2018,724.54,72.52,18.03,historical
+Lewisham,2019,705.21,74.34,15.85,historical
+Lewisham,2020,703.82,69.41,14.43,historical
+Lewisham,2021,710.87,69.04,11.98,historical
+Lewisham,2022,827.79,72.35,15.06,historical
+Lewisham,2023,746.21,66.82,14.53,historical
+Lewisham,2024,783.22,68.68,11.97,forecast
+Lewisham,2025,797.91,68.29,11.34,forecast
+Lewisham,2026,812.61,67.91,10.84,forecast
+Lewisham,2027,827.3,67.56,10.45,forecast
+Merton,2017,735.65,72.96,24.92,historical
+Merton,2018,688.36,70.82,20.93,historical
+Merton,2019,725.84,70.66,20.4,historical
+Merton,2020,632.63,68.16,18.5,historical
+Merton,2021,670.47,67.55,10.9,historical
+Merton,2022,740.32,69.08,17.22,historical
+Merton,2023,736.18,69.61,21.68,historical
+Merton,2024,704.21,67.58,14.85,forecast
+Merton,2025,704.21,67.2,13.85,forecast
+Merton,2026,704.21,66.89,12.92,forecast
+Merton,2027,704.21,66.65,12.06,forecast
+Newham,2017,588.87,58.77,20.54,historical
+Newham,2018,680.63,59.92,18.94,historical
+Newham,2019,658.15,59.45,19.74,historical
+Newham,2020,511.57,54.7,15.09,historical
+Newham,2021,569.46,58.1,14.54,historical
+Newham,2022,641.36,57.88,14.29,historical
+Newham,2023,645.71,60.87,17.87,historical
+Newham,2024,613.68,58.84,14.14,forecast
+Newham,2025,613.68,58.92,13.61,forecast
+Newham,2026,613.68,58.99,13.19,forecast
+Newham,2027,613.68,59.06,12.85,forecast
+Redbridge,2017,585.93,61.26,21.92,historical
+Redbridge,2018,579.0,62.58,23.32,historical
+Redbridge,2019,611.41,60.16,17.86,historical
+Redbridge,2020,565.66,58.1,17.46,historical
+Redbridge,2021,599.03,59.77,13.47,historical
+Redbridge,2022,679.25,62.7,16.92,historical
+Redbridge,2023,625.49,60.45,18.24,historical
+Redbridge,2024,639.03,60.4,14.39,forecast
+Redbridge,2025,647.15,60.31,13.61,forecast
+Redbridge,2026,655.28,60.22,12.95,forecast
+Redbridge,2027,663.4,60.13,12.41,forecast
+Richmond,2017,731.76,75.25,27.27,historical
+Richmond,2018,858.92,76.97,26.44,historical
+Richmond,2019,795.38,75.4,28.86,historical
+Richmond,2020,877.55,75.32,21.56,historical
+Richmond,2021,767.18,75.06,19.27,historical
+Richmond,2022,766.32,71.74,21.0,historical
+Richmond,2023,976.18,77.11,19.94,historical
+Richmond,2024,856.09,74.53,18.22,forecast
+Richmond,2025,863.92,74.33,17.48,forecast
+Richmond,2026,871.75,74.13,16.93,forecast
+Richmond,2027,879.59,73.94,16.54,forecast
+Southwark,2017,771.77,71.7,20.0,historical
+Southwark,2018,767.58,72.81,15.29,historical
+Southwark,2019,842.26,74.56,20.35,historical
+Southwark,2020,694.33,68.76,14.31,historical
+Southwark,2021,765.07,69.67,9.5,historical
+Southwark,2022,783.76,71.38,15.16,historical
+Southwark,2023,895.71,76.05,18.01,historical
+Southwark,2024,793.07,73.07,13.3,forecast
+Southwark,2025,794.18,73.3,12.6,forecast
+Southwark,2026,795.29,73.53,11.94,forecast
+Southwark,2027,796.4,73.76,11.3,forecast
+Sutton,2017,533.68,60.79,20.06,historical
+Sutton,2018,603.04,63.0,21.67,historical
+Sutton,2019,685.29,70.22,22.22,historical
+Sutton,2020,693.82,66.87,16.09,historical
+Sutton,2021,549.59,60.85,13.8,historical
+Sutton,2022,630.41,64.19,17.5,historical
+Sutton,2023,736.2,72.89,18.98,historical
+Sutton,2024,676.85,70.12,15.6,forecast
+Sutton,2025,687.77,71.16,14.93,forecast
+Sutton,2026,698.7,72.11,14.32,forecast
+Sutton,2027,709.62,72.95,13.78,forecast
+Tower Hamlets,2017,703.55,70.78,18.67,historical
+Tower Hamlets,2018,739.11,68.14,17.67,historical
+Tower Hamlets,2019,757.81,69.86,17.82,historical
+Tower Hamlets,2020,685.7,66.67,12.68,historical
+Tower Hamlets,2021,659.76,60.16,8.0,historical
+Tower Hamlets,2022,855.86,71.88,14.68,historical
+Tower Hamlets,2023,851.05,68.29,18.28,historical
+Tower Hamlets,2024,805.17,66.6,12.82,forecast
+Tower Hamlets,2025,818.86,66.24,12.13,forecast
+Tower Hamlets,2026,832.55,65.87,11.45,forecast
+Tower Hamlets,2027,846.24,65.5,10.79,forecast
+Waltham Forest,2017,723.98,68.28,19.15,historical
+Waltham Forest,2018,635.72,66.17,19.55,historical
+Waltham Forest,2019,695.37,69.26,20.38,historical
+Waltham Forest,2020,671.06,65.76,16.6,historical
+Waltham Forest,2021,607.62,65.26,11.14,historical
+Waltham Forest,2022,711.87,66.0,13.24,historical
+Waltham Forest,2023,790.58,67.48,17.71,historical
+Waltham Forest,2024,690.9,65.88,12.9,forecast
+Waltham Forest,2025,690.91,65.66,12.05,forecast
+Waltham Forest,2026,690.91,65.46,11.3,forecast
+Waltham Forest,2027,690.92,65.28,10.65,forecast
+Wandsworth,2017,768.4,73.08,23.4,historical
+Wandsworth,2018,852.09,76.81,21.5,historical
+Wandsworth,2019,840.34,77.71,22.9,historical
+Wandsworth,2020,730.71,72.23,22.11,historical
+Wandsworth,2021,826.75,78.12,12.53,historical
+Wandsworth,2022,904.95,76.56,16.76,historical
+Wandsworth,2023,944.05,80.35,18.29,historical
+Wandsworth,2024,906.46,79.57,14.36,forecast
+Wandsworth,2025,923.53,80.2,13.25,forecast
+Wandsworth,2026,940.6,80.73,12.3,forecast
+Wandsworth,2027,957.67,81.18,11.52,forecast
+Westminster,2017,688.64,66.47,21.9,historical
+Westminster,2018,786.07,67.74,15.05,historical
+Westminster,2019,752.75,70.52,18.48,historical
+Westminster,2020,633.71,62.32,14.44,historical
+Westminster,2021,689.18,67.72,9.01,historical
+Westminster,2022,830.95,70.46,12.97,historical
+Westminster,2023,800.57,71.78,11.8,historical
+Westminster,2024,743.92,70.87,8.94,forecast
+Westminster,2025,744.83,71.41,7.98,forecast
+Westminster,2026,745.75,71.89,7.23,forecast
+Westminster,2027,746.66,72.32,6.66,forecast

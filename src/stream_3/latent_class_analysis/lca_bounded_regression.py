@@ -19,9 +19,10 @@ def bounded_logistic_forecast_classes(forecasting_df, target_col):
 
         y_train = tmp[target_col].values
 
-        lower = max(y_train.min() - np.std(y_train), 0.001)
-        upper = min(y_train.max() + np.std(y_train), 0.999)
-        y_scaled = np.clip((y_train - lower) / (upper - lower), 0.001, 0.999)
+        buffer = max(0.05, (y_train.max() - y_train.min()) / 5)
+        lower = max(0, y_train.min() - buffer)
+        upper = min(1.0, y_train.max() + buffer)
+        y_scaled = (y_train - lower) / (upper - lower)
 
         model = LinearRegression()
         model.fit(X_train, logit(y_scaled))
