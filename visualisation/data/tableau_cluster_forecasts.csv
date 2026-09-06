@@ -1,0 +1,298 @@
+lca_class,cluster,year,mems_mins_per_week,pct_active,pct_volunteering,period
+6,Black Middle-aged Professional Women,2017,682.04,68.38,20.56,historical
+6,Black Middle-aged Professional Women,2018,655.42,65.4,19.38,historical
+6,Black Middle-aged Professional Women,2019,653.24,69.96,24.12,historical
+6,Black Middle-aged Professional Women,2020,558.99,56.61,15.93,historical
+6,Black Middle-aged Professional Women,2021,578.35,61.73,10.44,historical
+6,Black Middle-aged Professional Women,2022,794.56,67.0,12.66,historical
+6,Black Middle-aged Professional Women,2023,707.83,65.43,15.69,historical
+6,Black Middle-aged Professional Women,2024,661.5,62.77,11.22,forecast
+6,Black Middle-aged Professional Women,2025,661.5,62.22,10.13,forecast
+6,Black Middle-aged Professional Women,2026,661.5,61.66,9.2,forecast
+6,Black Middle-aged Professional Women,2027,661.5,61.12,8.43,forecast
+24,Disabled Older Retirees,2017,272.6,26.51,6.54,historical
+24,Disabled Older Retirees,2018,271.68,34.05,6.87,historical
+24,Disabled Older Retirees,2019,275.2,34.36,11.72,historical
+24,Disabled Older Retirees,2020,219.54,29.63,7.92,historical
+24,Disabled Older Retirees,2021,329.93,28.77,3.73,historical
+24,Disabled Older Retirees,2022,226.74,31.82,8.27,historical
+24,Disabled Older Retirees,2023,324.01,31.15,5.66,historical
+24,Disabled Older Retirees,2024,274.25,31.49,5.98,forecast
+24,Disabled Older Retirees,2025,274.25,31.63,5.7,forecast
+24,Disabled Older Retirees,2026,274.25,31.77,5.42,forecast
+24,Disabled Older Retirees,2027,274.25,31.91,5.15,forecast
+7,Established White British Retirees,2017,763.74,77.44,23.19,historical
+7,Established White British Retirees,2018,770.15,76.73,21.75,historical
+7,Established White British Retirees,2019,765.69,78.71,24.36,historical
+7,Established White British Retirees,2020,778.39,78.02,20.98,historical
+7,Established White British Retirees,2021,874.76,79.47,17.63,historical
+7,Established White British Retirees,2022,818.17,77.23,17.44,historical
+7,Established White British Retirees,2023,964.59,80.2,22.11,historical
+7,Established White British Retirees,2024,925.7,79.71,18.34,forecast
+7,Established White British Retirees,2025,952.29,80.06,17.72,forecast
+7,Established White British Retirees,2026,978.88,80.4,17.14,forecast
+7,Established White British Retirees,2027,1005.46,80.73,16.6,forecast
+5,Highly Educated Early Retirees,2017,670.02,71.7,18.41,historical
+5,Highly Educated Early Retirees,2018,692.06,70.4,18.63,historical
+5,Highly Educated Early Retirees,2019,682.95,70.03,16.88,historical
+5,Highly Educated Early Retirees,2020,661.06,66.26,14.81,historical
+5,Highly Educated Early Retirees,2021,706.33,68.18,11.11,historical
+5,Highly Educated Early Retirees,2022,731.32,70.75,14.22,historical
+5,Highly Educated Early Retirees,2023,804.15,71.12,14.87,historical
+5,Highly Educated Early Retirees,2024,771.98,69.35,11.91,forecast
+5,Highly Educated Early Retirees,2025,788.26,69.24,11.1,forecast
+5,Highly Educated Early Retirees,2026,804.54,69.13,10.36,forecast
+5,Highly Educated Early Retirees,2027,820.83,69.02,9.7,forecast
+20,Highly Educated White Other Professionals,2017,796.15,76.27,18.5,historical
+20,Highly Educated White Other Professionals,2018,885.02,75.93,16.58,historical
+20,Highly Educated White Other Professionals,2019,873.47,79.64,16.74,historical
+20,Highly Educated White Other Professionals,2020,750.06,72.13,11.31,historical
+20,Highly Educated White Other Professionals,2021,794.36,77.22,9.58,historical
+20,Highly Educated White Other Professionals,2022,869.09,80.35,12.61,historical
+20,Highly Educated White Other Professionals,2023,896.26,79.97,13.18,historical
+20,Highly Educated White Other Professionals,2024,837.78,79.87,9.73,forecast
+20,Highly Educated White Other Professionals,2025,837.78,80.41,8.85,forecast
+20,Highly Educated White Other Professionals,2026,837.78,80.92,8.09,forecast
+20,Highly Educated White Other Professionals,2027,837.78,81.4,7.44,forecast
+1,Highly Educated Working Mothers,2017,550.67,60.47,22.52,historical
+1,Highly Educated Working Mothers,2018,620.32,62.11,24.02,historical
+1,Highly Educated Working Mothers,2019,619.93,61.73,24.79,historical
+1,Highly Educated Working Mothers,2020,540.52,56.48,18.53,historical
+1,Highly Educated Working Mothers,2021,675.29,67.41,12.67,historical
+1,Highly Educated Working Mothers,2022,630.26,61.89,14.06,historical
+1,Highly Educated Working Mothers,2023,582.59,62.82,16.48,historical
+1,Highly Educated Working Mothers,2024,602.8,63.68,12.29,forecast
+1,Highly Educated Working Mothers,2025,602.8,64.12,11.15,forecast
+1,Highly Educated Working Mothers,2026,602.81,64.56,10.24,forecast
+1,Highly Educated Working Mothers,2027,602.81,64.99,9.55,forecast
+10,Highly Motivated Young Professional Men,2017,1061.76,88.04,30.77,historical
+10,Highly Motivated Young Professional Men,2018,1178.96,91.54,27.43,historical
+10,Highly Motivated Young Professional Men,2019,1241.52,93.14,22.38,historical
+10,Highly Motivated Young Professional Men,2020,1067.2,88.02,22.14,historical
+10,Highly Motivated Young Professional Men,2021,985.11,87.1,13.38,historical
+10,Highly Motivated Young Professional Men,2022,1183.92,90.68,18.23,historical
+10,Highly Motivated Young Professional Men,2023,1217.53,91.04,21.86,historical
+10,Highly Motivated Young Professional Men,2024,1133.72,90.08,14.54,forecast
+10,Highly Motivated Young Professional Men,2025,1133.72,90.11,13.15,forecast
+10,Highly Motivated Young Professional Men,2026,1133.72,90.15,12.02,forecast
+10,Highly Motivated Young Professional Men,2027,1133.72,90.19,11.12,forecast
+19,Independent Older Retirees,2017,498.78,55.4,21.99,historical
+19,Independent Older Retirees,2018,518.32,60.81,18.69,historical
+19,Independent Older Retirees,2019,547.81,59.09,17.26,historical
+19,Independent Older Retirees,2020,554.45,61.13,18.24,historical
+19,Independent Older Retirees,2021,636.8,63.23,12.87,historical
+19,Independent Older Retirees,2022,554.88,57.07,16.58,historical
+19,Independent Older Retirees,2023,623.33,62.17,15.73,historical
+19,Independent Older Retirees,2024,631.97,62.35,13.44,forecast
+19,Independent Older Retirees,2025,649.45,62.91,12.62,forecast
+19,Independent Older Retirees,2026,666.93,63.44,11.89,forecast
+19,Independent Older Retirees,2027,684.41,63.94,11.25,forecast
+4,Later-career Middle Socio-economic Workers,2017,627.99,62.65,15.22,historical
+4,Later-career Middle Socio-economic Workers,2018,603.82,62.59,15.68,historical
+4,Later-career Middle Socio-economic Workers,2019,561.75,60.5,16.01,historical
+4,Later-career Middle Socio-economic Workers,2020,571.1,62.08,12.97,historical
+4,Later-career Middle Socio-economic Workers,2021,485.23,54.2,6.17,historical
+4,Later-career Middle Socio-economic Workers,2022,652.21,64.71,12.37,historical
+4,Later-career Middle Socio-economic Workers,2023,597.68,57.23,11.54,historical
+4,Later-career Middle Socio-economic Workers,2024,585.68,57.97,8.71,forecast
+4,Later-career Middle Socio-economic Workers,2025,585.68,57.34,7.73,forecast
+4,Later-career Middle Socio-economic Workers,2026,585.68,56.71,6.82,forecast
+4,Later-career Middle Socio-economic Workers,2027,585.68,56.11,5.99,forecast
+23,Later-career Professional Men,2017,849.77,80.83,25.51,historical
+23,Later-career Professional Men,2018,941.77,83.38,29.17,historical
+23,Later-career Professional Men,2019,856.16,83.55,27.84,historical
+23,Later-career Professional Men,2020,859.07,79.22,21.33,historical
+23,Later-career Professional Men,2021,869.17,79.3,17.38,historical
+23,Later-career Professional Men,2022,904.11,80.0,21.5,historical
+23,Later-career Professional Men,2023,996.95,81.04,21.85,historical
+23,Later-career Professional Men,2024,928.0,79.56,18.32,forecast
+23,Later-career Professional Men,2025,935.82,79.21,17.28,forecast
+23,Later-career Professional Men,2026,943.64,78.87,16.37,forecast
+23,Later-career Professional Men,2027,951.46,78.54,15.59,forecast
+12,Later-career Professional Women,2017,719.02,78.77,23.18,historical
+12,Later-career Professional Women,2018,742.32,79.04,24.45,historical
+12,Later-career Professional Women,2019,791.39,83.11,25.96,historical
+12,Later-career Professional Women,2020,798.6,75.84,15.4,historical
+12,Later-career Professional Women,2021,800.53,77.88,13.04,historical
+12,Later-career Professional Women,2022,759.54,76.77,16.33,historical
+12,Later-career Professional Women,2023,863.36,76.33,16.48,historical
+12,Later-career Professional Women,2024,842.84,75.87,12.77,forecast
+12,Later-career Professional Women,2025,858.02,75.36,11.66,forecast
+12,Later-career Professional Women,2026,873.2,74.88,10.77,forecast
+12,Later-career Professional Women,2027,888.38,74.44,10.08,forecast
+14,Long-term Sick and Disabled Adults,2017,385.12,41.7,9.38,historical
+14,Long-term Sick and Disabled Adults,2018,401.02,43.28,9.87,historical
+14,Long-term Sick and Disabled Adults,2019,481.55,45.54,4.11,historical
+14,Long-term Sick and Disabled Adults,2020,481.65,34.66,8.52,historical
+14,Long-term Sick and Disabled Adults,2021,334.55,34.63,7.26,historical
+14,Long-term Sick and Disabled Adults,2022,330.14,37.64,4.93,historical
+14,Long-term Sick and Disabled Adults,2023,364.63,34.98,6.77,historical
+14,Long-term Sick and Disabled Adults,2024,384.05,33.48,5.19,forecast
+14,Long-term Sick and Disabled Adults,2025,380.83,32.6,4.72,forecast
+14,Long-term Sick and Disabled Adults,2026,377.61,31.9,4.27,forecast
+14,Long-term Sick and Disabled Adults,2027,374.38,31.34,3.85,forecast
+16,Lower Socio-economic Mothers and Carers,2017,550.33,57.45,14.81,historical
+16,Lower Socio-economic Mothers and Carers,2018,685.06,56.57,12.0,historical
+16,Lower Socio-economic Mothers and Carers,2019,610.66,54.64,14.53,historical
+16,Lower Socio-economic Mothers and Carers,2020,463.77,46.98,11.15,historical
+16,Lower Socio-economic Mothers and Carers,2021,470.05,46.81,5.7,historical
+16,Lower Socio-economic Mothers and Carers,2022,540.26,50.42,11.21,historical
+16,Lower Socio-economic Mothers and Carers,2023,594.33,53.74,12.26,historical
+16,Lower Socio-economic Mothers and Carers,2024,559.2,47.76,8.88,forecast
+16,Lower Socio-economic Mothers and Carers,2025,559.2,46.81,8.19,forecast
+16,Lower Socio-economic Mothers and Carers,2026,559.2,45.97,7.53,forecast
+16,Lower Socio-economic Mothers and Carers,2027,559.2,45.24,6.89,forecast
+0,Middle-aged Working Fathers,2017,637.88,55.87,25.75,historical
+0,Middle-aged Working Fathers,2018,621.07,60.62,18.87,historical
+0,Middle-aged Working Fathers,2019,548.22,60.0,25.44,historical
+0,Middle-aged Working Fathers,2020,560.58,51.35,16.44,historical
+0,Middle-aged Working Fathers,2021,489.89,52.65,11.16,historical
+0,Middle-aged Working Fathers,2022,691.66,56.86,15.64,historical
+0,Middle-aged Working Fathers,2023,669.85,56.36,19.02,historical
+0,Middle-aged Working Fathers,2024,602.74,54.2,12.85,forecast
+0,Middle-aged Working Fathers,2025,602.74,53.7,11.62,forecast
+0,Middle-aged Working Fathers,2026,602.74,53.21,10.56,forecast
+0,Middle-aged Working Fathers,2027,602.74,52.74,9.67,forecast
+15,Midlife Professional Workers Living Alone,2017,804.16,78.33,22.18,historical
+15,Midlife Professional Workers Living Alone,2018,795.24,75.72,20.84,historical
+15,Midlife Professional Workers Living Alone,2019,822.88,77.06,20.46,historical
+15,Midlife Professional Workers Living Alone,2020,757.97,77.35,14.6,historical
+15,Midlife Professional Workers Living Alone,2021,822.77,79.02,13.61,historical
+15,Midlife Professional Workers Living Alone,2022,857.07,78.1,13.97,historical
+15,Midlife Professional Workers Living Alone,2023,894.32,79.13,17.01,historical
+15,Midlife Professional Workers Living Alone,2024,868.11,79.12,12.7,forecast
+15,Midlife Professional Workers Living Alone,2025,879.63,79.42,11.83,forecast
+15,Midlife Professional Workers Living Alone,2026,891.14,79.72,11.12,forecast
+15,Midlife Professional Workers Living Alone,2027,902.65,80.01,10.55,forecast
+18,Older Parents Approaching Retirement,2017,494.41,56.25,21.28,historical
+18,Older Parents Approaching Retirement,2018,371.56,51.69,15.69,historical
+18,Older Parents Approaching Retirement,2019,734.14,61.97,22.22,historical
+18,Older Parents Approaching Retirement,2020,524.65,64.06,24.19,historical
+18,Older Parents Approaching Retirement,2021,439.34,53.95,12.96,historical
+18,Older Parents Approaching Retirement,2022,626.31,54.74,15.15,historical
+18,Older Parents Approaching Retirement,2023,796.67,76.34,19.4,historical
+18,Older Parents Approaching Retirement,2024,669.87,69.51,16.31,forecast
+18,Older Parents Approaching Retirement,2025,694.95,71.7,15.73,forecast
+18,Older Parents Approaching Retirement,2026,720.02,73.63,15.18,forecast
+18,Older Parents Approaching Retirement,2027,745.09,75.26,14.64,forecast
+22,Older Retirees with Lower Qualifications,2017,480.79,54.22,14.94,historical
+22,Older Retirees with Lower Qualifications,2018,510.24,55.77,11.6,historical
+22,Older Retirees with Lower Qualifications,2019,593.32,59.35,12.67,historical
+22,Older Retirees with Lower Qualifications,2020,492.08,52.08,8.73,historical
+22,Older Retirees with Lower Qualifications,2021,499.15,55.65,5.42,historical
+22,Older Retirees with Lower Qualifications,2022,597.17,58.27,9.68,historical
+22,Older Retirees with Lower Qualifications,2023,620.26,58.56,10.67,historical
+22,Older Retirees with Lower Qualifications,2024,596.92,58.3,6.98,forecast
+22,Older Retirees with Lower Qualifications,2025,610.69,58.76,6.19,forecast
+22,Older Retirees with Lower Qualifications,2026,624.45,59.21,5.45,forecast
+22,Older Retirees with Lower Qualifications,2027,638.22,59.64,4.78,forecast
+2,Professional Fathers,2017,687.45,74.96,30.48,historical
+2,Professional Fathers,2018,801.83,78.59,30.03,historical
+2,Professional Fathers,2019,756.8,77.23,27.49,historical
+2,Professional Fathers,2020,682.6,74.1,22.17,historical
+2,Professional Fathers,2021,643.53,72.59,15.84,historical
+2,Professional Fathers,2022,766.08,74.9,21.75,historical
+2,Professional Fathers,2023,790.54,77.52,22.06,historical
+2,Professional Fathers,2024,732.69,75.03,16.61,forecast
+2,Professional Fathers,2025,732.69,74.87,15.22,forecast
+2,Professional Fathers,2026,732.69,74.7,14.1,forecast
+2,Professional Fathers,2027,732.69,74.53,13.24,forecast
+3,Professional Part-time Working Mothers,2017,596.15,70.6,25.36,historical
+3,Professional Part-time Working Mothers,2018,593.47,70.44,26.06,historical
+3,Professional Part-time Working Mothers,2019,598.62,73.03,25.69,historical
+3,Professional Part-time Working Mothers,2020,620.22,71.55,17.76,historical
+3,Professional Part-time Working Mothers,2021,592.54,65.7,11.85,historical
+3,Professional Part-time Working Mothers,2022,598.14,68.07,14.73,historical
+3,Professional Part-time Working Mothers,2023,671.78,72.9,19.05,historical
+3,Professional Part-time Working Mothers,2024,634.12,69.64,12.26,forecast
+3,Professional Part-time Working Mothers,2025,640.11,69.46,10.88,forecast
+3,Professional Part-time Working Mothers,2026,646.11,69.27,9.79,forecast
+3,Professional Part-time Working Mothers,2027,652.1,69.09,8.97,forecast
+13,Unemployed Lower Socio-economic Adults,2017,527.38,49.77,13.24,historical
+13,Unemployed Lower Socio-economic Adults,2018,645.65,57.63,13.56,historical
+13,Unemployed Lower Socio-economic Adults,2019,613.65,57.37,14.4,historical
+13,Unemployed Lower Socio-economic Adults,2020,515.86,49.09,13.41,historical
+13,Unemployed Lower Socio-economic Adults,2021,576.29,55.64,11.96,historical
+13,Unemployed Lower Socio-economic Adults,2022,548.29,54.17,11.9,historical
+13,Unemployed Lower Socio-economic Adults,2023,463.84,46.78,12.03,historical
+13,Unemployed Lower Socio-economic Adults,2024,521.28,50.06,11.61,forecast
+13,Unemployed Lower Socio-economic Adults,2025,512.64,49.37,11.29,forecast
+13,Unemployed Lower Socio-economic Adults,2026,504.0,48.7,10.99,forecast
+13,Unemployed Lower Socio-economic Adults,2027,495.36,48.06,10.7,forecast
+11,Young Graduate Professionals in Shared Housing,2017,949.15,84.6,18.53,historical
+11,Young Graduate Professionals in Shared Housing,2018,953.06,83.6,20.05,historical
+11,Young Graduate Professionals in Shared Housing,2019,1010.16,84.94,20.32,historical
+11,Young Graduate Professionals in Shared Housing,2020,903.73,84.72,16.61,historical
+11,Young Graduate Professionals in Shared Housing,2021,798.69,77.55,9.68,historical
+11,Young Graduate Professionals in Shared Housing,2022,1040.92,84.77,14.1,historical
+11,Young Graduate Professionals in Shared Housing,2023,1091.68,87.62,18.67,historical
+11,Young Graduate Professionals in Shared Housing,2024,963.92,84.67,13.52,forecast
+11,Young Graduate Professionals in Shared Housing,2025,963.93,84.83,12.69,forecast
+11,Young Graduate Professionals in Shared Housing,2026,963.93,85.0,11.89,forecast
+11,Young Graduate Professionals in Shared Housing,2027,963.93,85.16,11.12,forecast
+25,Young Lower Socio-economic Adults Living with Parents,2017,952.09,70.95,29.69,historical
+25,Young Lower Socio-economic Adults Living with Parents,2018,891.39,69.05,29.47,historical
+25,Young Lower Socio-economic Adults Living with Parents,2019,873.94,66.85,30.17,historical
+25,Young Lower Socio-economic Adults Living with Parents,2020,727.57,60.62,22.64,historical
+25,Young Lower Socio-economic Adults Living with Parents,2021,827.08,66.67,24.86,historical
+25,Young Lower Socio-economic Adults Living with Parents,2022,1008.54,67.82,28.73,historical
+25,Young Lower Socio-economic Adults Living with Parents,2023,911.68,66.27,23.65,historical
+25,Young Lower Socio-economic Adults Living with Parents,2024,884.61,64.29,23.45,forecast
+25,Young Lower Socio-economic Adults Living with Parents,2025,884.61,63.65,22.65,forecast
+25,Young Lower Socio-economic Adults Living with Parents,2026,884.61,63.03,21.93,forecast
+25,Young Lower Socio-economic Adults Living with Parents,2027,884.61,62.43,21.28,forecast
+17,Young Professional Women,2017,622.26,72.44,15.1,historical
+17,Young Professional Women,2018,652.1,78.14,14.45,historical
+17,Young Professional Women,2019,674.54,77.51,12.41,historical
+17,Young Professional Women,2020,593.9,72.69,9.83,historical
+17,Young Professional Women,2021,566.41,69.96,6.84,historical
+17,Young Professional Women,2022,672.51,74.13,7.04,historical
+17,Young Professional Women,2023,743.42,74.88,11.79,historical
+17,Young Professional Women,2024,649.25,72.95,6.75,forecast
+17,Young Professional Women,2025,649.95,72.62,5.89,forecast
+17,Young Professional Women,2026,650.65,72.3,5.14,forecast
+17,Young Professional Women,2027,651.35,71.98,4.51,forecast
+26,Young Professionals Living with Parents,2017,782.5,71.09,22.44,historical
+26,Young Professionals Living with Parents,2018,804.02,73.49,27.17,historical
+26,Young Professionals Living with Parents,2019,822.03,73.86,20.72,historical
+26,Young Professionals Living with Parents,2020,650.11,66.78,14.24,historical
+26,Young Professionals Living with Parents,2021,661.56,63.4,12.31,historical
+26,Young Professionals Living with Parents,2022,783.93,68.36,19.53,historical
+26,Young Professionals Living with Parents,2023,822.3,71.56,21.72,historical
+26,Young Professionals Living with Parents,2024,760.92,66.86,15.65,forecast
+26,Young Professionals Living with Parents,2025,760.92,66.14,14.74,forecast
+26,Young Professionals Living with Parents,2026,760.92,65.45,13.89,forecast
+26,Young Professionals Living with Parents,2027,760.92,64.78,13.11,forecast
+21,Young Students Living with Parents,2017,879.93,67.95,31.31,historical
+21,Young Students Living with Parents,2018,958.26,73.51,37.38,historical
+21,Young Students Living with Parents,2019,885.19,70.54,32.29,historical
+21,Young Students Living with Parents,2020,777.97,67.06,28.37,historical
+21,Young Students Living with Parents,2021,663.53,61.73,14.53,historical
+21,Young Students Living with Parents,2022,971.76,67.12,24.59,historical
+21,Young Students Living with Parents,2023,1024.59,70.47,27.55,historical
+21,Young Students Living with Parents,2024,880.18,66.09,19.39,forecast
+21,Young Students Living with Parents,2025,880.18,65.53,17.59,forecast
+21,Young Students Living with Parents,2026,880.18,64.99,16.03,forecast
+21,Young Students Living with Parents,2027,880.18,64.46,14.71,forecast
+8,Young Students in Shared Housing,2017,995.28,76.75,20.48,historical
+8,Young Students in Shared Housing,2018,984.29,76.31,25.0,historical
+8,Young Students in Shared Housing,2019,971.0,80.53,25.69,historical
+8,Young Students in Shared Housing,2020,723.04,71.96,15.24,historical
+8,Young Students in Shared Housing,2021,839.14,69.82,11.22,historical
+8,Young Students in Shared Housing,2022,1163.73,83.66,20.11,historical
+8,Young Students in Shared Housing,2023,946.27,72.88,19.02,historical
+8,Young Students in Shared Housing,2024,946.11,74.93,15.1,forecast
+8,Young Students in Shared Housing,2025,946.11,74.68,14.06,forecast
+8,Young Students in Shared Housing,2026,946.11,74.43,13.09,forecast
+8,Young Students in Shared Housing,2027,946.11,74.19,12.2,forecast
+9,Young and Mid-career Middle Socio-economic Workers,2017,754.09,66.94,18.55,historical
+9,Young and Mid-career Middle Socio-economic Workers,2018,824.2,70.06,17.93,historical
+9,Young and Mid-career Middle Socio-economic Workers,2019,821.21,69.08,14.67,historical
+9,Young and Mid-career Middle Socio-economic Workers,2020,593.42,61.89,14.54,historical
+9,Young and Mid-career Middle Socio-economic Workers,2021,723.66,66.46,8.92,historical
+9,Young and Mid-career Middle Socio-economic Workers,2022,794.64,68.52,14.72,historical
+9,Young and Mid-career Middle Socio-economic Workers,2023,1006.45,71.02,14.02,historical
+9,Young and Mid-career Middle Socio-economic Workers,2024,788.34,68.76,10.87,forecast
+9,Young and Mid-career Middle Socio-economic Workers,2025,788.37,69.01,9.98,forecast
+9,Young and Mid-career Middle Socio-economic Workers,2026,788.39,69.25,9.16,forecast
+9,Young and Mid-career Middle Socio-economic Workers,2027,788.42,69.49,8.41,forecast
